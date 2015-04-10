@@ -36,6 +36,19 @@ terminal OVER;
 terminal LPAREN;
 terminal RPAREN;
 terminal SEMI;
+terminal FOR;
+terminal BOOLEAN;
+terminal INT;
+terminal BEGIN;
+terminal RETURN;
+terminal VOID;
+terminal NE;
+terminal GE;
+terminal LE;
+terminal COMA;
+terminal GT;
+terminal LCLASP;
+terminal RCLASP;
 
 /* Simbolos No Terminales */
 non terminal program;

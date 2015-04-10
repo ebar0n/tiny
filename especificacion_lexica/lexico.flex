@@ -17,6 +17,11 @@ import java_cup.runtime.*;
 		lineanum=0;
 		debug=true;
 	}
+
+	Scanner(java.io.InputStream in){
+	  this(new java.io.InputStreamReader(in));
+    }
+
 	private SymbolFactory sf;
 	private int lineanum;
 	private boolean debug;
@@ -34,7 +39,7 @@ import java_cup.runtime.*;
 
 
 digito		= [0-9]
-numero		= {digito}+
+numero		= -?{digito}+
 letra			= [a-zA-Z]
 identificador	= {letra}+
 nuevalinea		= \n | \n\r | \r\n
@@ -64,14 +69,47 @@ espacio		= [ \t]+
 "write"         {	if(debug) System.out.println("token WRITE");
 			return sf.newSymbol("WRITE",sym.WRITE);
 			}
+"for"		    {   if(debug) System.out.println("token FOR");
+			return sf.newSymbol("FOR",sym.FOR);
+			}
+"boolean"		{   if(debug) System.out.println("token BOOLEAN");
+			return sf.newSymbol("BOOLEAN",sym.BOOLEAN);
+			}			
+"int"		    {   if(debug) System.out.println("token INT");
+			return sf.newSymbol("INT",sym.INT);
+			}
+"begin"		    {   if(debug) System.out.println("token BEGIN");
+			return sf.newSymbol("BEGIN",sym.BEGIN);
+			}
+"return"		{   if(debug) System.out.println("token RETURN");
+			return sf.newSymbol("RETURN",sym.RETURN);
+			}
+"void"		    {   if(debug) System.out.println("token VOID");
+			return sf.newSymbol("VOID",sym.VOID);
+			}
+">="		    {   if(debug) System.out.println("token GE");
+			return sf.newSymbol("GE",sym.GE);
+			}
+">"		    	{   if(debug) System.out.println("token GT");
+			return sf.newSymbol("GT",sym.GT);
+			}
+"<="		    {   if(debug) System.out.println("token LE");
+			return sf.newSymbol("LE",sym.LE);
+			}
+"<"         	{	if(debug) System.out.println("token LT");
+			return sf.newSymbol("LT",sym.LT);
+			}
+","		    	{   if(debug) System.out.println("token COMA");
+			return sf.newSymbol("COM",sym.COMA);
+			}
+"!="		    {   if(debug) System.out.println("token NE");
+			return sf.newSymbol("NE",sym.NE);
+			}
 ":="            {	if(debug) System.out.println("token ASSIGN");
 			return sf.newSymbol("ASSIGN",sym.ASSIGN);
 			}
 "="             {	if(debug) System.out.println("token EQ");
 			return sf.newSymbol("EQ",sym.EQ);
-			}
-"<"             {	if(debug) System.out.println("token LT");
-			return sf.newSymbol("LT",sym.LT);
 			}
 "+"             {	if(debug) System.out.println("token PLUS");
 			return sf.newSymbol("PLUS",sym.PLUS);
@@ -90,6 +128,12 @@ espacio		= [ \t]+
 			}
 ")"             {	if(debug) System.out.println("token RPAREN");
 			return sf.newSymbol("RPAREN",sym.RPAREN);
+			}
+"["		    	{   if(debug) System.out.println("token LCLASP");
+			return sf.newSymbol("LCLASP",sym.LCLASP);
+			}
+"]"		    	{   if(debug) System.out.println("token RCLASP");
+			return sf.newSymbol("RCLASP",sym.RCLASP);
 			}
 ";"             {	if(debug) System.out.println("token SEMI");
 			return sf.newSymbol("SEMI",sym.SEMI);
