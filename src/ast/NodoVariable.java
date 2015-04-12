@@ -4,33 +4,33 @@ public class NodoVariable extends NodoBase{
 	
 	static enum Tipo{ INT, BOOLEAN };
 	private String id;
-	private NodoBase partev;
-	private Tipo tipo;
+	private NodoBase nodo;
+	private tipoDato tipo;
 
-	public NodoVariable(String id,Tipo tipo) {
+	public NodoVariable(String id,tipoDato tipo) {
 		super();
 		this.id = id;
-		this.partev = null;
+		this.nodo = null;
 		this.tipo= tipo;
 	}
-	public NodoVariable(NodoBase partev,Tipo tipo) {
+	public NodoVariable(NodoBase nodo,tipoDato tipo) {
 		super();
 		this.id = null;
-		this.partev = partev;
+		this.nodo = nodo;
 		this.tipo = tipo;
 	}
 
-	public NodoVariable(String id, NodoBase partev,Tipo tipo) {
+	public NodoVariable(String id, NodoBase nodo,tipoDato tipo) {
 		super();
 		this.id = id;
-		this.partev = partev;
+		this.nodo = nodo;
 		this.tipo = tipo;
 	}
 	
 	public NodoVariable() {
 		super();
 		this.id = null;
-		this.partev = null;
+		this.nodo = null;
 		this.tipo = null;
 	}
 	
@@ -38,23 +38,23 @@ public class NodoVariable extends NodoBase{
 		return id;
 	}
 	
-	public Tipo getTipo() {
+	public tipoDato getTipo() {
 		return tipo;
 	}
 
-	public NodoBase getPartev() {
-		return partev;
+	public NodoBase getnodo() {
+		return nodo;
 	}
 	
 	public void setId(String id) {
 		this.id = id;
 	}
 	
-	public void setTipo(Tipo tipo) {
+	public void setTipo(tipoDato tipo) {
 		this.tipo = tipo;
 	}
 
-	public void setPartev(NodoBase partev) {
-		this.partev = partev;
+	public void setnodo(NodoBase nodo) {
+		this.nodo = nodo;
 	}	
 }

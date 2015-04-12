@@ -66,6 +66,9 @@ non terminal NodoBase simple_exp;
 non terminal NodoBase term;
 non terminal NodoBase factor;
 
+non terminal NodoBase variable_stmt;
+non terminal NodoBase var_list;
+
 /* Precedencia de operadores */
 precedence left PLUS;
 precedence left MINUS;
@@ -78,22 +81,22 @@ program     ::= stmt_seq:s	{: if(modoDepuracion) System.out.println("\t regla 1"
 					:}
 		;
 		
-variable_stmt	::= INT var_stmt:str
+variable_stmt	::= INT var_list:v
 					{: if(modoDepuracion) System.out.println("\t TYPE INT"); 
-						RESULT = new NodoVariable(str,tipoDato.INT);
+						RESULT = new NodoVariable(v,tipoDato.INT);
 					:}
-				| BOOLEAN var_stmt:str 
+				| BOOLEAN var_list:v 
 					{: if(modoDepuracion) System.out.println("\t TYPE BOOLEAN"); 
-						RESULT = new NodoVariable(str,tipoDato.BOOLEAN);
+						RESULT = new NodoVariable(v,tipoDato.BOOLEAN);
 					:}		
 				;
 
-var_list	::= ID:variable COMA var_stmt:str 
-				{: if(modoDepuracion) System.out.println("\t regla var_stmt id coma"); 
-					RESULT = new NodoVariable(variable.toString(),str,tipoDato.INT);
+var_list	::= ID:variable COMA var_list:v 
+				{: if(modoDepuracion) System.out.println("\t regla var COMA var_list"); 
+					RESULT = new NodoVariable(variable.toString(),v,tipoDato.INT);
 				:}
 			| ID:variable 
-				{: if(modoDepuracion) System.out.println("\t regla var_stmt id"); 
+				{: if(modoDepuracion) System.out.println("\t regla var COMA id"); 
 					RESULT = new NodoVariable(variable.toString(),tipoDato.BOOLEAN);
 				:}
 		/*| ID:variable OBRACKET NUM:tam CBRACKET COMA var_stmt:v {: if(modoDepuracion) System.out.println("\t regla var_stmt vector coma"); 
