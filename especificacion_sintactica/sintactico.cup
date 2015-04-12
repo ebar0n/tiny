@@ -118,6 +118,9 @@ stmt        ::= if_stmt:sif	{: if(modoDepuracion) System.out.println("\t regla i
 			| for_stmt:sfor {: System.out.println("\t regla for"); 
 					RESULT=sfor;
 					:}
+			| return_stmt:sretr {: System.out.println("\t regla return"); 
+					RESULT=sretr;
+					:}
             | error	{: if(modoDepuracion) System.out.println("\t regla 3g"); 
 				System.out.println("Ocurrio error en cup # 0004");
 				RESULT=null;

@@ -18,7 +18,7 @@ public class NodoValor extends NodoBase {
 		super();
 	}
 	
-	public Integer getValorInteger() {
+	public Integer getValor() {
 		return valor;
 	}
 
