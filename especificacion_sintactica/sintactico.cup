@@ -334,7 +334,6 @@ bloque_stmt  ::= BEGIN stmt_seq:exp END {:
 				:} 
 		;
 
-
 funcion_stmt ::= VOID:f_type ID:valor LPAREN decl_fun:decl RPAREN bloque_stmt:exp {:
 				if(modoDepuracion) System.out.println("\t regla funcion");
 				RESULT = new NodoFuncion(f_type,valor,decl,exp);
