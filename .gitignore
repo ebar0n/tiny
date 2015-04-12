@@ -2,6 +2,6 @@ bin
 .classpath
 .project
 .settings
-src/compilador/Scanner.java
-src/compilador/sym.java
-src/compilador/parser.java
+src/compilador/Scanner.*
+src/compilador/sym.*
+src/compilador/parser.*
