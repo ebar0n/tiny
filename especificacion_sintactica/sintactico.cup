@@ -65,6 +65,7 @@ non terminal NodoBase exp;
 non terminal NodoBase simple_exp;
 non terminal NodoBase term;
 non terminal NodoBase factor;
+non terminal NodoBase array_var_access;
 
 /* Precedencia de operadores */
 precedence left PLUS;
@@ -95,7 +96,7 @@ stmt_seq    ::= stmt_seq:ini SEMI stmt:sent	{: if(modoDepuracion) System.out.pri
 				:}
 		;
 
-stmt        ::= if_stmt:sif	{: if(modoDepuracion) System.out.println("\t regla 3a"); 
+stmt        ::= if_stmt:sif	{: if(modoDepuracion) System.out.println("\t regla 3a if"); 
 					RESULT=sif;
 					:}
             | repeat_stmt:srep	{: if(modoDepuracion) System.out.println("\t regla 3b"); 
@@ -109,6 +110,9 @@ stmt        ::= if_stmt:sif	{: if(modoDepuracion) System.out.println("\t regla 3
 					:}
             | write_stmt:sesc	{: if(modoDepuracion) System.out.println("\t regla 3e"); 
 					RESULT=sesc;
+					:}
+			| array_var_access:vesc	{: if(modoDepuracion) System.out.println("\t regla vector"); 
+					RESULT=vesc;
 					:}
             | error	{: if(modoDepuracion) System.out.println("\t regla 3f"); 
 				System.out.println("Ocurrio error en cup # 0004");
@@ -217,4 +221,17 @@ factor      ::= LPAREN exp:ex RPAREN	{: if(modoDepuracion) System.out.println("\
 				System.out.println("Ocurrio error en cup # 0003");
 				RESULT=null;
 				:}
+		;
+
+array_var_access	::= ID:variable LCLASP simple_exp:pos RCLASP
+				{:
+					if(modoDepuracion) System.out.println("\t regla array_var_access"); 
+						System.out.println("Accediendo a variable tipo vector");
+					if(variable!=null && pos!=null){
+						RESULT= new NodoArray(variable.toString(), pos);					
+					}else{
+						RESULT = null;
+						System.out.println("Ocurrio error en cup # array_var_access");
+					}
+				:}	
 		;
