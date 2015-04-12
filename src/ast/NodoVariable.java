@@ -2,29 +2,28 @@ package ast;
 
 public class NodoVariable extends NodoBase{
 	
-	static enum Tipo{ INT, BOOLEAN };
 	private String id;
 	private NodoBase nodo;
 	private tipoDato tipo;
-
-	public NodoVariable(String id,tipoDato tipo) {
+	
+	public NodoVariable(String id,NodoBase nodo) {
 		super();
 		this.id = id;
-		this.nodo = null;
-		this.tipo= tipo;
+		this.nodo = nodo;
+		this.tipo= null;
 	}
 	public NodoVariable(NodoBase nodo,tipoDato tipo) {
 		super();
 		this.id = null;
 		this.nodo = nodo;
 		this.tipo = tipo;
-	}
-
-	public NodoVariable(String id, NodoBase nodo,tipoDato tipo) {
+	}	
+	
+	public NodoVariable(String id) {
 		super();
 		this.id = id;
-		this.nodo = nodo;
-		this.tipo = tipo;
+		this.nodo = null;
+		this.tipo = null;
 	}
 	
 	public NodoVariable() {
