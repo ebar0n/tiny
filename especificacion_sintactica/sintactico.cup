@@ -97,7 +97,7 @@ stmt_seq    ::= stmt_seq:ini SEMI stmt:sent	{: if(modoDepuracion) System.out.pri
 				:}
 		;
 
-stmt        ::= if_stmt:sif	{: if(modoDepuracion) System.out.println("\t regla 3a"); 
+stmt        ::= if_stmt:sif	{: if(modoDepuracion) System.out.println("\t regla if"); 
 					RESULT=sif;
 					:}
             | repeat_stmt:srep	{: if(modoDepuracion) System.out.println("\t regla 3b"); 
@@ -112,17 +112,20 @@ stmt        ::= if_stmt:sif	{: if(modoDepuracion) System.out.println("\t regla 3
             | write_stmt:sesc	{: if(modoDepuracion) System.out.println("\t regla 3e"); 
 					RESULT=sesc;
 					:}
-            | error	{: if(modoDepuracion) System.out.println("\t regla 3f"); 
+			| for_stmt:sfor {: System.out.println("\t regla for"); 
+					RESULT=sfor;
+					:}
+            | error	{: if(modoDepuracion) System.out.println("\t regla 3g"); 
 				System.out.println("Ocurrio error en cup # 0004");
 				RESULT=null;
 				:}
             ;
 
-if_stmt     ::= IF exp:ex THEN stmt_seq:pthen END	{: if(modoDepuracion) System.out.println("\t regla 4a"); 
+if_stmt     ::= IF exp:ex THEN stmt_seq:pthen END {: if(modoDepuracion) System.out.println("\t regla 4a"); 
 		RESULT = new NodoIf(ex,pthen);
 		:}
 		| IF exp:ex THEN stmt_seq:pthen ELSE stmt_seq:pelse END	{: if(modoDepuracion) System.out.println("\t regla 4b"); 
-		RESULT = new NodoIf(ex,pthen,pelse);		
+		RESULT = new NodoIf(ex,pthen,pelse);
 		:}
 		;
 
@@ -231,8 +234,7 @@ eq_stmt ::= ID:variable EQ exp:ex	{: if(modoDepuracion) System.out.println("\t r
 					:}
 		;
 
-for_stmt ::= FOR LPAREN eq_stmt:ini SEMI exp:cond SEMI eq_stmt:inc RPAREN stmt_seq:sent END 
-			{: if(modoDepuracion) System.out.println("\t regla 14"); 
+for_stmt ::= FOR LPAREN eq_stmt:ini SEMI exp:cond SEMI eq_stmt:inc RPAREN stmt_seq:sent END {: if(modoDepuracion) System.out.println("\t regla 14");
 				RESULT = new NodoFor(ini,cond,inc,sent);
 			:}
 		;
