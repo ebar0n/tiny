@@ -73,6 +73,11 @@ non terminal NodoBase var_list;
 non terminal NodoBase eq_stmt;
 non terminal NodoBase for_stmt;
 non terminal NodoBase return_stmt;
+non terminal NodoBase funcion_stmt;
+non terminal NodoBase bloque_stmt;
+non terminal NodoBase decl_fun;
+non terminal NodoBase param_funcion;
+non terminal NodoBase call_funcion;
 
 /* Precedencia de operadores */
 precedence left PLUS;
@@ -322,3 +327,66 @@ return_stmt ::= RETURN factor:fact {: if(modoDepuracion) System.out.println("\t 
 				| RETURN  {: if(modoDepuracion) System.out.println("\t regla RETURN b");
 						RESULT = new NodoReturn();
 					:};
+
+bloque_stmt  ::= BEGIN stmt_seq:exp END {: 
+				if(modoDepuracion) System.out.println("\t regla bloque_begin");
+				RESULT = new NodoBloque(exp);
+				:} 
+		;
+
+
+funcion_stmt ::= VOID:f_type ID:valor LPAREN decl_fun:decl RPAREN bloque_stmt:exp {:
+				if(modoDepuracion) System.out.println("\t regla funcion");
+				RESULT = new NodoFuncion(f_type,valor,decl,exp);
+				:}
+		| INT:f_type2 ID:valor2 LPAREN decl_fun:decl2 RPAREN bloque_stmt:exp2 {:
+				if(modoDepuracion) System.out.println("\t regla funcion");
+				RESULT = new NodoFuncion(f_type2,valor2,decl2,exp2);
+				:}
+		| BOOLEAN:f_type3 ID:valor3 LPAREN decl_fun:decl3 RPAREN bloque_stmt:exp3 {:
+				if(modoDepuracion) System.out.println("\t regla funcion");
+				RESULT = new NodoFuncion(f_type3,valor3,decl3,exp3);
+				:}
+		;
+
+param_funcion ::= param_funcion:parametro {:
+				if(modoDepuracion) System.out.println("\t regla parametros_funcion");
+				RESULT = new NodoParamFuncion(parametro);
+				:}
+				| param_funcion:parametro2 COMA {:
+				if(modoDepuracion) System.out.println("\t regla parametros_funcion");
+				RESULT = new NodoParamFuncion(parametro2);
+				:}
+				| NUM:valor	{: if(modoDepuracion) System.out.println("\t regla parametros_funcion"); 
+					System.out.println("Devolvi nodo numero entero");
+					if(valor!=null){
+						RESULT= new NodoParamFuncion(valor);					
+					}else{
+						RESULT = null;
+						System.out.println("Ocurrio error en cup # 0005");
+					}
+					:}
+				| ID:variable	{: if(modoDepuracion) System.out.println("\t regla parametros_funcion"); 
+					if(variable!=null){
+						System.out.println("Construyendo Nodo ID para Lexema: "+ variable.toString());
+						RESULT= new NodoParamFuncion(variable.toString());		
+					}else{
+						RESULT = null;
+						System.out.println("Ocurrio error en cup # 0005");
+					}
+					:}
+				| TRUE:verdadero {:
+						if(modoDepuracion) System.out.println("\t regla parametros_funcion");
+						RESULT = new NodoParamFuncion(true);
+					:}
+				| FALSE:falso {:
+						if(modoDepuracion) System.out.println("\t regla parametros_funcion");
+						RESULT = new NodoParamFuncion(false);
+					:}
+		;
+
+call_funcion ::= ID:valor LPAREN param_funcion:variables RPAREN SEMI {:
+				if(modoDepuracion) System.out.println("\t regla llamada_funcion");
+				RESULT = new NodoCallFuncion(valor.toString(),variables);
+				:} 
+		;
