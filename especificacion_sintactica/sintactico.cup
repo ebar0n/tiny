@@ -66,7 +66,7 @@ non terminal NodoBase simple_exp;
 non terminal NodoBase term;
 non terminal NodoBase factor;
 
-non terminal NodoBase variable_stmt;
+non terminal NodoBase decl_var;
 non terminal NodoBase var_list;
 
 /* Precedencia de operadores */
@@ -81,24 +81,24 @@ program     ::= stmt_seq:s	{: if(modoDepuracion) System.out.println("\t regla 1"
 					:}
 		;
 		
-variable_stmt	::= INT var_list:v
-					{: if(modoDepuracion) System.out.println("\t TYPE INT"); 
-						RESULT = new NodoVariable(v,tipoDato.INT);
-					:}
-				| BOOLEAN var_list:v 
-					{: if(modoDepuracion) System.out.println("\t TYPE BOOLEAN"); 
-						RESULT = new NodoVariable(v,tipoDato.BOOLEAN);
-					:}		
-				;
-
-var_list	::= ID:variable COMA var_list:v 
-				{: if(modoDepuracion) System.out.println("\t regla var COMA var_list"); 
-					RESULT = new NodoVariable(variable.toString(),v,tipoDato.INT);
+decl_var	::= INT var_list:v
+				{: if(modoDepuracion) System.out.println("\t regla INT var_list");
+					RESULT = new NodoVariable(v,tipoDato.INT);
 				:}
-			| ID:variable 
-				{: if(modoDepuracion) System.out.println("\t regla var COMA id"); 
-					RESULT = new NodoVariable(variable.toString(),tipoDato.BOOLEAN);
-				:}	
+			| BOOLEAN var_list:v
+				{: if(modoDepuracion) System.out.println("\t regla BOOLEAN var_list");
+					RESULT = new NodoVariable(v,tipoDato.BOOLEAN);
+				:}
+			;
+			
+var_list	::= ID:variable COMA var_list:v
+				{: if(modoDepuracion) System.out.println("\t regla ID COMA var_list"); 
+					RESULT = new NodoVariable(variable.toString(), v);
+				:}
+			| ID:variable
+				{: if(modoDepuracion) System.out.println("\t regla ID"); 
+					RESULT = new NodoVariable(variable.toString());
+				:}
 			;
 
 stmt_seq    ::= stmt_seq:ini SEMI stmt:sent	{: if(modoDepuracion) System.out.println("\t regla 2a"); 
@@ -121,10 +121,10 @@ stmt_seq    ::= stmt_seq:ini SEMI stmt:sent	{: if(modoDepuracion) System.out.pri
 stmt        ::= if_stmt:sif	{: if(modoDepuracion) System.out.println("\t regla 3a"); 
 					RESULT=sif;
 					:}
-            | variable_stmt:strvar	
-            	{: if(modoDepuracion) System.out.println("\t regla variable_stmt"); 
-					RESULT=strvar;
-				:}	
+			| decl_var:dclvar
+				{: if(modoDepuracion) System.out.println("\t regla decl_var"); 
+					RESULT=dclvar;
+				:}
             | repeat_stmt:srep	{: if(modoDepuracion) System.out.println("\t regla 3b"); 
 						RESULT=srep;
 						:}
