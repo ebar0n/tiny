@@ -51,6 +51,8 @@ terminal LCLASP;
 terminal RCLASP;
 terminal AND;
 terminal OR;
+terminal TRUE;
+terminal FALSE;
 
 /* Simbolos No Terminales */
 non terminal program;
@@ -67,6 +69,7 @@ non terminal NodoBase term;
 non terminal NodoBase factor;
 non terminal NodoBase eq_stmt;
 non terminal NodoBase for_stmt;
+non terminal NodoBase return_stmt;
 
 /* Precedencia de operadores */
 precedence left PLUS;
@@ -218,6 +221,12 @@ factor      ::= LPAREN exp:ex RPAREN	{: if(modoDepuracion) System.out.println("\
 						System.out.println("Ocurrio error en cup # 0005");
 					}
 					:}
+		| TRUE      {: if(modoDepuracion) System.out.println("\t regla 12d"); 
+						RESULT= new NodoValor(true);					
+					:}
+		| FALSE		{: if(modoDepuracion) System.out.println("\t regla 12e"); 
+						RESULT= new NodoValor(false);					
+					:}
 		| error	{: if(modoDepuracion) System.out.println("\t regla 12d"); 
 				System.out.println("Ocurrio error en cup # 0003");
 				RESULT=null;
@@ -238,3 +247,10 @@ for_stmt ::= FOR LPAREN eq_stmt:ini SEMI exp:cond SEMI eq_stmt:inc RPAREN stmt_s
 				RESULT = new NodoFor(ini,cond,inc,sent);
 			:}
 		;
+
+return_stmt ::= RETURN factor:fact {: if(modoDepuracion) System.out.println("\t regla RETURN a");
+						RESULT = new NodoReturn(fact);
+					:}
+				| RETURN  {: if(modoDepuracion) System.out.println("\t regla RETURN b");
+						RESULT = new NodoReturn();
+					:};
