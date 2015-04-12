@@ -49,6 +49,8 @@ terminal COMA;
 terminal GT;
 terminal LCLASP;
 terminal RCLASP;
+terminal AND;
+terminal OR;
 
 /* Simbolos No Terminales */
 non terminal program;

@@ -87,6 +87,12 @@ espacio		= [ \t]+
 "void"		    {   if(debug) System.out.println("token VOID");
 			return sf.newSymbol("VOID",sym.VOID);
 			}
+"and"		    {   if(debug) System.out.println("token AND");
+			return sf.newSymbol("AND",sym.AND);
+			}
+"or"		    {   if(debug) System.out.println("token OR");
+			return sf.newSymbol("OR",sym.OR);
+			}
 ">="		    {   if(debug) System.out.println("token GE");
 			return sf.newSymbol("GE",sym.GE);
 			}
