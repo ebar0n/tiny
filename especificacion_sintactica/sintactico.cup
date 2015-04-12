@@ -4,7 +4,7 @@ import java_cup.runtime.*;
 import ast.*;
 
 action code {:
-	private boolean modoDepuracion=false;
+	private boolean modoDepuracion=true;
 	private NodoBase ast=null;
 	private int lineanum=0;
 	
@@ -66,6 +66,9 @@ non terminal NodoBase simple_exp;
 non terminal NodoBase term;
 non terminal NodoBase factor;
 
+non terminal NodoBase variable_stmt;
+non terminal NodoBase var_list;
+
 /* Precedencia de operadores */
 precedence left PLUS;
 precedence left MINUS;
@@ -77,6 +80,26 @@ program     ::= stmt_seq:s	{: if(modoDepuracion) System.out.println("\t regla 1"
 					ast = s;
 					:}
 		;
+		
+variable_stmt	::= INT var_list:v
+					{: if(modoDepuracion) System.out.println("\t TYPE INT"); 
+						RESULT = new NodoVariable(v,tipoDato.INT);
+					:}
+				| BOOLEAN var_list:v 
+					{: if(modoDepuracion) System.out.println("\t TYPE BOOLEAN"); 
+						RESULT = new NodoVariable(v,tipoDato.BOOLEAN);
+					:}		
+				;
+
+var_list	::= ID:variable COMA var_list:v 
+				{: if(modoDepuracion) System.out.println("\t regla var COMA var_list"); 
+					RESULT = new NodoVariable(variable.toString(),v,tipoDato.INT);
+				:}
+			| ID:variable 
+				{: if(modoDepuracion) System.out.println("\t regla var COMA id"); 
+					RESULT = new NodoVariable(variable.toString(),tipoDato.BOOLEAN);
+				:}	
+			;
 
 stmt_seq    ::= stmt:sent SEMI stmt_seq:ini{: if(modoDepuracion) System.out.println("\t regla 2a"); 
 						NodoBase hijoActual = ini;
@@ -114,6 +137,10 @@ stmt_seq    ::= stmt:sent SEMI stmt_seq:ini{: if(modoDepuracion) System.out.prin
 stmt        ::= if_stmt:sif	{: if(modoDepuracion) System.out.println("\t regla 3a"); 
 					RESULT=sif;
 					:}
+            | variable_stmt:strvar	
+            	{: if(modoDepuracion) System.out.println("\t regla variable_stmt"); 
+					RESULT=strvar;
+				:}	
             | repeat_stmt:srep	{: if(modoDepuracion) System.out.println("\t regla 3b"); 
 						RESULT=srep;
 						:}

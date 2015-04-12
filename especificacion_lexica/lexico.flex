@@ -18,10 +18,6 @@ import java_cup.runtime.*;
 		debug=true;
 	}
 
-	Scanner(java.io.InputStream in){
-	  this(new java.io.InputStreamReader(in));
-    }
-
 	private SymbolFactory sf;
 	private int lineanum;
 	private boolean debug;
