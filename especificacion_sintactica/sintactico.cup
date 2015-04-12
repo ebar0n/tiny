@@ -98,14 +98,8 @@ var_list	::= ID:variable COMA var_list:v
 			| ID:variable 
 				{: if(modoDepuracion) System.out.println("\t regla var COMA id"); 
 					RESULT = new NodoVariable(variable.toString(),tipoDato.BOOLEAN);
-				:}
-		/*| ID:variable OBRACKET NUM:tam CBRACKET COMA var_stmt:v {: if(modoDepuracion) System.out.println("\t regla var_stmt vector coma"); 
-			RESULT = new NodoVector(variable.toString(),tipoDato.INT,tam);
-		:}		
-		| ID:variable OBRACKET NUM:tam CBRACKET{: if(modoDepuracion) System.out.println("\t regla var_stmt vector"); 
-			RESULT = new NodoVector(variable.toString(),tipoDato.INT,tam);
-		:}*/		
-		;
+				:}	
+			;
 
 stmt_seq    ::= stmt_seq:ini SEMI stmt:sent	{: if(modoDepuracion) System.out.println("\t regla 2a"); 
 						NodoBase hijoActual = ini;
@@ -127,6 +121,10 @@ stmt_seq    ::= stmt_seq:ini SEMI stmt:sent	{: if(modoDepuracion) System.out.pri
 stmt        ::= if_stmt:sif	{: if(modoDepuracion) System.out.println("\t regla 3a"); 
 					RESULT=sif;
 					:}
+            | variable_stmt:strvar	
+            	{: if(modoDepuracion) System.out.println("\t regla variable_stmt"); 
+					RESULT=strvar;
+				:}	
             | repeat_stmt:srep	{: if(modoDepuracion) System.out.println("\t regla 3b"); 
 						RESULT=srep;
 						:}
