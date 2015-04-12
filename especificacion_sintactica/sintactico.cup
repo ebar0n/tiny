@@ -67,6 +67,9 @@ non terminal NodoBase term;
 non terminal NodoBase factor;
 non terminal NodoBase array_var_access;
 
+non terminal NodoBase decl_var;
+non terminal NodoBase var_list;
+
 /* Precedencia de operadores */
 precedence left PLUS;
 precedence left MINUS;
@@ -78,6 +81,48 @@ program     ::= stmt_seq:s	{: if(modoDepuracion) System.out.println("\t regla 1"
 					ast = s;
 					:}
 		;
+		
+decl_var	::= INT var_list:v
+				{: if(modoDepuracion) System.out.println("\t regla INT var_list");
+					RESULT = new NodoVariable(v,tipoDato.INT);
+				:}
+			| BOOLEAN var_list:v
+				{: if(modoDepuracion) System.out.println("\t regla BOOLEAN var_list");
+					RESULT = new NodoVariable(v,tipoDato.BOOLEAN);
+				:}
+			;
+			
+var_list	::= ID:variable COMA var_list:v
+				{: if(modoDepuracion) System.out.println("\t regla ID COMA var_list"); 
+					RESULT = new NodoVariable(variable.toString(), v);
+				:}
+			| ID:variable
+				{: if(modoDepuracion) System.out.println("\t regla ID"); 
+					RESULT = new NodoVariable(variable.toString());
+				:}
+			| ID:variable LCLASP NUM:tam RCLASP COMA var_list:v
+				{:
+					if(modoDepuracion) System.out.println("\t regla array_declare"); 
+						System.out.println("Declarando variable tipo vector + var_list ");
+					if(variable!=null && tam!=null){
+						RESULT= new NodoArray(variable.toString(), tam, v);					
+					}else{
+						RESULT = null;
+						System.out.println("Ocurrio error en cup # array_declare");
+					}
+				:}
+			| ID:variable LCLASP NUM:tam RCLASP
+				{:
+					if(modoDepuracion) System.out.println("\t regla array_declare"); 
+						System.out.println("Declarando variable tipo vector");
+					if(variable!=null && tam!=null){
+						RESULT= new NodoArray(variable.toString(), tam);					
+					}else{
+						RESULT = null;
+						System.out.println("Ocurrio error en cup # array_declare");
+					}
+				:}
+			;
 
 stmt_seq    ::= stmt_seq:ini SEMI stmt:sent	{: if(modoDepuracion) System.out.println("\t regla 2a"); 
 						NodoBase hijoActual = ini;
@@ -99,6 +144,10 @@ stmt_seq    ::= stmt_seq:ini SEMI stmt:sent	{: if(modoDepuracion) System.out.pri
 stmt        ::= if_stmt:sif	{: if(modoDepuracion) System.out.println("\t regla 3a if"); 
 					RESULT=sif;
 					:}
+			| decl_var:dclvar
+				{: if(modoDepuracion) System.out.println("\t regla decl_var"); 
+					RESULT=dclvar;
+				:}
             | repeat_stmt:srep	{: if(modoDepuracion) System.out.println("\t regla 3b"); 
 						RESULT=srep;
 						:}
