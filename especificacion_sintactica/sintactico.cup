@@ -4,7 +4,7 @@ import java_cup.runtime.*;
 import ast.*;
 
 action code {:
-	private boolean modoDepuracion=false;
+	private boolean modoDepuracion=true;
 	private NodoBase ast=null;
 	private int lineanum=0;
 	
@@ -65,6 +65,8 @@ non terminal NodoBase exp;
 non terminal NodoBase simple_exp;
 non terminal NodoBase term;
 non terminal NodoBase factor;
+non terminal NodoBase eq_stmt;
+non terminal NodoBase for_stmt;
 
 /* Precedencia de operadores */
 precedence left PLUS;
@@ -217,4 +219,20 @@ factor      ::= LPAREN exp:ex RPAREN	{: if(modoDepuracion) System.out.println("\
 				System.out.println("Ocurrio error en cup # 0003");
 				RESULT=null;
 				:}
+		;
+
+eq_stmt ::= ID:variable EQ exp:ex	{: if(modoDepuracion) System.out.println("\t regla 13");
+					if(variable!=null)
+						RESULT = new NodoAsignacion(variable.toString(),ex);
+					else{
+						RESULT = null;
+						System.out.println("Ocurrio error en cup # 00013");
+					}
+					:}
+		;
+
+for_stmt ::= FOR LPAREN eq_stmt:ini SEMI exp:cond SEMI eq_stmt:inc RPAREN stmt_seq:sent END 
+			{: if(modoDepuracion) System.out.println("\t regla 14"); 
+				RESULT = new NodoFor(ini,cond,inc,sent);
+			:}
 		;
