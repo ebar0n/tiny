@@ -100,8 +100,8 @@ var_list	::= ID:variable COMA var_list:v
 					RESULT = new NodoVariable(variable.toString(),tipoDato.BOOLEAN);
 				:}	
 			;
-
-stmt_seq    ::= stmt:sent SEMI stmt_seq:ini{: if(modoDepuracion) System.out.println("\t regla 2a"); 
+			
+stmt_seq    ::=stmt:sent stmt_seq:ini SEMI	{: if(modoDepuracion) System.out.println("\t regla 2a"); 
 						NodoBase hijoActual = ini;
 						if(hijoActual !=null){
 							while(hijoActual.TieneHermano()){
@@ -113,27 +113,11 @@ stmt_seq    ::= stmt:sent SEMI stmt_seq:ini{: if(modoDepuracion) System.out.prin
 							RESULT=sent;
 						}
 						:}
-            | 
-		;
-
-
-/*stmt_seq    ::= stmt_seq:ini SEMI stmt:sent	{: if(modoDepuracion) System.out.println("\t regla 2a"); 
-						NodoBase hijoActual = ini;
-						if(hijoActual !=null){
-							while(hijoActual.TieneHermano()){
-								hijoActual = hijoActual.getHermanoDerecha();
-							}
-							hijoActual.setHermanoDerecha(sent);
-							RESULT=ini;
-						}else{
-							RESULT=sent;
-						}
-						:}
-            | stmt:sent	{: if(modoDepuracion) System.out.println("\t regla 2b"); 
+            | stmt:sent	SEMI{: if(modoDepuracion) System.out.println("\t regla 2b"); 
 				RESULT=sent;				
 				:}
 		;
-*/
+		
 stmt        ::= if_stmt:sif	{: if(modoDepuracion) System.out.println("\t regla 3a"); 
 					RESULT=sif;
 					:}
