@@ -2,17 +2,15 @@ package ast;
 
 public class NodoValor extends NodoBase {
 	private Integer valor;
-	private boolean valorb;
+	private Boolean valorb;
 
 	public NodoValor(Integer valor) {
 		super();
 		this.valor = valor;
-		this.valorb = null;
 	}
 
-	public NodoValor(boolean valor) {
+	public NodoValor(Boolean valor) {
 		super();
-		this.valor = null;
 		this.valorb = valor;
 	}
 
@@ -24,7 +22,7 @@ public class NodoValor extends NodoBase {
 		return valor;
 	}
 
-	public boolean getValorBoolean() {
+	public Boolean getValorBoolean() {
 		return valorb;
 	}
 
