@@ -51,6 +51,8 @@ terminal LCLASP;
 terminal RCLASP;
 terminal AND;
 terminal OR;
+terminal TRUE;
+terminal FALSE;
 
 /* Simbolos No Terminales */
 non terminal program;
@@ -66,9 +68,11 @@ non terminal NodoBase simple_exp;
 non terminal NodoBase term;
 non terminal NodoBase factor;
 non terminal NodoBase array_var_access;
-
 non terminal NodoBase decl_var;
 non terminal NodoBase var_list;
+non terminal NodoBase eq_stmt;
+non terminal NodoBase for_stmt;
+non terminal NodoBase return_stmt;
 
 /* Precedencia de operadores */
 precedence left PLUS;
@@ -141,7 +145,7 @@ stmt_seq    ::= stmt_seq:ini SEMI stmt:sent	{: if(modoDepuracion) System.out.pri
 				:}
 		;
 
-stmt        ::= if_stmt:sif	{: if(modoDepuracion) System.out.println("\t regla 3a if"); 
+stmt        ::= if_stmt:sif	{: if(modoDepuracion) System.out.println("\t regla if"); 
 					RESULT=sif;
 					:}
 			| decl_var:dclvar
@@ -163,17 +167,23 @@ stmt        ::= if_stmt:sif	{: if(modoDepuracion) System.out.println("\t regla 3
 			| array_var_access:vesc	{: if(modoDepuracion) System.out.println("\t regla vector"); 
 					RESULT=vesc;
 					:}
-            | error	{: if(modoDepuracion) System.out.println("\t regla 3f"); 
+			| for_stmt:sfor {: System.out.println("\t regla for"); 
+					RESULT=sfor;
+					:}
+			| return_stmt:sretr {: System.out.println("\t regla return"); 
+					RESULT=sretr;
+					:}
+            | error	{: if(modoDepuracion) System.out.println("\t regla 3g"); 
 				System.out.println("Ocurrio error en cup # 0004");
 				RESULT=null;
 				:}
             ;
 
-if_stmt     ::= IF exp:ex THEN stmt_seq:pthen END	{: if(modoDepuracion) System.out.println("\t regla 4a"); 
+if_stmt     ::= IF exp:ex THEN stmt_seq:pthen END {: if(modoDepuracion) System.out.println("\t regla 4a"); 
 		RESULT = new NodoIf(ex,pthen);
 		:}
 		| IF exp:ex THEN stmt_seq:pthen ELSE stmt_seq:pelse END	{: if(modoDepuracion) System.out.println("\t regla 4b"); 
-		RESULT = new NodoIf(ex,pthen,pelse);		
+		RESULT = new NodoIf(ex,pthen,pelse);
 		:}
 		;
 
@@ -266,6 +276,12 @@ factor      ::= LPAREN exp:ex RPAREN	{: if(modoDepuracion) System.out.println("\
 						System.out.println("Ocurrio error en cup # 0005");
 					}
 					:}
+		| TRUE      {: if(modoDepuracion) System.out.println("\t regla 12d"); 
+						RESULT= new NodoValor(true);					
+					:}
+		| FALSE		{: if(modoDepuracion) System.out.println("\t regla 12e"); 
+						RESULT= new NodoValor(false);					
+					:}
 		| error	{: if(modoDepuracion) System.out.println("\t regla 12d"); 
 				System.out.println("Ocurrio error en cup # 0003");
 				RESULT=null;
@@ -284,3 +300,25 @@ array_var_access	::= ID:variable LCLASP simple_exp:pos RCLASP
 					}
 				:}	
 		;
+
+eq_stmt ::= ID:variable EQ exp:ex	{: if(modoDepuracion) System.out.println("\t regla 13");
+					if(variable!=null)
+						RESULT = new NodoAsignacion(variable.toString(),ex);
+					else{
+						RESULT = null;
+						System.out.println("Ocurrio error en cup # 00013");
+					}
+					:}
+		;
+
+for_stmt ::= FOR LPAREN eq_stmt:ini SEMI exp:cond SEMI eq_stmt:inc RPAREN stmt_seq:sent END {: if(modoDepuracion) System.out.println("\t regla for");
+				RESULT = new NodoFor(ini,cond,inc,sent);
+			:}
+		;
+
+return_stmt ::= RETURN factor:fact {: if(modoDepuracion) System.out.println("\t regla RETURN a");
+						RESULT = new NodoReturn(fact);
+					:}
+				| RETURN  {: if(modoDepuracion) System.out.println("\t regla RETURN b");
+						RESULT = new NodoReturn();
+					:};
