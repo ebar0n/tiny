@@ -8,11 +8,17 @@ public class NodoFuncion extends NodoBase{
 	private NodoBase expression;
 	
 	public NodoFuncion(Object tipo,String identificador,NodoBase declaracion,NodoBase expression) {
-		// TODO Auto-generated constructor stub
 		super();
 		this.tipo = tipo;
 		this.identificador = identificador;
 		this.declaracion = declaracion;
+		this.expression = expression;
+	}
+
+	public NodoFuncion(Object tipo,String identificador,NodoBase expression) {
+		super();
+		this.tipo = tipo;
+		this.identificador = identificador;
 		this.expression = expression;
 	}
 	

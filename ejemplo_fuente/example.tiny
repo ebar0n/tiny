@@ -3,6 +3,20 @@ begin
 	return (a+b);
 end;
 
+int factorial()
+begin
+	read x;
+	int fact;
+	fact:=0;
+	if 0 < x then
+		fact := 1;
+	  	repeat
+	    	fact := fact * x;
+	    	x := x - 1;
+	  	until x = 0;
+	end;
+end;
+
 void myproc()
 begin
 	int a[10];
@@ -28,4 +42,15 @@ begin
 		b[0]:=b[0*a];
 	end;
 
+	read a;
+	read b[0];
+	write a/1;
+	write b[0];
+	write factorial();
+
+	a:=(2+1)*4+(3/(3+1));
+	a:=c[(2+1)*4+(3/(3+1))];
+
+	b[1-1]:=2-2+(-1);
+	c:=-1;
 end;

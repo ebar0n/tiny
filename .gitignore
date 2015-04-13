@@ -10,3 +10,4 @@ src/compilador/parser.*
 manifest.mf
 build.xml
 *.swp
+/nbproject
