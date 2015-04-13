@@ -404,6 +404,18 @@ funcion_stmt ::= VOID:f_type ID:valor LPAREN decl_fun:decl RPAREN bloque_stmt:ex
 				if(modoDepuracion) System.out.println("\t regla funcion");
 				RESULT = new NodoFuncion(f_type3,valor3,decl3,exp3);
 				:}
+		| VOID:f_type ID:valor LPAREN RPAREN bloque_stmt:exp {:
+				if(modoDepuracion) System.out.println("\t regla funcion");
+				/*RESULT = new NodoFuncion(f_type,valor,decl,exp);*/
+				:}
+		| INT:f_type2 ID:valor2 LPAREN RPAREN bloque_stmt:exp2 {:
+				if(modoDepuracion) System.out.println("\t regla funcion");
+				/*RESULT = new NodoFuncion(f_type2,valor2,decl2,exp2);*/
+				:}
+		| BOOLEAN:f_type3 ID:valor3 LPAREN RPAREN bloque_stmt:exp3 {:
+				if(modoDepuracion) System.out.println("\t regla funcion");
+				/*RESULT = new NodoFuncion(f_type3,valor3,decl3,exp3);*/
+				:}
 		;
 
 param_funcion ::= simple_exp:parametro COMA param_funcion {:
