@@ -5,3 +5,7 @@ bin
 src/compilador/Scanner.*
 src/compilador/sym.*
 src/compilador/parser.*
+/Tiny/nbproject/private/
+/build/
+manifest.mf
+build.xml
