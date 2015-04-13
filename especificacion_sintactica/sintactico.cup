@@ -144,7 +144,7 @@ var_list	::= ID:variable COMA var_list:v
 				:}
 			;
 			
-stmt_seq    ::=stmt_seq:ini stmt:sent SEMI	{: if(modoDepuracion) System.out.println("\t regla 2a"); 
+stmt_seq    ::=stmt_seq:ini stmt:sent SEMI {: if(modoDepuracion) System.out.println("\t regla 2a"); 
 						NodoBase hijoActual = ini;
 						if(hijoActual !=null){
 							while(hijoActual.TieneHermano()){
@@ -159,7 +159,7 @@ stmt_seq    ::=stmt_seq:ini stmt:sent SEMI	{: if(modoDepuracion) System.out.prin
             | stmt:sent	SEMI{: if(modoDepuracion) System.out.println("\t regla 2b"); 
 				RESULT=sent;				
 				:}
-		;
+			;
 
 stmt        ::= if_stmt:sif	{: if(modoDepuracion) System.out.println("\t regla 3a"); 
 					RESULT=sif;
@@ -188,9 +188,9 @@ stmt        ::= if_stmt:sif	{: if(modoDepuracion) System.out.println("\t regla 3
 			| for_stmt:sfor {: System.out.println("\t regla for"); 
 					RESULT=sfor;
 					:}
-			| return_stmt:sretr {: System.out.println("\t regla return"); 
+			/*| return_stmt:sretr {: System.out.println("\t regla return"); 
 					RESULT=sretr;
-					:}
+					:} */
 			| call_funcion:callfunc
 				{: if(modoDepuracion) System.out.println("\t regla call_func"); 
 					RESULT=callfunc;
