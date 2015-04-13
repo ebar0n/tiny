@@ -1,0 +1,31 @@
+int myfunc(int a,boolean b)
+begin
+	return (a+b);
+end;
+
+void myproc()
+begin
+	int a[10];
+	for(x=1;x<10;x=x+1)
+		a[x]:=x;
+		if x>=7 and x<10 then
+			return;
+		end;
+	end;
+end;
+
+begin 
+	int a,b[1],c;
+	a:=1;
+	c:=a*a+3;
+	boolean d,e,g[a+3];
+	d:=true;
+	c:=myfunc(a,d);
+
+	if d!=false then
+		myproc();
+	else
+		b[0]:=b[0*a];
+	end;
+
+end;
