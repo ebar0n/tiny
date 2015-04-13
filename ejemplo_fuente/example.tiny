@@ -18,7 +18,7 @@ begin
 	int a,b[1],c;
 	a:=1;
 	c:=a*a+3;
-	boolean d,e,g[a+3];
+	boolean d,e,g[3];
 	d:=true;
 	c:=myfunc(a,d);
 

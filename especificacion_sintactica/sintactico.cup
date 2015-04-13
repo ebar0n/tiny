@@ -181,9 +181,6 @@ stmt        ::= if_stmt:sif	{: if(modoDepuracion) System.out.println("\t regla 3
             | write_stmt:sesc	{: if(modoDepuracion) System.out.println("\t regla 3e"); 
 					RESULT=sesc;
 					:}
-			| array_var_access:vesc	{: if(modoDepuracion) System.out.println("\t regla vector"); 
-					RESULT=vesc;
-					:}
 			| for_stmt:sfor {: System.out.println("\t regla for"); 
 					RESULT=sfor;
 					:}
@@ -225,6 +222,20 @@ assign_stmt ::= ID:variable 	{: if(modoDepuracion) System.out.println("\t regla 
 					System.out.println("Ocurrio error en cup # 0001");
 					}
 					:}
+			|	array_var_access:vesc	
+				{: if(modoDepuracion) System.out.println("\t regla vector asing"); 
+					RESULT=vesc;
+				:}
+				ASSIGN exp:ex
+				{: 
+					if(modoDepuracion) System.out.println("\t regla 6 parte final");
+					if(vesc!=null)
+						RESULT = new NodoAsignacion(vesc,ex);
+					else{
+						RESULT = null;
+						System.out.println("Ocurrio error en cup # 0001");
+					}
+				:}
 		;
 
 read_stmt   ::= READ ID:variable	{: if(modoDepuracion) System.out.println("\t regla 7"); 
@@ -275,6 +286,9 @@ exp    ::=simple_exp:exI GE simple_exp:exD	{: if(modoDepuracion) System.out.prin
 
 		| simple_exp:ex	{: if(modoDepuracion) System.out.println("\t regla 9i"); 
 						RESULT = ex;
+					:}
+		| array_var_access:vesc	{: if(modoDepuracion) System.out.println("\t regla vector"); 
+					RESULT=vesc;
 					:}
 		;
 
