@@ -68,7 +68,6 @@ non terminal NodoBase simple_exp;
 non terminal NodoBase term;
 non terminal NodoBase factor;
 non terminal NodoBase array_var_access;
-non terminal NodoBase logica_exp;
 
 non terminal NodoBase decl_var;
 non terminal NodoBase var_list;
@@ -265,20 +264,18 @@ exp    ::=simple_exp:exI GE simple_exp:exD	{: if(modoDepuracion) System.out.prin
 		| simple_exp:exI NE simple_exp:exD	{: if(modoDepuracion) System.out.println("\t regla 9h"); 
 								RESULT = new NodoOperacion(exI,tipoOp.diferente,exD);
 								:}
-		| simple_exp:ex	{: if(modoDepuracion) System.out.println("\t regla 9i"); 
-					RESULT = ex;
-					:}
-		;
 
-logica_exp ::= exp:exI AND logica_exp:exD	{: if(modoDepuracion) System.out.println("\t regla 13a"); 
-								RESULT = new NodoLogico(exI,tipoOp.and,exD);
+		| simple_exp:exI AND simple_exp:exD	{: if(modoDepuracion) System.out.println("\t regla AND"); 
+								RESULT = new NodoOperacion(exI,tipoOp.diferente,exD);
 								:}
-		| exp:exI OR logica_exp:exD	{: if(modoDepuracion) System.out.println("\t regla 13b"); 
-								RESULT = new NodoLogico(exI,tipoOp.and,exD);
+
+		| simple_exp:exI OR simple_exp:exD	{: if(modoDepuracion) System.out.println("\t regla OR"); 
+								RESULT = new NodoOperacion(exI,tipoOp.diferente,exD);
 								:}
-		| exp:ex {: if(modoDepuracion) System.out.println("\t regla 13c"); 
-								RESULT = ex;
-								:}
+
+		| simple_exp:ex	{: if(modoDepuracion) System.out.println("\t regla 9i"); 
+						RESULT = ex;
+					:}
 		;
 
 simple_exp  ::= simple_exp:exI PLUS term:exD	{: if(modoDepuracion) System.out.println("\t regla 10a"); 
