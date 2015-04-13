@@ -83,6 +83,8 @@ non terminal NodoBase call_funcion;
 precedence left PLUS;
 precedence left MINUS;
 precedence left TIMES;
+precedence left LPAREN;
+precedence left RPAREN;
 
 
 /* REGLAS GRAMATICALES */
@@ -178,6 +180,10 @@ stmt        ::= if_stmt:sif	{: if(modoDepuracion) System.out.println("\t regla i
 			| return_stmt:sretr {: System.out.println("\t regla return"); 
 					RESULT=sretr;
 					:}
+			| call_funcion:callfunc
+				{: if(modoDepuracion) System.out.println("\t regla call_func"); 
+					RESULT=callfunc;
+				:}
             | error	{: if(modoDepuracion) System.out.println("\t regla 3g"); 
 				System.out.println("Ocurrio error en cup # 0004");
 				RESULT=null;
@@ -348,44 +354,25 @@ funcion_stmt ::= VOID:f_type ID:valor LPAREN decl_fun:decl RPAREN bloque_stmt:ex
 				:}
 		;
 
-param_funcion ::= param_funcion:parametro {:
+param_funcion ::= simple_exp:parametro COMA param_funcion {:
 				if(modoDepuracion) System.out.println("\t regla parametros_funcion");
-				RESULT = new NodoParamFuncion(parametro);
+					/*RESULT = new NodoParamFuncion(parametro);*/
 				:}
-				| param_funcion:parametro2 COMA {:
-				if(modoDepuracion) System.out.println("\t regla parametros_funcion");
-				RESULT = new NodoParamFuncion(parametro2);
-				:}
-				| NUM:valor	{: if(modoDepuracion) System.out.println("\t regla parametros_funcion"); 
-					System.out.println("Devolvi nodo numero entero");
-					if(valor!=null){
-						RESULT= new NodoParamFuncion(valor);					
-					}else{
-						RESULT = null;
-						System.out.println("Ocurrio error en cup # 0005");
-					}
-					:}
-				| ID:variable	{: if(modoDepuracion) System.out.println("\t regla parametros_funcion"); 
-					if(variable!=null){
-						System.out.println("Construyendo Nodo ID para Lexema: "+ variable.toString());
-						RESULT= new NodoParamFuncion(variable.toString());		
-					}else{
-						RESULT = null;
-						System.out.println("Ocurrio error en cup # 0005");
-					}
-					:}
-				| TRUE:verdadero {:
+				| simple_exp
+					{:
 						if(modoDepuracion) System.out.println("\t regla parametros_funcion");
-						RESULT = new NodoParamFuncion(true);
-					:}
-				| FALSE:falso {:
-						if(modoDepuracion) System.out.println("\t regla parametros_funcion");
-						RESULT = new NodoParamFuncion(false);
+						/*RESULT = new NodoParamFuncion(true);*/
 					:}
 		;
 
-call_funcion ::= ID:valor LPAREN param_funcion:variables RPAREN SEMI {:
-				if(modoDepuracion) System.out.println("\t regla llamada_funcion");
-				RESULT = new NodoCallFuncion(valor.toString(),variables);
-				:} 
+call_funcion ::= ID:valor LPAREN param_funcion RPAREN 
+				{:
+					if(modoDepuracion) System.out.println("\t regla llamada_funcion");
+					/*RESULT = new NodoCallFuncion(valor.toString(),variables);*/
+				:}
+				| ID LPAREN RPAREN
+					{:
+						if(modoDepuracion) System.out.println("\t regla llamada_funcion sin parametros");
+						/*RESULT = new NodoCallFuncion(valor.toString(),variables);*/
+					:}
 		;
