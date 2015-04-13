@@ -9,3 +9,4 @@ src/compilador/parser.*
 /build/
 manifest.mf
 build.xml
+*.swp
