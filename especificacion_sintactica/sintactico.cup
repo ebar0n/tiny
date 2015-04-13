@@ -158,7 +158,9 @@ stmt        ::= if_stmt:sif	{: if(modoDepuracion) System.out.println("\t regla i
 			| decl_var:dclvar
 				{: if(modoDepuracion) System.out.println("\t regla decl_var"); 
 					RESULT=dclvar;
-				:}
+				:}	
+			| funcion_stmt
+			| bloque_stmt
             | repeat_stmt:srep	{: if(modoDepuracion) System.out.println("\t regla 3b"); 
 						RESULT=srep;
 						:}
@@ -336,13 +338,31 @@ return_stmt ::= RETURN factor:fact {: if(modoDepuracion) System.out.println("\t 
 
 bloque_stmt  ::= BEGIN stmt_seq:exp END {: 
 				if(modoDepuracion) System.out.println("\t regla bloque_begin");
-				RESULT = new NodoBloque(exp);
+				/*RESULT = new NodoBloque(exp);*/
 				:} 
 		;
 
+decl_fun ::= INT ID COMA decl_fun
+				{:
+					if(modoDepuracion) System.out.println("\t regla INT ID COMA decl_fun");
+				:}
+			| BOOLEAN ID COMA decl_fun
+				{:
+					if(modoDepuracion) System.out.println("\t regla BOOLEAN ID COMA decl_fun");
+				:}
+			| INT ID
+				{:
+					if(modoDepuracion) System.out.println("\t regla INT ID");
+				:}
+			| BOOLEAN ID
+				{:
+					if(modoDepuracion) System.out.println("\t regla BOOLEAN ID");
+				:}
+			;
+
 funcion_stmt ::= VOID:f_type ID:valor LPAREN decl_fun:decl RPAREN bloque_stmt:exp {:
 				if(modoDepuracion) System.out.println("\t regla funcion");
-				RESULT = new NodoFuncion(f_type,valor,decl,exp);
+				/*RESULT = new NodoFuncion(f_type,valor,decl,exp);*/
 				:}
 		| INT:f_type2 ID:valor2 LPAREN decl_fun:decl2 RPAREN bloque_stmt:exp2 {:
 				if(modoDepuracion) System.out.println("\t regla funcion");
