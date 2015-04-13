@@ -3,6 +3,7 @@ package ast;
 public class NodoLogico extends NodoBase{
 	private NodoBase opIzquierdo;
 	private NodoBase opDerecho;
+	private NodoBase exp;
 	private tipoOp operacion;
 	
 	public NodoLogico(NodoBase opIzquierdo, tipoOp tipoOperacion, NodoBase opDerecho) {
@@ -17,6 +18,11 @@ public class NodoLogico extends NodoBase{
 		this.opIzquierdo = null;
 		this.opDerecho = null;
 		this.operacion = tipoOperacion;
+	}
+
+	public NodoLogico(NodoBase exp) {
+		super();
+		this.exp = exp;
 	}
 
 	public NodoBase getOpIzquierdo() {

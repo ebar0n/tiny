@@ -5,10 +5,14 @@ public class NodoCallFuncion extends NodoBase{
 	private String identificador;
 	private NodoBase variables;
 	
-	
 	public NodoCallFuncion(String identificador,NodoBase variables) {
 		this.identificador = identificador;
 		this.variables = variables;
+	}
+
+	public NodoCallFuncion(String identificador) {
+		this.identificador = identificador;
+		this.variables = null;
 	}
 	
 	public String getIdentificador() {
