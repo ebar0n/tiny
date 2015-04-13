@@ -188,9 +188,9 @@ stmt        ::= if_stmt:sif	{: if(modoDepuracion) System.out.println("\t regla 3
 			| for_stmt:sfor {: System.out.println("\t regla for"); 
 					RESULT=sfor;
 					:}
-			/*| return_stmt:sretr {: System.out.println("\t regla return"); 
+			| return_stmt:sretr {: System.out.println("\t regla return"); 
 					RESULT=sretr;
-					:} */
+					:} 
 			| call_funcion:callfunc
 				{: if(modoDepuracion) System.out.println("\t regla call_func"); 
 					RESULT=callfunc;
