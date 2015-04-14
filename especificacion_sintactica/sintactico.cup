@@ -97,7 +97,6 @@ non terminal NodoBase array_var_access;
 
 non terminal NodoBase declare_variable;
 non terminal NodoBase variable_list;
-non terminal NodoBase eq_sentence;
 non terminal NodoBase for_sentence;
 non terminal NodoBase return_sentence;
 non terminal NodoBase declare_function;
@@ -124,20 +123,20 @@ start with program;
 program		::= unit;
 
 unit 		::= 
-			external_declaration:ed 
+			external_declaration:ed block_sentence:d SEMI
 				{: 
 					printModoDepuracion("regla program");
 					ast = ed;
 				:}
-			| unit:tu external_declaration:ed
+			| block_sentence:d SEMI
 				{: 
 					printModoDepuracion("regla program");
-					ast = ed;
+					ast = d;
 				:}
 			;
 
 external_declaration ::=
-			block_sentence:d SEMI
+			external_declaration declare_function:fd SEMI
 			| declare_function:fd SEMI
 			;
 
@@ -392,7 +391,7 @@ write_sentence  ::=
 		;
 
 for_sentence 	::=
-		FOR LPAREN eq_sentence:ini SEMI logical_expression:cond SEMI eq_sentence:inc RPAREN sentence_list:sent END 
+		FOR LPAREN assign_sentence:ini SEMI logical_expression:cond SEMI assign_sentence:inc RPAREN sentence_list:sent END 
 			{: 
 				printModoDepuracion("\t  regla for_sentence");
 				RESULT = new NodoFor(ini,cond,inc,sent);
@@ -596,19 +595,6 @@ array_var_access	::=
 			:}	
 		;
 
-eq_sentence 	::= 
-		ID:variable EQ expression:ex
-			{: 
-				//Regla asignacion exclusiva para un for
-				printModoDepuracion("\t\t  regla eq_sentence");
-				if(variable!=null)
-					RESULT = new NodoAsignacion(variable.toString(),ex);
-				else{
-					RESULT = null;
-					System.out.println("Ocurrio error en cup # 00013");
-				}
-			:}
-		;
 
 arguments_function ::= 
 		logical_expression:parametro COMA arguments_function

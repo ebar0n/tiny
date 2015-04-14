@@ -20,7 +20,7 @@ end;
 void myproc()
 begin
 	int a[10];
-	for(x=1;x<10;x=x+1)
+	for(x:=1;x<10;x:=x+1)
 		a[x]:=x;
 		if x>=7 and x<10 then
 			return;
