@@ -28,6 +28,7 @@ begin
 	end;
 end;
 
+int algo()
 begin 
 	int a,b[1],c;
 	a:=1;

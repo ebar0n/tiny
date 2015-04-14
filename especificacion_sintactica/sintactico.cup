@@ -79,6 +79,9 @@ terminal FALSE;
 /* Simbolos No terminales */
 
 non terminal program;
+non terminal NodoBase unit;
+non terminal NodoBase external_declaration;
+non terminal NodoBase declarator_function;
 non terminal NodoBase sentence_list;
 non terminal NodoBase sentence;
 non terminal NodoBase if_sentence;
@@ -118,42 +121,34 @@ precedence left LPAREN, RPAREN;
 
 start with program;
 /* REGLAS GRAMATICALES */
+program		::= unit;
 
-program		::= 
-		sentence_list:s
-			{: 
-				printModoDepuracion("regla program");
-				ast = s;
-			:}
-		;
+unit 		::= 
+			external_declaration:ed 
+				{: 
+					printModoDepuracion("regla program");
+					ast = ed;
+				:}
+			| unit:tu external_declaration:ed
+				{: 
+					printModoDepuracion("regla program");
+					ast = ed;
+				:}
+			;
 
-type_specifier	::=	INT
-			{: 
-				printModoDepuracion("\t regla INT ");
-			:}
-		|	BOOLEAN
-			{: 
-				printModoDepuracion("\t regla boolean de tipo");
-			:}		
-		|	VOID
-			{: 
-				printModoDepuracion("\t regla void de tipo");
-			:}		
-		;	
-		
+external_declaration ::=
+			declare_variable:d SEMI
+			| declare_function:fd SEMI
+			;
+
 declare_variable	::= 
-		INT variable_list:v
+		type_specifier:type variable_list:v
 			{: 
 				printModoDepuracion("\t regla INT declare_variable");
 				RESULT = new NodoVariable(v,tipoDato.INT);
 			:}
-		| BOOLEAN variable_list:v
-			{: 
-				printModoDepuracion("\t regla BOOLEAN declare_variable");
-				RESULT = new NodoVariable(v,tipoDato.BOOLEAN);
-			:}
 		;
-			
+
 variable_list	::= 
 		ID:variable COMA variable_list:v
 			{: 
@@ -186,7 +181,56 @@ variable_list	::=
 				}
 			:}
 		;
-			
+	
+declare_function ::= 
+		type_specifier:type ID:valor declarator_function:decl block_sentence:expression 
+			{:
+				printModoDepuracion("\t regla declare_function -> VOID arguments_list_function");
+				RESULT = new NodoFunction(type,valor,decl,expression);
+			:}
+		|	VOID:type ID:valor declarator_function:decl block_sentence:expression 
+			{:
+				printModoDepuracion("\t regla declare_function -> VOID arguments_list_function");
+				RESULT = new NodoFunction(type,valor,decl,expression);
+			:}
+		;
+
+type_specifier	::=	
+		INT
+			{: 
+				printModoDepuracion("\t regla INT ");
+			:}
+		|	BOOLEAN
+			{: 
+				printModoDepuracion("\t regla boolean de tipo");
+			:}		
+		;
+
+declarator_function ::=
+	| LPAREN  RPAREN
+	| LPAREN arguments_list_function:ptl RPAREN
+	;
+
+block_sentence  ::= 
+		BEGIN sentence_list:expression END 
+			{: 
+				printModoDepuracion("regla return_sentence -> block_sentence");
+				RESULT = new NodoBloque(expression);
+			:} 
+		;
+
+arguments_list_function ::= 
+		type_specifier ID COMA arguments_list_function
+			{:
+				printModoDepuracion("\t\t regla arguments_list_function -> INT ID COMA");
+			:}
+		| type_specifier ID
+			{:
+				printModoDepuracion("\t\t regla arguments_list_function -> INT ID");
+
+			:}
+		;
+
 sentence_list    ::=
 		sentence_list:ini sentence:sent SEMI 
 			{: 
@@ -209,7 +253,7 @@ sentence_list    ::=
 			:}
 		;
 
-sentence        ::=
+sentence ::=
 		if_sentence:sif
 			{: 
 				printModoDepuracion("\t\t regla sentence -> if_sentence"); 
@@ -272,18 +316,18 @@ sentence        ::=
 			:}
     	;
 
-if_sentence     ::= 
-		IF logical_expression:ex THEN sentence_list:pthen END 
-			{: 
-				printModoDepuracion("\t\t\t regla if_sentence -> logical_expression"); 
-				RESULT = new NodoIf(ex,pthen);
-			:}
-		| IF logical_expression:ex THEN sentence_list:pthen ELSE sentence_list:pelse END
-			{: 
-				printModoDepuracion("\t\t\t regla if_sentence -> logical_expression else"); 
-				RESULT = new NodoIf(ex,pthen,pelse);
-			:}
-		;
+if_sentence ::= 
+	IF logical_expression:ex THEN sentence_list:pthen END 
+		{: 
+			printModoDepuracion("\t\t\t regla if_sentence -> logical_expression"); 
+			RESULT = new NodoIf(ex,pthen);
+		:}
+	| IF logical_expression:ex THEN sentence_list:pthen ELSE sentence_list:pelse END
+		{: 
+			printModoDepuracion("\t\t\t regla if_sentence -> logical_expression else"); 
+			RESULT = new NodoIf(ex,pthen,pelse);
+		:}
+	;
 
 repeat_sentence ::= 
 		REPEAT sentence_list:cuerpo UNTIL expression:prueba	
@@ -347,8 +391,59 @@ write_sentence  ::=
 			:}
 		;
 
+for_sentence 	::=
+		FOR LPAREN eq_sentence:ini SEMI logical_expression:cond SEMI eq_sentence:inc RPAREN sentence_list:sent END 
+			{: 
+				printModoDepuracion("\t  regla for_sentence");
+				RESULT = new NodoFor(ini,cond,inc,sent);
+			:}
+		;
 
-expression    		::=
+return_sentence ::= 
+		RETURN factor:fact
+			{: 
+				printModoDepuracion("\t\t  regla return_sentence -> factor");
+				RESULT = new NodoReturn(fact);
+			:}
+		| RETURN 
+			{: 
+				printModoDepuracion("\t\t  regla return_sentence -> empty");
+				RESULT = new NodoReturn();
+			:};
+
+function_sentence ::= 
+		ID:valor LPAREN arguments_function:variables RPAREN 
+			{:
+				printModoDepuracion("\t\t regla function_sentence -> arguments_function");
+				RESULT = new NodoCallFunction(valor.toString(),variables);
+			:}
+		| ID:valor LPAREN RPAREN
+			{:
+				printModoDepuracion("\t\t regla function_sentence -> not arguments_function");
+				RESULT = new NodoCallFunction(valor.toString());
+			:}
+		;
+
+logical_expression ::= 
+		expression:exI AND logical_expression:exD
+			{: 
+				printModoDepuracion("\t\t\t  regla logical_expression -> AND logical_expression");
+				RESULT = new NodoLogico(exI,tipoOp.and,exD);			
+			:}
+
+		| expression:exI OR logical_expression:exD
+			{:
+				printModoDepuracion("\t\t\t  regla logical_expression -> OR logical_expression");
+				RESULT = new NodoLogico(exI,tipoOp.or,exD);	
+			:}
+		| expression:exl
+			{: 
+				printModoDepuracion("\t\t\t  regla logical_expression -> expression");
+				RESULT = new NodoLogico(exl);						
+			:}
+		;
+
+expression  ::=
 		additive_expression:exI GE additive_expression:exD
 			{: 
 				printModoDepuracion("\t\t\t\t  regla expression -> GE");
@@ -394,25 +489,6 @@ expression    		::=
 			{: 
 				printModoDepuracion("\t\t\t\t  regla expression -> array_var_access");
 				RESULT=vesc;
-			:}
-		;
-
-logical_expression ::= 
-		expression:exI AND logical_expression:exD
-			{: 
-				printModoDepuracion("\t\t\t  regla logical_expression -> AND logical_expression");
-				RESULT = new NodoLogico(exI,tipoOp.and,exD);			
-			:}
-
-		| expression:exI OR logical_expression:exD
-			{:
-				printModoDepuracion("\t\t\t  regla logical_expression -> OR logical_expression");
-				RESULT = new NodoLogico(exI,tipoOp.or,exD);	
-			:}
-		| expression:exl
-			{: 
-				printModoDepuracion("\t\t\t  regla logical_expression -> expression");
-				RESULT = new NodoLogico(exl);						
 			:}
 		;
 
@@ -534,87 +610,6 @@ eq_sentence 	::=
 			:}
 		;
 
-for_sentence 	::=
-		FOR LPAREN eq_sentence:ini SEMI logical_expression:cond SEMI eq_sentence:inc RPAREN sentence_list:sent END 
-			{: 
-				printModoDepuracion("\t  regla for_sentence");
-				RESULT = new NodoFor(ini,cond,inc,sent);
-			:}
-		;
-
-return_sentence ::= 
-		RETURN factor:fact
-			{: 
-				printModoDepuracion("\t\t  regla return_sentence -> factor");
-				RESULT = new NodoReturn(fact);
-			:}
-		| RETURN 
-			{: 
-				printModoDepuracion("\t\t  regla return_sentence -> empty");
-				RESULT = new NodoReturn();
-			:};
-
-block_sentence  ::= 
-		BEGIN sentence_list:expression END 
-			{: 
-				printModoDepuracion("regla return_sentence -> block_sentence");
-				RESULT = new NodoBloque(expression);
-			:} 
-		;
-
-arguments_list_function 	::= 
-		INT ID COMA arguments_list_function
-			{:
-				printModoDepuracion("\t\t regla arguments_list_function -> INT ID COMA");
-			:}
-		| BOOLEAN ID COMA arguments_list_function
-			{:
-				printModoDepuracion("\t\t regla arguments_list_function -> BOOLEAN ID COMA");
-			:}
-		| INT ID
-			{:
-				printModoDepuracion("\t\t regla arguments_list_function -> INT ID");
-
-			:}
-		| BOOLEAN ID
-			{:
-				printModoDepuracion("\t\t regla arguments_list_function -> BOOLEAN ID");
-			:}
-		;
-
-declare_function ::= 
-		VOID:f_type_specifier ID:valor LPAREN arguments_list_function:decl RPAREN block_sentence:expression 
-			{:
-				printModoDepuracion("\t regla declare_function -> VOID arguments_list_function");
-				RESULT = new NodoFunction(f_type_specifier,valor,decl,expression);
-			:}
-		| INT:f_type_specifier2 ID:valor2 LPAREN arguments_list_function:decl2 RPAREN block_sentence:expression2 
-			{:
-				printModoDepuracion("\t regla declare_function -> INT arguments_list_function");
-				RESULT = new NodoFunction(f_type_specifier2,valor2,decl2,expression2);
-			:}
-		| BOOLEAN:f_type_specifier3 ID:valor3 LPAREN arguments_list_function:decl3 RPAREN block_sentence:expression3
-			{:
-				printModoDepuracion("\t regla declare_function -> BOOLEAN arguments_list_function");
-				RESULT = new NodoFunction(f_type_specifier3,valor3,decl3,expression3);
-			:}
-		| VOID:f_type_specifier ID:valor LPAREN RPAREN block_sentence:expression
-			{:
-				printModoDepuracion("\t regla declare_function -> VOID");
-				RESULT = new NodoFunction(f_type_specifier,valor,expression);
-			:}
-		| INT:f_type_specifier2 ID:valor2 LPAREN RPAREN block_sentence:expression2
-			{:
-				printModoDepuracion("\t regla declare_function -> INT");
-				RESULT = new NodoFunction(f_type_specifier2,valor2,expression2);
-			:}
-		| BOOLEAN:f_type_specifier3 ID:valor3 LPAREN RPAREN block_sentence:expression3
-			{:
-				printModoDepuracion("\t regla declare_function -> BOOLEAN");
-				RESULT = new NodoFunction(f_type_specifier3,valor3,expression3);
-			:}
-		;
-
 arguments_function ::= 
 		additive_expression:parametro COMA arguments_function
 			{:
@@ -625,18 +620,5 @@ arguments_function ::=
 			{:
 				printModoDepuracion("\t\t regla arguments_function -> additive_expression");
 				RESULT = new NodoParamFunction(parametro);
-			:}
-		;
-
-function_sentence ::= 
-		ID:valor LPAREN arguments_function:variables RPAREN 
-			{:
-				printModoDepuracion("\t\t regla function_sentence -> arguments_function");
-				RESULT = new NodoCallFunction(valor.toString(),variables);
-			:}
-		| ID:valor LPAREN RPAREN
-			{:
-				printModoDepuracion("\t\t regla function_sentence -> not arguments_function");
-				RESULT = new NodoCallFunction(valor.toString());
 			:}
 		;
