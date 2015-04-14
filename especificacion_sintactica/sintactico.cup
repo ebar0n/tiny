@@ -384,7 +384,7 @@ read_sentence   ::=
 		;
 
 write_sentence  ::=
-		WRITE expression:ex
+		WRITE logical_expression:ex
 			{: 
 				printModoDepuracion("\t\t\t  regla write_sentence -> expression"); 
 				RESULT= new NodoEscribir(ex);
@@ -475,20 +475,10 @@ expression  ::=
 				printModoDepuracion("\t\t\t\t  regla expression -> NE");
 				RESULT = new NodoOperacion(exI,tipoOp.diferente,exD);
 			:}
-		| function_sentence:callfunc
-			{: 
-				printModoDepuracion("\t\t\t\t  regla expression -> function_sentence");
-				RESULT=callfunc;
-			:}
 		| additive_expression:ex
 			{: 
 				printModoDepuracion("\t\t\t\t  regla expression -> additive_expression");
 				RESULT = ex;
-			:}
-		| array_var_access:vesc	
-			{: 
-				printModoDepuracion("\t\t\t\t  regla expression -> array_var_access");
-				RESULT=vesc;
 			:}
 		;
 
@@ -529,7 +519,7 @@ multiplicative_expression        ::=
 		;
 
 factor      ::= 
-		LPAREN expression:ex RPAREN	
+		LPAREN logical_expression:ex RPAREN	
 			{: 
 				printModoDepuracion("\t\t\t\t\t\t  regla factor -> PAREN");
 				RESULT = ex;
@@ -575,6 +565,16 @@ factor      ::=
 				printModoDepuracion("\t\t\t\t\t\t  regla factor -> TRUE");
 				RESULT= new NodoValor(false);					
 			:}
+		| array_var_access:vesc	
+			{: 
+				printModoDepuracion("\t\t\t\t  regla expression -> array_var_access");
+				RESULT=vesc;
+			:}
+		| function_sentence:vesc	
+			{: 
+				printModoDepuracion("\t\t\t\t  regla expression -> function_sentence");
+				RESULT=vesc;
+			:}
 		| error
 			{: 
 				printModoDepuracion("\t\t\t\t\t\t  regla factor");
@@ -611,12 +611,12 @@ eq_sentence 	::=
 		;
 
 arguments_function ::= 
-		additive_expression:parametro COMA arguments_function
+		logical_expression:parametro COMA arguments_function
 			{:
 				printModoDepuracion("\t\t regla arguments_function -> parametro COMA");
 				RESULT = new NodoParamFunction(parametro);
 			:}
-		| additive_expression:parametro
+		| logical_expression:parametro
 			{:
 				printModoDepuracion("\t\t regla arguments_function -> additive_expression");
 				RESULT = new NodoParamFunction(parametro);
