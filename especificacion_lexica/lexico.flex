@@ -1,3 +1,4 @@
+
 package compilador;
 
 import java_cup.runtime.*;
@@ -6,9 +7,13 @@ import java_cup.runtime.*;
 %%
 /* Habilitar la compatibilidad con el interfaz CUP para el generador sintactico*/
 %cup
-/* Llamar Scanner a la clase que contiene el analizador Lexico */
-%class Scanner
+/* Acceso a la columna y fila actual de analisis CUP */
+%line
+%column
 
+/* Llamar Scanner a la clase que contiene el analizador Lexico */
+
+%class Scanner
 /*-- CONSTRUCTOR --*/
 %{
 	public Scanner(java.io.InputStream r, SymbolFactory sf){
@@ -19,21 +24,19 @@ import java_cup.runtime.*;
 
 	private SymbolFactory sf;
 	private int lineanum;
-	private boolean debug=true;
+	private boolean debug = true;
 
 	public void printDebug(String message){
-		if(debug) 
-			System.out.println(message); 
+		if(debug) {
+			System.out.print(message);
+			System.out.println(" - linea " + (yyline + 1) + ", columna " + (yycolumn + 1) + ", valor: \"" + yytext() + "\"");
+		}
 	}
 %}
 
 %eofval{
     return sf.newSymbol("EOF",sym.EOF);
 %eofval}
-
-/* Acceso a la columna y fila actual de analisis CUP */
-%line
-%column
 
 digito		= [0-9]
 numero		= {digito}+
@@ -226,7 +229,7 @@ espacio		= [ \t]+
 
 {identificador}	{
 				printDebug("token ID");
-				return sf.newSymbol("ID",sym.ID,new String(yytext()));
+				return sf.newSymbol("ID",sym.ID,new String((yyline + 1) + " " + (yycolumn + 1) + " " + yytext()) );
 			}
 
 {nuevalinea} {
@@ -243,5 +246,5 @@ espacio		= [ \t]+
 			}
 
 .           {
-				System.err.println("Caracter Ilegal encontrado en analisis lexico: " + yytext() + "\n");
+				System.err.println("Error lexico , linea " + (yyline+1) + ", columna " + (yycolumn+1) + " -> " + yytext() + "\n");
 			}

@@ -1,13 +1,13 @@
 package ast;
 
-public class NodoFuncion extends NodoBase{
+public class NodoFunction extends NodoBase{
 
 	private Object tipo;
 	private String identificador;
 	private NodoBase declaracion;
 	private NodoBase expression;
 	
-	public NodoFuncion(Object tipo,String identificador,NodoBase declaracion,NodoBase expression) {
+	public NodoFunction(Object tipo,String identificador,NodoBase declaracion,NodoBase expression) {
 		super();
 		this.tipo = tipo;
 		this.identificador = identificador;
@@ -15,7 +15,7 @@ public class NodoFuncion extends NodoBase{
 		this.expression = expression;
 	}
 
-	public NodoFuncion(Object tipo,String identificador,NodoBase expression) {
+	public NodoFunction(Object tipo,String identificador,NodoBase expression) {
 		super();
 		this.tipo = tipo;
 		this.identificador = identificador;

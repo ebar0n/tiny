@@ -2,7 +2,9 @@
 Versión en java muy simple del compilador del lenguaje Tiny diseñado por el profesor Louden en su libro compiladores e intérpretes usado en la UNET
 
 #Como usar el script
-El script /run_generadores.sh/ recibe dos argumentos *compile* y *run*, para usar *run* se debe haber compilado primero
+El script *run_generadores.sh* recibe dos argumentos **compile** para compilar y **run** para ejecutar.
+
+Para usar **run** se debe haber compilado primero y se puede agregar un tercer parámetro a después de **run** con la dirección del archivo del código fuente
 
 #Reglas Gramaticales
 

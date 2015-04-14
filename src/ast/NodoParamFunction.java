@@ -1,31 +1,31 @@
 package ast;
 
-public class NodoParamFuncion extends NodoBase{
+public class NodoParamFunction extends NodoBase{
 
 	private String identificador;
 	private NodoBase base;
 	private int numero;
 	private boolean condicion;
 	
-	public NodoParamFuncion(String identificador) {
+	public NodoParamFunction(String identificador) {
 		// TODO Auto-generated constructor stub
 		super();
 		this.identificador = identificador;
 	}
 	
-	public NodoParamFuncion(NodoBase base) {
+	public NodoParamFunction(NodoBase base) {
 		// TODO Auto-generated constructor stub
 		super();
 		this.base = base;
 	}
 	
-	public NodoParamFuncion(int numero) {
+	public NodoParamFunction(int numero) {
 		// TODO Auto-generated constructor stub
 		super();
 		this.numero = numero;
 	}
 	
-	public NodoParamFuncion(boolean condicion) {
+	public NodoParamFunction(boolean condicion) {
 		// TODO Auto-generated constructor stub
 		super();
 		this.condicion = condicion;

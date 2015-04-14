@@ -1,6 +1,9 @@
 #!/bin/bash
 
-case "$1" in 
+OPTION=$1
+shift 1
+
+case "$OPTION" in 
     "compile" )
         echo "# =================================================================== #"
         echo "# ===========Generando analizador lexico: (JFLEX)==================== #"
@@ -9,12 +12,13 @@ case "$1" in
         echo "# =================================================================== #"
         echo "# ===============Generando analizador sintactico: (CUP)============== #"
         echo "# =================================================================== #"
-        java -jar JAR/java-cup-11a.jar -destdir src/compilador/ especificacion_sintactica/sintactico.cup
+        java -jar JAR/java-cup-11a.jar $@ -destdir src/compilador/ especificacion_sintactica/sintactico.cup
     ;;
 
     "run" )
+        FILE=$1
         javac -d build/classes -classpath src:compilador:src/ast:JAR/java-cup-11a-runtime.jar src/compilador/Compilador.java
-        java -cp build/classes:JAR/java-cup-11a-runtime.jar compilador.Compilador $2
+        java -cp build/classes:JAR/java-cup-11a-runtime.jar compilador.Compilador $FILE
     ;;
 
 esac
