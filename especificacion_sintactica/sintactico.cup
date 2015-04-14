@@ -137,7 +137,7 @@ unit 		::=
 			;
 
 external_declaration ::=
-			declare_variable:d SEMI
+			block_sentence:d SEMI
 			| declare_function:fd SEMI
 			;
 
