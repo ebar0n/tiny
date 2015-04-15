@@ -2,24 +2,24 @@ package ast;
 
 public class NodoCallFunction extends NodoBase{
 	
-	private String identificador;
+	private NodoIdentificador identificador;
 	private NodoBase variables;
 	
-	public NodoCallFunction(String identificador,NodoBase variables) {
+	public NodoCallFunction(NodoIdentificador identificador,NodoBase variables) {
 		this.identificador = identificador;
 		this.variables = variables;
 	}
 
-	public NodoCallFunction(String identificador) {
+	public NodoCallFunction(NodoIdentificador identificador) {
 		this.identificador = identificador;
 		this.variables = null;
 	}
 	
-	public String getIdentificador() {
+	public NodoIdentificador getIdentificador() {
 		return identificador;
 	}
 	
-	public void setIdentificador(String identificador) {
+	public void setIdentificador(NodoIdentificador identificador) {
 		this.identificador = identificador;
 	}
 	

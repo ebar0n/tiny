@@ -169,7 +169,7 @@ declare_variable	::=
 		type_specifier:type variable_list:v
 			{: 
 				printModoDepuracion("\t regla INT declare_variable");
-				RESULT = new NodoVariable(v,tipoDato.INT);
+				RESULT = new NodoVariable(v,type);
 			:}
 		;
 
@@ -357,7 +357,7 @@ if_sentence ::=
 	;
 
 repeat_sentence ::= 
-		REPEAT sentence_list:cuerpo UNTIL expression:prueba	
+		REPEAT sentence_list:cuerpo UNTIL logical_expression:prueba	
 			{: 
 				printModoDepuracion("\t\t\t regla repeat_sentence");
 				RESULT = new NodoRepeat(cuerpo,prueba);
@@ -365,7 +365,7 @@ repeat_sentence ::=
 		;
 
 assign_sentence ::= 
-		ID:variable ASSIGN expression:ex	
+		ID:variable ASSIGN logical_expression:ex	
 			{: 
 				printModoDepuracion("\t\t\t regla assign_sentence -> ID");
 				if(variable!=null)
@@ -375,11 +375,11 @@ assign_sentence ::=
 					System.out.println("Ocurrio error en cup regla assign_sentence -> ID");
 				}
 			:}
-		| array_var_access:vesc	ASSIGN expression:ex
+		| array_var_access:vesc	ASSIGN logical_expression:ex
 			{: 
 				printModoDepuracion("\t\t\t regla assign_sentence -> array_var_access");
 				if(vesc!=null && ex!=null)
-					RESULT = new NodoAsignacion(vesc,ex);
+					RESULT = new NodoAsignacion((NodoArray)vesc,ex);
 				else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla assign_sentence -> array_var_access");
@@ -427,9 +427,9 @@ for_sentence 	::=
 		;
 
 return_sentence ::= 
-		RETURN factor:fact
+		RETURN logical_expression:fact
 			{: 
-				printModoDepuracion("\t\t  regla return_sentence -> factor");
+				printModoDepuracion("\t\t  regla return_sentence -> logical_expression");
 				RESULT = new NodoReturn(fact);
 			:}
 		| RETURN 
@@ -442,12 +442,12 @@ function_sentence ::=
 		ID:valor LPAREN arguments_function:variables RPAREN 
 			{:
 				printModoDepuracion("\t\t regla function_sentence -> arguments_function");
-				RESULT = new NodoCallFunction(valor,variables);
+				RESULT = new NodoCallFunction(new NodoIdentificador(valor),variables);
 			:}
 		| ID:valor LPAREN RPAREN
 			{:
 				printModoDepuracion("\t\t regla function_sentence -> not arguments_function");
-				RESULT = new NodoCallFunction(valor);
+				RESULT = new NodoCallFunction(new NodoIdentificador(valor));
 			:}
 		;
 
@@ -589,7 +589,7 @@ factor      ::=
 			:}
 		| FALSE
 			{: 
-				printModoDepuracion("\t\t\t\t\t\t  regla factor -> TRUE");
+				printModoDepuracion("\t\t\t\t\t\t  regla factor -> FALSE");
 				RESULT= new NodoValor(false);					
 			:}
 		| array_var_access:vesc	

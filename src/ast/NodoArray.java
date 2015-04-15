@@ -42,9 +42,9 @@ public class NodoArray extends NodoBase {
 		return this.id;
 	}
 
-	public Integer getPos(){
+	public NodoBase getPos(){
 		//En construccion, se debe verificar que tipo de nodo es y obtener el valor.
-		return 0;
+		return pos;
 	}
 
 	public NodoBase getId() {
