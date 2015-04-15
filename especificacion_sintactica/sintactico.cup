@@ -600,10 +600,10 @@ array_var_access	::=
 
 
 arguments_function ::= 
-		logical_expression:parametro COMA arguments_function
+		logical_expression:parametro COMA arguments_function:arg
 			{:
 				printModoDepuracion("\t\t regla arguments_function -> parametro COMA");
-				RESULT = new NodoParamFunction(parametro);
+				RESULT = new NodoParamFunction(parametro,arg);
 			:}
 		| logical_expression:parametro
 			{:
