@@ -221,15 +221,15 @@ block_sentence  ::=
 		;
 
 arguments_list_function ::= 
-		type_specifier ID COMA arguments_list_function
+		type_specifier:tipo ID:valor COMA arguments_list_function:arg
 			{:
 				printModoDepuracion("\t\t regla arguments_list_function -> INT ID COMA");
-				
+				RESULT = new NodoArgList(valor,tipo,arg);
 			:}
-		| type_specifier ID
+		| type_specifier:tipo ID:valor
 			{:
 				printModoDepuracion("\t\t regla arguments_list_function -> INT ID");
-
+				RESULT = new NodoArgList(valor,tipo);
 			:}
 		;
 
