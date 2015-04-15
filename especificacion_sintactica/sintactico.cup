@@ -4,7 +4,7 @@ import java_cup.runtime.*;
 import ast.*;
 
 action code {:
-	private boolean modoDepuracion=false;
+	private boolean modoDepuracion=true;
 	private NodoBase ast=null;
 	private int lineanum=0;
 	
@@ -16,14 +16,15 @@ action code {:
 /*	public void printModoDepuracion(int lvl, String message){
 		if(modoDepuracion) {
 			while(lvl > 0) {
-				System.out.print("\t");
+				System.out.print("");
 				lvl--;
 			}
 			System.out.println(message); 	
 	} */
 
 	public void printModoDepuracion(String message){
-		System.out.println("\t" + message); 	
+		if(modoDepuracion)
+			System.out.println("\t" + message); 	
 	}
 :}
 
@@ -131,7 +132,7 @@ program		::= unit;
 unit 		::= 
 			external_declaration:ed block_sentence:d SEMI
 				{: 
-					printModoDepuracion("regla program");
+					printModoDepuracion("program");
 					NodoBase hijoActual = ed;
 					if(hijoActual != null){
 						while(hijoActual.TieneHermano()){
@@ -145,7 +146,7 @@ unit 		::=
 				:}
 			| block_sentence:d SEMI
 				{: 
-					printModoDepuracion("regla program");
+					printModoDepuracion("program");
 					ast = d;
 				:}
 			;
@@ -153,7 +154,7 @@ unit 		::=
 external_declaration ::=
 			external_declaration:exd declare_function:fd SEMI
 				{: 
-					printModoDepuracion("\t regla external_declaration -> declare_function SEMI");
+					printModoDepuracion("external_declaration -> declare_function SEMI");
 					NodoBase hijoActual = exd;
 					if(hijoActual !=null){
 						while(hijoActual.TieneHermano()){
@@ -167,7 +168,7 @@ external_declaration ::=
 				:}
 			| declare_function:fd SEMI
 				{: 
-	    			printModoDepuracion("\t regla external_declaration -> declare_function");
+	    			printModoDepuracion("external_declaration -> declare_function");
 					RESULT=fd;				
 				:}
 			;
@@ -243,7 +244,7 @@ declarator_function ::=
 	| LPAREN  RPAREN
 	| LPAREN arguments_list_function:ptl RPAREN
 		{:
-			printModoDepuracion("\t regla declarator_function -> Lista arguments_list_function");
+			printModoDepuracion("declarator_function -> LPAREN arguments_list_function RPAREN");
 			RESULT = new NodoArgList(ptl);
 		:}
 	;
@@ -387,7 +388,7 @@ assign_sentence ::=
 			:}
 		| array_var_access:vesc	ASSIGN logical_expression:ex
 			{: 
-				printModoDepuracion("\t\t\t regla assign_sentence -> array_var_access");
+				printModoDepuracion("assign_sentence -> array_var_access");
 				if(vesc!=null && ex!=null)
 					RESULT = new NodoAsignacion((NodoArray)vesc,ex);
 				else{
@@ -400,7 +401,7 @@ assign_sentence ::=
 read_sentence   ::=
 		READ ID:variable
 			{: 
-				printModoDepuracion("\t\t\t  regla read_sentence -> ID"); 
+				printModoDepuracion("read_sentence -> ID"); 
 				if(variable!=null)
 					RESULT = new NodoLeer(new NodoIdentificador(variable));
 				else{
@@ -410,7 +411,7 @@ read_sentence   ::=
 			:}
 		| READ array_var_access:variable
 			{: 
-				printModoDepuracion("\t\t\t  regla read_sentence -> array_var_access"); 
+				printModoDepuracion("read_sentence -> array_var_access"); 
 				if(variable!=null)
 					RESULT = new NodoLeer(variable);
 				else{
@@ -423,7 +424,7 @@ read_sentence   ::=
 write_sentence  ::=
 		WRITE logical_expression:ex
 			{: 
-				printModoDepuracion("\t\t\t  regla write_sentence -> expression"); 
+				printModoDepuracion("write_sentence -> expression"); 
 				RESULT= new NodoEscribir(ex);
 			:}
 		;
@@ -431,7 +432,7 @@ write_sentence  ::=
 for_sentence 	::=
 		FOR LPAREN assign_sentence:ini SEMI logical_expression:cond SEMI assign_sentence:inc RPAREN sentence_list:sent END 
 			{: 
-				printModoDepuracion("\t  regla for_sentence");
+				printModoDepuracion("for_sentence");
 				RESULT = new NodoFor(ini,cond,inc,sent);
 			:}
 		;
@@ -439,24 +440,24 @@ for_sentence 	::=
 return_sentence ::= 
 		RETURN logical_expression:fact
 			{: 
-				printModoDepuracion("\t\t  regla return_sentence -> logical_expression");
+				printModoDepuracion("return_sentence -> logical_expression");
 				RESULT = new NodoReturn(fact);
 			:}
 		| RETURN 
 			{: 
-				printModoDepuracion("\t\t  regla return_sentence -> empty");
+				printModoDepuracion("return_sentence -> empty");
 				RESULT = new NodoReturn();
 			:};
 
 function_sentence ::= 
 		ID:valor LPAREN arguments_function:variables RPAREN 
 			{:
-				printModoDepuracion("\t\t regla function_sentence -> arguments_function");
+				printModoDepuracion("function_sentence -> arguments_function");
 				RESULT = new NodoCallFunction(new NodoIdentificador(valor),variables);
 			:}
 		| ID:valor LPAREN RPAREN
 			{:
-				printModoDepuracion("\t\t regla function_sentence -> not arguments_function");
+				printModoDepuracion("function_sentence -> not arguments_function");
 				RESULT = new NodoCallFunction(new NodoIdentificador(valor));
 			:}
 		;
@@ -464,18 +465,18 @@ function_sentence ::=
 logical_expression ::= 
 		expression:exI AND logical_expression:exD
 			{: 
-				printModoDepuracion("\t\t\t  regla logical_expression -> AND logical_expression");
+				printModoDepuracion("logical_expression -> AND logical_expression");
 				RESULT = new NodoLogico(exI,tipoOp.and,exD);			
 			:}
 
 		| expression:exI OR logical_expression:exD
 			{:
-				printModoDepuracion("\t\t\t  regla logical_expression -> OR logical_expression");
+				printModoDepuracion("logical_expression -> OR logical_expression");
 				RESULT = new NodoLogico(exI,tipoOp.or,exD);	
 			:}
 		| expression:exl
 			{: 
-				printModoDepuracion("\t\t\t  regla logical_expression -> expression");
+				printModoDepuracion("logical_expression -> expression");
 				RESULT = new NodoLogico(exl);						
 			:}
 		;
@@ -483,38 +484,38 @@ logical_expression ::=
 expression  ::=
 		additive_expression:exI GE additive_expression:exD
 			{: 
-				printModoDepuracion("\t\t\t\t  regla expression -> GE");
+				printModoDepuracion("expression -> GE");
 				RESULT = new NodoOperacion(exI,tipoOp.mayori,exD);
 			:} 
 		| additive_expression:exI GT additive_expression:exD
 			{: 
-				printModoDepuracion("\t\t\t\t  regla expression -> GT");
+				printModoDepuracion("expression -> GT");
 				RESULT = new NodoOperacion(exI,tipoOp.mayor,exD);
 			:}
 		 
 		| additive_expression:exI LE additive_expression:exD
 			{: 
-				printModoDepuracion("\t\t\t\t  regla expression -> LE");
+				printModoDepuracion("expression -> LE");
 				RESULT = new NodoOperacion(exI,tipoOp.menori,exD);
 			:}
 		| additive_expression:exI LT additive_expression:exD	
 			{: 
-				printModoDepuracion("\t\t\t\t  regla expression -> LT");
+				printModoDepuracion("expression -> LT");
 				RESULT = new NodoOperacion(exI,tipoOp.menor,exD);
 			:}
 		| additive_expression:exI EQ additive_expression:exD
 			{: 
-				printModoDepuracion("\t\t\t\t  regla expression -> EQ");
+				printModoDepuracion("expression -> EQ");
 				RESULT = new NodoOperacion(exI,tipoOp.igual,exD);
 			:} 
 		| additive_expression:exI NE additive_expression:exD
 			{: 
-				printModoDepuracion("\t\t\t\t  regla expression -> NE");
+				printModoDepuracion("expression -> NE");
 				RESULT = new NodoOperacion(exI,tipoOp.diferente,exD);
 			:}
 		| additive_expression:ex
 			{: 
-				printModoDepuracion("\t\t\t\t  regla expression -> additive_expression");
+				printModoDepuracion("expression -> additive_expression");
 				RESULT = ex;
 			:}
 		;
@@ -522,17 +523,17 @@ expression  ::=
 additive_expression  ::=
 		additive_expression:exI PLUS multiplicative_expression:exD
 			{: 
-				printModoDepuracion("\t\t\t\t\t  regla additive_expression -> PLUS");
+				printModoDepuracion("additive_expression -> PLUS");
 				RESULT = new NodoOperacion(exI,tipoOp.mas,exD);
 			:}
 		| additive_expression:exI MINUS multiplicative_expression:exD
 			{: 
-				printModoDepuracion("\t\t\t\t\t  regla additive_expression -> MINUS");
+				printModoDepuracion("additive_expression -> MINUS");
 				RESULT = new NodoOperacion(exI,tipoOp.menos,exD);
 			:}
 		| multiplicative_expression:ex
 			{:
-				printModoDepuracion("\t\t\t\t\t  regla additive_expression -> multiplicative_expression");
+				printModoDepuracion("additive_expression -> multiplicative_expression");
 				RESULT=ex;
 			:}
 		;
@@ -540,17 +541,17 @@ additive_expression  ::=
 multiplicative_expression        ::= 
 		multiplicative_expression:exI TIMES factor:exD
 			{: 
-				printModoDepuracion("\t\t\t\t\t\t  regla multiplicative_expression -> TIMES");
+				printModoDepuracion("multiplicative_expression -> TIMES");
 				RESULT = new NodoOperacion(exI,tipoOp.por,exD);
 			:}
 		| multiplicative_expression:exI OVER factor:exD
 			{: 
-				printModoDepuracion("\t\t\t\t\t\t  regla multiplicative_expression -> OVER");
+				printModoDepuracion("multiplicative_expression -> OVER");
 				RESULT = new NodoOperacion(exI,tipoOp.entre,exD);
 			:}
 		| factor:ex
 			{: 
-				printModoDepuracion("\t\t\t\t\t\t  regla factor");
+				printModoDepuracion("multiplicative_expression -> factor");
 				RESULT=ex;
 			:}
 		;
@@ -558,12 +559,12 @@ multiplicative_expression        ::=
 factor      ::= 
 		LPAREN logical_expression:ex RPAREN	
 			{: 
-				printModoDepuracion("\t\t\t\t\t\t  regla factor -> PAREN");
+				printModoDepuracion("factor -> LPAREN logical_expression RPAREN");
 				RESULT = ex;
 			:}
 		| NUM:valor
 			{: 
-				printModoDepuracion("\t\t\t\t\t\t  regla factor -> NUM");
+				printModoDepuracion("factor -> NUM");
 				if(valor!=null){
 					RESULT= new NodoValor(valor);					
 				}else{
@@ -573,7 +574,7 @@ factor      ::=
 			:}
 		| MINUS NUM:valor 
         	{: 
-				printModoDepuracion("\t\t\t\t\t\t  regla factor -> NUM NEGATIVO");
+				printModoDepuracion("factor -> MINUS NUM");
 				if(valor!=null){
 					RESULT= new NodoValor(valor*-1);					
 				}else{
@@ -583,7 +584,7 @@ factor      ::=
 			:}
 		| ID:variable
 			{: 
-				printModoDepuracion("\t\t\t\t\t\t  regla factor -> ID");
+				printModoDepuracion("factor -> ID");
 				if(variable!=null){
 					//System.out.println("Construyendo Nodo ID para Lexema: "+ variable.toString());
 					RESULT= new NodoIdentificador(variable);		
@@ -594,22 +595,22 @@ factor      ::=
 			:}
 		| TRUE   
 			{: 
-				printModoDepuracion("\t\t\t\t\t\t  regla factor -> TRUE");
+				printModoDepuracion("factor -> TRUE");
 				RESULT= new NodoValor(true);					
 			:}
 		| FALSE
 			{: 
-				printModoDepuracion("\t\t\t\t\t\t  regla factor -> FALSE");
+				printModoDepuracion("factor -> FALSE");
 				RESULT= new NodoValor(false);					
 			:}
 		| array_var_access:vesc	
 			{: 
-				printModoDepuracion("\t\t\t\t  regla expression -> array_var_access");
+				printModoDepuracion("expression -> array_var_access");
 				RESULT=vesc;
 			:}
 		| function_sentence:vesc	
 			{: 
-				printModoDepuracion("\t\t\t\t  regla expression -> function_sentence");
+				printModoDepuracion("expression -> function_sentence");
 				RESULT=vesc;
 			:}
 		| error
@@ -622,7 +623,7 @@ factor      ::=
 array_var_access	::= 
 		ID:variable LCLASP additive_expression:pos RCLASP
 			{:
-				printModoDepuracion("\t\t\t\t  regla array_var_access");
+				printModoDepuracion("array_var_access");
 				if(variable!=null && pos!=null){
 					RESULT= new NodoArray(new NodoIdentificador(variable), pos);					
 				}else{
@@ -634,14 +635,14 @@ array_var_access	::=
 
 
 arguments_function ::= 
-		logical_expression:parametro COMA arguments_function:arg
+		logical_expression:le COMA arguments_function:af
 			{:
-				printModoDepuracion("\t\t regla arguments_function -> parametro COMA");
-				RESULT = new NodoParamFunction(parametro,arg);
+				printModoDepuracion("arguments_function -> logical_expression COMA arguments_function");
+				RESULT = new NodoParamFunction(le,af);
 			:}
-		| logical_expression:parametro
+		| logical_expression:le
 			{:
-				printModoDepuracion("\t\t regla arguments_function -> additive_expression");
-				RESULT = new NodoParamFunction(parametro);
+				printModoDepuracion("arguments_function -> logical_expression");
+				RESULT = new NodoParamFunction(le);
 			:}
 		;
