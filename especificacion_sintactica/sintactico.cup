@@ -168,8 +168,8 @@ external_declaration ::=
 declare_variable	::= 
 		type_specifier:type variable_list:v
 			{: 
-				printModoDepuracion("\t regla INT declare_variable");
-				RESULT = new NodoVariable(v,tipoDato.INT);
+				printModoDepuracion("\t regla declare_variable");
+				RESULT = new NodoVariable(v,type);
 			:}
 		;
 
