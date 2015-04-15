@@ -25,7 +25,10 @@ public class NodoArgList extends NodoBase {
         this.tipo = tipo;
         this.argumento = argumento;
     }
-      
+    
+    public NodoArgList(NodoBase argumento) {
+        this.argumento = argumento;
+    } 
 
     public void setArgumento(NodoBase argumento) {
         this.argumento = argumento;
@@ -50,5 +53,7 @@ public class NodoArgList extends NodoBase {
     public tipoDato getTipo() {
         return tipo;
     }
-    
+    public NodoBase getNodo() {
+        return nodo;
+    }
 }

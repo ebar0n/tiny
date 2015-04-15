@@ -242,8 +242,11 @@ type_specifier	::=
 declarator_function ::=
 	| LPAREN  RPAREN
 	| LPAREN arguments_list_function:ptl RPAREN
+		{:
+			printModoDepuracion("\t regla declarator_function -> Lista arguments_list_function");
+			RESULT = new NodoArgList(ptl);
+		:}
 	;
-
 block_sentence  ::= 
 		BEGIN sentence_list:expression END 
 			{:

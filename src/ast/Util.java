@@ -59,8 +59,26 @@ public class Util {
 
 		    	}
 		    	
+		    }else if(raiz instanceof NodoArgList){
+
+		    	NodoArgList nodoA = (NodoArgList)raiz;
+
+		    	if (nodoA != null)
+		    		System.out.println("Argumentos ";
+		    	
+		    	NodoBase nodo = null;
+		    	
+		    	while(nodoA != null){
+		    		imprimirNodo(nodoa.getId() + " Argumentos de Tipo: " + nodoA.getTipo());
+		    		nodo = nodoA.getNodo();
+		    	}
+		    	nodoA = null;
+
+		    	if(nodo instanceof NodoArgList){
+		    		nodoA = (NodoArgList)nodo;
+		    	}
 		    }
-		    else if (raiz instanceof  NodoIf)
+			else if (raiz instanceof  NodoIf)
 		    	System.out.println("If");
 		    else if (raiz instanceof  NodoRepeat)
 		    	System.out.println("Repeat");
