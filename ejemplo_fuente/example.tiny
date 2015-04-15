@@ -3,11 +3,13 @@ int myfunc(int a,boolean b)
 begin
 	int a[10];
 	return a[a+b];
+	boolean c,d,e;
+	write factor;
 end;
 
 boolean myfunc2(int a,boolean b)
 begin
-	return a<2 and true;
+	return z<2 and true;
 end;
 
 
@@ -16,7 +18,7 @@ int factorial()
 begin
 	
 	read x; { input an integer }
-	if 0 < x then { don't compute if x <= 0 }
+	if 0 < z and t > 0 then { don't compute if x <= 0 }
 	  fact := 1;
 	  repeat
 	    fact := fact * x;
@@ -48,6 +50,7 @@ begin
 			return;
 		end;
 	end;
+	read w;
 end;
 
 begin 

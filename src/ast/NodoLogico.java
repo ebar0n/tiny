@@ -11,13 +11,11 @@ public class NodoLogico extends NodoBase{
 		this.opIzquierdo = opIzquierdo;
 		this.opDerecho = opDerecho;
 		this.operacion = tipoOperacion;
-		this.exp = null;
 	}
 
 	public NodoLogico(NodoBase exp) {
 		super();
-		this.exp = exp;
-		this.opIzquierdo = null;
+		this.opIzquierdo = exp;
 		this.opDerecho = null;
 	}
 

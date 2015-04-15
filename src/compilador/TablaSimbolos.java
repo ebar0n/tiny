@@ -3,13 +3,8 @@ package compilador;
 import java.util.*;
 
 
-import ast.NodoAsignacion;
-import ast.NodoBase;
-import ast.NodoEscribir;
-import ast.NodoIdentificador;
-import ast.NodoIf;
-import ast.NodoOperacion;
-import ast.NodoRepeat;
+import ast.*;
+
 
 public class TablaSimbolos {
 	private HashMap<String, RegistroSimbolo> tabla;
@@ -23,32 +18,72 @@ public class TablaSimbolos {
 
 	public void cargarTabla(NodoBase raiz){
 		while (raiz != null) {
-	    if (raiz instanceof NodoIdentificador){
-	    	InsertarSimbolo(((NodoIdentificador)raiz).getNombre(),-1);
-	    	//TODO: A�adir el numero de linea y localidad de memoria correcta
-	    }
-
 	    /* Hago el recorrido recursivo */
-	    if (raiz instanceof  NodoIf){
-	    	cargarTabla(((NodoIf)raiz).getPrueba());
-	    	cargarTabla(((NodoIf)raiz).getParteThen());
-	    	if(((NodoIf)raiz).getParteElse()!=null){
-	    		cargarTabla(((NodoIf)raiz).getParteElse());
-	    	}
-	    }
-	    else if (raiz instanceof  NodoRepeat){
-	    	cargarTabla(((NodoRepeat)raiz).getCuerpo());
-	    	cargarTabla(((NodoRepeat)raiz).getPrueba());
-	    }
-	    else if (raiz instanceof  NodoAsignacion)
-	    	cargarTabla(((NodoAsignacion)raiz).getExpresion());
-	    else if (raiz instanceof  NodoEscribir)
-	    	cargarTabla(((NodoEscribir)raiz).getExpresion());
-	    else if (raiz instanceof NodoOperacion){
-	    	cargarTabla(((NodoOperacion)raiz).getOpIzquierdo());
-	    	cargarTabla(((NodoOperacion)raiz).getOpDerecho());
-	    }
-	    raiz = raiz.getHermanoDerecha();
+		    System.out.println(raiz);
+		    if (raiz instanceof NodoFunction){
+		    	InsertarSimbolo(((NodoFunction)raiz).getIdentificador(),1);
+		    	if(((NodoFunction)raiz).getDeclaracion()!=null){
+		    		cargarTabla(((NodoFunction)raiz).getDeclaracion());
+		    	}
+		    	cargarTabla(((NodoFunction)raiz).getExpression());
+		    }
+
+		    //ARGUMENTOS DE LAS FUNCIONES
+		    if (raiz instanceof NodoArgList){
+		     	InsertarSimbolo(((NodoArgList)raiz).getIdentificador(),2);
+		     	if(((NodoArgList)raiz).getArgumento()!=null){
+		    		cargarTabla(((NodoArgList)raiz).getArgumento());
+		    	}
+		    }
+
+		    if (raiz instanceof NodoBloque){
+		    	cargarTabla(((NodoBloque)raiz).getExpression());
+		    }
+
+		    if (raiz instanceof NodoIdentificador){
+		    	InsertarSimbolo(((NodoIdentificador)raiz).getNombre(),-1);
+		    	//TODO: A�adir el numero de linea y localidad de memoria correcta
+		    }
+
+		    if (raiz instanceof NodoVariable){
+		    	if(((NodoVariable)raiz).getId()!=null){
+		    		InsertarSimbolo(((NodoVariable)raiz).getId().getNombre(),-1);
+		    	}
+		    	cargarTabla(((NodoVariable)raiz).getNodo());
+		    }
+
+		    if (raiz instanceof NodoArray){
+		    	if(((NodoArray)raiz).getId()!=null){
+		    		InsertarSimbolo(((NodoArray)raiz).getIdentificador().getNombre(),-1);
+		    	}
+		    	cargarTabla(((NodoArray)raiz).getNodo());
+		    }
+
+		    if (raiz instanceof NodoLogico){
+		    	cargarTabla(((NodoLogico)raiz).getOpIzquierdo());
+		    	cargarTabla(((NodoLogico)raiz).getOpDerecho());
+		    }
+
+		    if (raiz instanceof  NodoIf){
+		    	cargarTabla(((NodoIf)raiz).getPrueba());
+		    	cargarTabla(((NodoIf)raiz).getParteThen());
+		    	if(((NodoIf)raiz).getParteElse()!=null){
+		    		cargarTabla(((NodoIf)raiz).getParteElse());
+		    	}
+		    }
+		    else if (raiz instanceof  NodoRepeat){
+		    	cargarTabla(((NodoRepeat)raiz).getCuerpo());
+		    	cargarTabla(((NodoRepeat)raiz).getPrueba());
+		    }
+		    else if (raiz instanceof  NodoAsignacion)
+		    	cargarTabla(((NodoAsignacion)raiz).getExpresion());
+		    else if (raiz instanceof  NodoEscribir)
+		    	cargarTabla(((NodoEscribir)raiz).getExpresion());
+		    else if (raiz instanceof NodoOperacion){
+		    	cargarTabla(((NodoOperacion)raiz).getOpIzquierdo());
+		    	cargarTabla(((NodoOperacion)raiz).getOpDerecho());
+		    }
+	    	raiz = raiz.getHermanoDerecha();
 	  }
 	}
 	
@@ -73,7 +108,7 @@ public class TablaSimbolos {
 		System.out.println("*** Tabla de Simbolos ***");
 		for( Iterator <String>it = tabla.keySet().iterator(); it.hasNext();) { 
             String s = (String)it.next();
-	    System.out.println("Consegui Key: "+s+" con direccion: " + BuscarSimbolo(s).getDireccionMemoria());
+	    System.out.println("Consegui Key: "+s+" con direccion: " + BuscarSimbolo(s).getDireccionMemoria() + " Numero de linea: "+ String.valueOf(BuscarSimbolo(s).getNumLinea()));
 		}
 	}
 
