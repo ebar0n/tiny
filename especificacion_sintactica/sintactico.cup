@@ -4,7 +4,7 @@ import java_cup.runtime.*;
 import ast.*;
 
 action code {:
-	private boolean modoDepuracion=false;
+	private boolean modoDepuracion=true;
 	private NodoBase ast=null;
 	private int lineanum=0;
 	
@@ -73,8 +73,8 @@ terminal LCLASP;
 terminal RCLASP;
 terminal AND;
 terminal OR;
-terminal boolean TRUE;
-terminal boolean FALSE;
+terminal TRUE;
+terminal FALSE;
 
 /* Simbolos No terminales */
 
@@ -105,7 +105,7 @@ non terminal NodoBase arguments_list_function;
 non terminal NodoBase arguments_function;
 non terminal NodoBase function_sentence;
 non terminal NodoBase logical_expression;
-non terminal NodoBase type_specifier;	
+non terminal tipoDato type_specifier;	
 
 /* Precedencia de operadores */
 
@@ -152,18 +152,18 @@ variable_list	::=
 		ID:variable COMA variable_list:v
 			{: 
 				printModoDepuracion("\t\t regla variable_list -> ID COMA"); 
-				RESULT = new NodoVariable(variable.toString(), v);
+				RESULT = new NodoVariable(variable, v);
 			:}
 		| ID:variable
 			{: 
 				printModoDepuracion("\t\t regla variable_list -> ID"); 
-				RESULT = new NodoVariable(variable.toString());
+				RESULT = new NodoVariable(variable);
 			:}
 		| ID:variable LCLASP NUM:tam RCLASP COMA variable_list:v
 			{:
 				printModoDepuracion("\t\t regla variable_list -> array_declare COMA"); 
 				if(variable!=null && tam!=null){
-					RESULT= new NodoArray(variable.toString(), tam, v);					
+					RESULT= new NodoArray(variable, tam, v);					
 				}else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla variable_list -> array_declare COMA");
@@ -173,7 +173,7 @@ variable_list	::=
 			{:
 				printModoDepuracion("\t\t regla variable_list -> array_declare"); 
 				if(variable!=null && tam!=null){
-					RESULT= new NodoArray(variable.toString(), tam);					
+					RESULT= new NodoArray(variable, tam);					
 				}else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla variable_list -> array_declare COMA");
@@ -198,10 +198,12 @@ type_specifier	::=
 		INT
 			{: 
 				printModoDepuracion("\t regla INT ");
+				RESULT = tipoDato.INT;
 			:}
 		|	BOOLEAN
 			{: 
 				printModoDepuracion("\t regla boolean de tipo");
+				RESULT = tipoDato.BOOLEAN;
 			:}		
 		;
 
@@ -222,6 +224,7 @@ arguments_list_function ::=
 		type_specifier ID COMA arguments_list_function
 			{:
 				printModoDepuracion("\t\t regla arguments_list_function -> INT ID COMA");
+				
 			:}
 		| type_specifier ID
 			{:
@@ -341,7 +344,7 @@ assign_sentence ::=
 			{: 
 				printModoDepuracion("\t\t\t regla assign_sentence -> ID");
 				if(variable!=null)
-					RESULT = new NodoAsignacion(variable.toString(),ex);
+					RESULT = new NodoAsignacion(variable,ex);
 				else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla assign_sentence -> ID");
@@ -364,7 +367,7 @@ read_sentence   ::=
 			{: 
 				printModoDepuracion("\t\t\t  regla read_sentence -> ID"); 
 				if(variable!=null)
-					RESULT = new NodoLeer(variable.toString());
+					RESULT = new NodoLeer(variable);
 				else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla read_sentence -> ID");
@@ -374,7 +377,7 @@ read_sentence   ::=
 			{: 
 				printModoDepuracion("\t\t\t  regla read_sentence -> array_var_access"); 
 				if(variable!=null)
-					RESULT = new NodoLeer(variable.toString());
+					RESULT = new NodoLeer(variable);
 				else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla read_sentence -> array_var_access");
@@ -414,12 +417,12 @@ function_sentence ::=
 		ID:valor LPAREN arguments_function:variables RPAREN 
 			{:
 				printModoDepuracion("\t\t regla function_sentence -> arguments_function");
-				RESULT = new NodoCallFunction(valor.toString(),variables);
+				RESULT = new NodoCallFunction(valor,variables);
 			:}
 		| ID:valor LPAREN RPAREN
 			{:
 				printModoDepuracion("\t\t regla function_sentence -> not arguments_function");
-				RESULT = new NodoCallFunction(valor.toString());
+				RESULT = new NodoCallFunction(valor);
 			:}
 		;
 
@@ -548,7 +551,7 @@ factor      ::=
 				printModoDepuracion("\t\t\t\t\t\t  regla factor -> ID");
 				if(variable!=null){
 					//System.out.println("Construyendo Nodo ID para Lexema: "+ variable.toString());
-					RESULT= new NodoIdentificador(variable.toString());		
+					RESULT= new NodoIdentificador(variable);		
 				}else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla factor -> ID");
@@ -559,7 +562,7 @@ factor      ::=
 				printModoDepuracion("\t\t\t\t\t\t  regla factor -> TRUE");
 				RESULT= new NodoValor(true);					
 			:}
-		| FALSE	
+		| FALSE
 			{: 
 				printModoDepuracion("\t\t\t\t\t\t  regla factor -> TRUE");
 				RESULT= new NodoValor(false);					
@@ -587,7 +590,7 @@ array_var_access	::=
 			{:
 				printModoDepuracion("\t\t\t\t  regla array_var_access");
 				if(variable!=null && pos!=null){
-					RESULT= new NodoArray(variable.toString(), pos);					
+					RESULT= new NodoArray(variable, pos);					
 				}else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla array_var_access");
