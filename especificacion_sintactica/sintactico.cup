@@ -73,8 +73,8 @@ terminal LCLASP;
 terminal RCLASP;
 terminal AND;
 terminal OR;
-terminal TRUE;
-terminal FALSE;
+terminal boolean TRUE;
+terminal boolean FALSE;
 
 /* Simbolos No terminales */
 
