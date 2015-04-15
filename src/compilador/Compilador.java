@@ -27,10 +27,10 @@ public class Compilador {
 		System.out.println();
 		System.out.println("IMPRESION DEL AST GENERADO");
 		System.out.println();
-		ast.Util.imprimirAST(root);
-		//TablaSimbolos ts = new TablaSimbolos();
-		//ts.cargarTabla(root);
-		//ts.ImprimirClaves();
+		//ast.Util.imprimirAST(root);
+		TablaSimbolos ts = new TablaSimbolos();
+		ts.cargarTabla(root);
+		ts.ImprimirClaves();
 	    //REALIZAR ACA ANALISIS SEMANTICO
 		//Generador.setTablaSimbolos(ts);
 //		Generador.generarCodigoObjeto(root);
