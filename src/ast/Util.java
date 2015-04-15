@@ -64,13 +64,14 @@ public class Util {
 		    	NodoArgList nodoA = (NodoArgList)raiz;
 
 		    	if (nodoA != null)
-		    		System.out.println("Argumentos ";
+		    		System.out.println("Argumentos");
 		    	
 		    	NodoBase nodo = null;
 		    	
 		    	while(nodoA != null){
-		    		imprimirNodo(nodoa.getId() + " Argumentos de Tipo: " + nodoA.getTipo());
-		    		nodo = nodoA.getNodo();
+		    		//imprimirNodo(nodoA.getId() + " Argumentos de Tipo: " + nodoA.getTipo());
+		    		System.out.println(nodoA.getId() + " Argumentos de Tipo: " + nodoA.getTipo());
+		    		nodo = nodoA.getArgumento();
 		    	}
 		    	nodoA = null;
 

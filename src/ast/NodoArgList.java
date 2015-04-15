@@ -9,7 +9,7 @@ package ast;
  * @author Cristopher_Notebook
  */
 public class NodoArgList extends NodoBase {
-    
+    private NodoIdentificador id;
     private String identificador;
     private tipoDato tipo;
     private NodoBase argumento;
@@ -53,7 +53,7 @@ public class NodoArgList extends NodoBase {
     public tipoDato getTipo() {
         return tipo;
     }
-    public NodoBase getNodo() {
-        return nodo;
+    public NodoBase getId() {
+        return id;
     }
 }
