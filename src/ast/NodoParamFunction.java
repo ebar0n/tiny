@@ -3,25 +3,25 @@ package ast;
 public class NodoParamFunction extends NodoBase{
 
 	private NodoBase expresion;
-	private NodoBase base;
+	private NodoBase siguiente;
 
         public NodoParamFunction(NodoBase expresion) {
             super();
             this.expresion = expresion;
         }
         
-        public NodoParamFunction(NodoBase expresion, NodoBase base) {
+        public NodoParamFunction(NodoBase expresion, NodoBase siguiente) {
             super();
             this.expresion = expresion;
-            this.base = base;
+            this.siguiente = siguiente;
         }
 
-        public void setBase(NodoBase base) {
-            this.base = base;
+        public void setSiguiente(NodoBase siguiente) {
+            this.siguiente = siguiente;
         }
 
-        public NodoBase getBase() {
-            return base;
+        public NodoBase getSiguiente() {
+            return siguiente;
         }
 
         public void setExpresion(NodoBase expresion) {

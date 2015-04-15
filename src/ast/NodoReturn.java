@@ -1,20 +1,20 @@
 package ast;
 
 public class NodoReturn extends NodoBase {
-	private NodoBase factor;
+	private NodoBase exprecion;
 
-	public NodoReturn(NodoBase factor) {
+	public NodoReturn(NodoBase exprecion) {
 		super();
-		this.factor = factor;
+		this.exprecion = exprecion;
 	}
 
 	public NodoReturn() {
 		super();
-		this.factor = null;
+		this.exprecion = null;
 	}
 	
-	public NodoBase getFactor() {
-		return factor;
+	public NodoBase getExpresion() {
+		return exprecion;
 	}
 
 }
