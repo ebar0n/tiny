@@ -17,8 +17,8 @@ case "$OPTION" in
 
     "run" )
         FILE=$1
-        javac -d build/classes -classpath src:compilador:src/ast:JAR/java-cup-11a-runtime.jar src/compilador/Compilador.java
-        java -cp build/classes:JAR/java-cup-11a-runtime.jar compilador.Compilador $FILE
+        javac -sourcepath ./src -classpath ./JAR/java-cup-11a-runtime.jar ./src/compilador/Compilador.java -d build/classes 
+        java -cp ./build/classes:./JAR/java-cup-11a-runtime.jar compilador.Compilador $FILE
     ;;
 
 esac
