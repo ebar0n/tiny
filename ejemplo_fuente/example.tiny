@@ -1,27 +1,43 @@
-{
+
 int myfunc(int a,boolean b)
 begin
-	return (a+b);
+	int a[10];
+	return a[a+b];
 end;
 
-boolean myfunc(int a,boolean b)
+boolean myfunc2(int a,boolean b)
 begin
-	return false;
+	return a<2 and true;
 end;
+
+
 
 int factorial()
 begin
-	read x;
-	int fact;
-	fact:=0;
-	if 0 < x then
-		fact := 1;
-	  	repeat
-	    	fact := fact * x;
-	    	x := x - 1;
-	  	until x = 0;
+	
+	read x; { input an integer }
+	if 0 < x then { don't compute if x <= 0 }
+	  fact := 1;
+	  repeat
+	    fact := fact * x;
+	    x := x - 1;
+	  until x = 0;
+	  return fact; { return factorial of x }
 	end;
+	read y;
+
+
+	a:=1; 
+	b:=2;
+
+
+	if 0 < x then { don't compute if x <= 0 }
+	  fact := 1;
+	  return fact;  { return factorial of x }
+	end;
+
 end;
+
 
 void myproc()
 begin
@@ -33,28 +49,36 @@ begin
 		end;
 	end;
 end;
-}
+
 begin 
+
 	int a,b[1],c;
 	
 	a:=1;
-	c:=a*a+3;
-	boolean d,e,g[3];
+	a:=-4;
+
+	c:=a*-8+3;
+	d:= a > 5 or b;
+	
+	boolean d,e,g[3],h[3],j;
 	d:=true;
 	c:=myfunc(a,d);
 
-	{
+	
 	if d!=false then
 		myproc();
 	else
 		b[0]:=b[0*a];
 	end;
 
+
+
 	read a;
 	read b[0];
 	write a/1;
 	write b[0];
 	write factorial();
+
 
 	a:=(2+1)*4+(3/(3+1));
 	a:=c[(2+1)*4+(3/(3+1))];

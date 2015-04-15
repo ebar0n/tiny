@@ -13,10 +13,17 @@ action code {:
 		return ast;
 	}
 
-	public void printModoDepuracion(String message){
+/*	public void printModoDepuracion(int lvl, String message){
 		if(modoDepuracion) {
-			System.out.println("\t" + message); 	
-		}
+			while(lvl > 0) {
+				System.out.print("\t");
+				lvl--;
+			}
+			System.out.println(message); 	
+	} */
+
+	public void printModoDepuracion(String message){
+		System.out.println("\t" + message); 	
 	}
 :}
 
@@ -126,7 +133,7 @@ unit 		::=
 				{: 
 					printModoDepuracion("regla program");
 					NodoBase hijoActual = ed;
-					if(hijoActual !=null){
+					if(hijoActual != null){
 						while(hijoActual.TieneHermano()){
 							hijoActual = hijoActual.getHermanoDerecha();
 						}
@@ -168,40 +175,40 @@ external_declaration ::=
 declare_variable	::= 
 		type_specifier:type variable_list:v
 			{: 
-				printModoDepuracion("\t regla declare_variable");
-				RESULT = new NodoVariable(v,type);
+				printModoDepuracion("declare_variable -> type_specifier variable_list");
+				RESULT = new NodoVariable(v, type);
 			:}
 		;
 
 variable_list	::= 
 		ID:variable COMA variable_list:v
 			{: 
-				printModoDepuracion("\t\t regla variable_list -> ID COMA"); 
+				printModoDepuracion("variable_list -> ID COMA variable_list"); 
 				RESULT = new NodoVariable(new NodoIdentificador(variable), v);
 			:}
 		| ID:variable
 			{: 
-				printModoDepuracion("\t\t regla variable_list -> ID"); 
+				printModoDepuracion("variable_list -> ID"); 
 				RESULT = new NodoVariable(new NodoIdentificador(variable));
 			:}
 		| ID:variable LCLASP NUM:tam RCLASP COMA variable_list:v
 			{:
-				printModoDepuracion("\t\t regla variable_list -> array_declare COMA"); 
+				printModoDepuracion("variable_list -> ID LCLASP NUM RCLASP COMA variable_list"); 
 				if(variable!=null && tam!=null){
 					RESULT= new NodoArray(new NodoIdentificador(variable), tam, v);					
 				}else{
 					RESULT = null;
-					System.out.println("Ocurrio error en cup regla variable_list -> array_declare COMA");
+					System.out.println("Ocurrio error en cup regla variable_list -> ID LCLASP NUM RCLASP COMA variable_list");
 				}
 			:}
 		| ID:variable LCLASP NUM:tam RCLASP
 			{:
-				printModoDepuracion("\t\t regla variable_list -> array_declare"); 
+				printModoDepuracion("variable_list -> ID LCLASP NUM RCLASP"); 
 				if(variable!=null && tam!=null){
 					RESULT= new NodoArray(new NodoIdentificador(variable), tam);					
 				}else{
 					RESULT = null;
-					System.out.println("Ocurrio error en cup regla variable_list -> array_declare COMA");
+					System.out.println("Ocurrio error en cup regla variable_list -> ID LCLASP NUM RCLASP");
 				}
 			:}
 		;
@@ -209,12 +216,12 @@ variable_list	::=
 declare_function ::= 
 		type_specifier:type ID:valor declarator_function:decl block_sentence:expression 
 			{:
-				printModoDepuracion("\t regla declare_function -> VOID arguments_list_function");
+				printModoDepuracion("declare_function -> type_specifier ID declarator_function block_sentence");
 				RESULT = new NodoFunction(type,valor,decl,expression);
 			:}
 		|	VOID:type ID:valor declarator_function:decl block_sentence:expression 
 			{:
-				printModoDepuracion("\t regla declare_function -> VOID arguments_list_function");
+				printModoDepuracion("declare_function -> VOID declarator_function block_sentence");
 				RESULT = new NodoFunction(tipoDato.VOID,valor,decl,expression);
 			:}
 		;
@@ -222,12 +229,12 @@ declare_function ::=
 type_specifier	::=	
 		INT
 			{: 
-				printModoDepuracion("\t regla INT ");
+				printModoDepuracion("type_specifier -> INT ");
 				RESULT = tipoDato.INT;
 			:}
 		|	BOOLEAN
 			{: 
-				printModoDepuracion("\t regla boolean de tipo");
+				printModoDepuracion("type_specifier -> BOOLEAN");
 				RESULT = tipoDato.BOOLEAN;
 			:}		
 		;
@@ -243,28 +250,28 @@ declarator_function ::=
 block_sentence  ::= 
 		BEGIN sentence_list:expression END 
 			{:
-				printModoDepuracion("regla return_sentence -> block_sentence");
+				printModoDepuracion("block_sentence -> BEGIN sentence_list END");
 				RESULT = new NodoBloque(expression);
 			:} 
 		;
 
 arguments_list_function ::= 
-		type_specifier:tipo ID:valor COMA arguments_list_function:arg
+		type_specifier:type ID:valor COMA arguments_list_function:arg
 			{:
-				printModoDepuracion("\t\t regla arguments_list_function -> INT ID COMA");
-				RESULT = new NodoArgList(valor,tipo,arg);
+				printModoDepuracion("arguments_list_function -> type_specifier ID COMA arguments_list_function");
+				RESULT = new NodoArgList(valor,type,arg);
 			:}
-		| type_specifier:tipo ID:valor
+		| type_specifier:type ID:valor
 			{:
-				printModoDepuracion("\t\t regla arguments_list_function -> INT ID");
-				RESULT = new NodoArgList(valor,tipo);
+				printModoDepuracion("arguments_list_function -> type_specifier ID");
+				RESULT = new NodoArgList(valor,type);
 			:}
 		;
 
 sentence_list    ::=
 		sentence_list:ini sentence:sent SEMI 
 			{: 
-				printModoDepuracion("\t regla sentence_list -> sentence_list sentence"); 
+				printModoDepuracion("sentence_list -> sentence_list sentence SEMI"); 
 				NodoBase hijoActual = ini;
 				if(hijoActual !=null){
 					while(hijoActual.TieneHermano()){
@@ -278,66 +285,66 @@ sentence_list    ::=
 			:}
 	    | sentence:sent	SEMI
 	    	{: 
-	    		printModoDepuracion("\t regla sentence_list -> sentence");
+	    		printModoDepuracion("sentence_list -> sentence SEMI");
 				RESULT=sent;				
 			:}
 		;
 
 sentence ::=
-		if_sentence:sif
-			{: 
-				printModoDepuracion("\t\t regla sentence -> if_sentence"); 
-				RESULT=sif;
-			:}
-		| declare_variable:dclvar
-			{: 
-				printModoDepuracion("\t\t regla sentence -> declare_variable"); 
-				RESULT=dclvar;
-			:}	
-		| declare_function:declafunc
-			{: 
-				printModoDepuracion("\t\t regla sentence -> declare_function"); 
-				RESULT=declafunc;
-			:}
-		| block_sentence:declablo
-			{: 
-				printModoDepuracion("\t\t regla sentence -> block_sentence"); 
-				RESULT=declablo;
-			:}
-        | repeat_sentence:srep
-        	{:
-        		printModoDepuracion("\t\t regla sentence -> repeat_sentence"); 
-				RESULT=srep;
-			:}
-		| assign_sentence:sasi
-			{: 
-				printModoDepuracion("\t\t regla sentence -> assign_sentence"); 
-				RESULT=sasi;
-			:}
-        | read_sentence:slec
-        	{: 
-        		printModoDepuracion("\t\t regla sentence -> read_sentence");  
-				RESULT=slec;
-			:}
-        | write_sentence:sesc
-        	{: 
-        		printModoDepuracion("\t\t regla sentence -> write_sentence");
-				RESULT=sesc;
-			:}
-		| for_sentence:sfor 
+		if_sentence:is
 			{:
-				printModoDepuracion("\t\t regla sentence -> for_sentence"); 
-				RESULT=sfor;
+				printModoDepuracion("sentence -> if_sentence"); 
+				RESULT=is;
 			:}
-		| return_sentence:sretr
+		| declare_variable:dv
 			{: 
-				printModoDepuracion("\t\t regla sentence -> return_sentence"); 
-				RESULT=sretr;
+				printModoDepuracion("sentence -> declare_variable"); 
+				RESULT=dv;
+			:}	
+		| declare_function:df
+			{: 
+				printModoDepuracion("sentence -> declare_function"); 
+				RESULT=df;
+			:}
+		| block_sentence:bs
+			{: 
+				printModoDepuracion("sentence -> block_sentence"); 
+				RESULT=bs;
+			:}
+        | repeat_sentence:rs
+        	{:
+        		printModoDepuracion("sentence -> repeat_sentence"); 
+				RESULT=rs;
+			:}
+		| assign_sentence:as
+			{: 
+				printModoDepuracion("sentence -> assign_sentence"); 
+				RESULT=as;
+			:}
+        | read_sentence:rs
+        	{: 
+        		printModoDepuracion("sentence -> read_sentence");  
+				RESULT=rs;
+			:}
+        | write_sentence:ws
+        	{: 
+        		printModoDepuracion("sentence -> write_sentence");
+				RESULT=ws;
+			:}
+		| for_sentence:fs 
+			{:
+				printModoDepuracion("sentence -> for_sentence"); 
+				RESULT=fs;
+			:}
+		| return_sentence:rs
+			{: 
+				printModoDepuracion("sentence -> return_sentence"); 
+				RESULT=rs;
 			:} 
-		| function_sentence:callfunc_procedure
+		| function_sentence:fs
 			{: 
-				printModoDepuracion("\t\t regla sentence -> function_sentence by procedure"); 
-				RESULT=callfunc_procedure;
+				printModoDepuracion("sentence -> function_sentence"); 
+				RESULT=fs;
 			:}
         | error
         	{: 
@@ -347,30 +354,30 @@ sentence ::=
     	;
 
 if_sentence ::= 
-	IF logical_expression:ex THEN sentence_list:pthen END 
+	IF logical_expression:le THEN sentence_list:sl END 
 		{: 
-			printModoDepuracion("\t\t\t regla if_sentence -> logical_expression"); 
-			RESULT = new NodoIf(ex,pthen);
+			printModoDepuracion("if_sentence -> IF logical_expression THEN sentence_list END"); 
+			RESULT = new NodoIf(le,sl);
 		:}
-	| IF logical_expression:ex THEN sentence_list:pthen ELSE sentence_list:pelse END
+	| IF logical_expression:le THEN sentence_list:slthen ELSE sentence_list:slelse END
 		{: 
-			printModoDepuracion("\t\t\t regla if_sentence -> logical_expression else"); 
-			RESULT = new NodoIf(ex,pthen,pelse);
+			printModoDepuracion("if_sentence -> IF logical_expression THEN sentence_list ELSE sentence_list END"); 
+			RESULT = new NodoIf(le,slthen,slelse);
 		:}
 	;
 
 repeat_sentence ::= 
-		REPEAT sentence_list:cuerpo UNTIL expression:prueba	
+		REPEAT sentence_list:sl UNTIL expression:ex
 			{: 
-				printModoDepuracion("\t\t\t regla repeat_sentence");
-				RESULT = new NodoRepeat(cuerpo,prueba);
+				printModoDepuracion("repeat_sentence -> REPEAT sentence_list UNTIL expression");
+				RESULT = new NodoRepeat(sl,ex);
 			:}
 		;
 
 assign_sentence ::= 
-		ID:variable ASSIGN expression:ex	
+		ID:variable ASSIGN logical_expression:ex	
 			{: 
-				printModoDepuracion("\t\t\t regla assign_sentence -> ID");
+				printModoDepuracion("assign_sentence -> ID ASSIGN");
 				if(variable!=null)
 					RESULT = new NodoAsignacion(new NodoIdentificador(variable),ex);
 				else{
@@ -378,11 +385,11 @@ assign_sentence ::=
 					System.out.println("Ocurrio error en cup regla assign_sentence -> ID");
 				}
 			:}
-		| array_var_access:vesc	ASSIGN expression:ex
+		| array_var_access:vesc	ASSIGN logical_expression:ex
 			{: 
 				printModoDepuracion("\t\t\t regla assign_sentence -> array_var_access");
 				if(vesc!=null && ex!=null)
-					RESULT = new NodoAsignacion(vesc,ex);
+					RESULT = new NodoAsignacion((NodoArray)vesc,ex);
 				else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla assign_sentence -> array_var_access");
@@ -430,9 +437,9 @@ for_sentence 	::=
 		;
 
 return_sentence ::= 
-		RETURN factor:fact
+		RETURN logical_expression:fact
 			{: 
-				printModoDepuracion("\t\t  regla return_sentence -> factor");
+				printModoDepuracion("\t\t  regla return_sentence -> logical_expression");
 				RESULT = new NodoReturn(fact);
 			:}
 		| RETURN 
@@ -445,12 +452,12 @@ function_sentence ::=
 		ID:valor LPAREN arguments_function:variables RPAREN 
 			{:
 				printModoDepuracion("\t\t regla function_sentence -> arguments_function");
-				RESULT = new NodoCallFunction(valor,variables);
+				RESULT = new NodoCallFunction(new NodoIdentificador(valor),variables);
 			:}
 		| ID:valor LPAREN RPAREN
 			{:
 				printModoDepuracion("\t\t regla function_sentence -> not arguments_function");
-				RESULT = new NodoCallFunction(valor);
+				RESULT = new NodoCallFunction(new NodoIdentificador(valor));
 			:}
 		;
 
@@ -592,7 +599,7 @@ factor      ::=
 			:}
 		| FALSE
 			{: 
-				printModoDepuracion("\t\t\t\t\t\t  regla factor -> TRUE");
+				printModoDepuracion("\t\t\t\t\t\t  regla factor -> FALSE");
 				RESULT= new NodoValor(false);					
 			:}
 		| array_var_access:vesc	

@@ -31,9 +31,15 @@ public class Util {
 		    	}
 
 		    	if (nodov != null)
-		    		System.out.println("Declarar variable de tipo "+nodov.getTipo());
+		    		if(nodov.getTipo()!=null)
+		    			System.out.println("Declarar variable de tipo "+nodov.getTipo());
+		    		else
+		    			System.out.println("Uso variable");	
 		    	else
-		    		System.out.println("Declarar variable de tipo "+nodoa.getTipo());
+		    		if(nodoa.getTipo()!=null)
+		    			System.out.println("Declarar variable de tipo "+nodoa.getTipo());
+		    		else
+		    			System.out.println("Uso variable");	
 		    	
 		    	NodoBase nodo = null;
 
@@ -44,7 +50,21 @@ public class Util {
 		    			nodo = nodov.getNodo();
 		    		}
 		    		else if (nodoa != null){
-		    			imprimirNodo(nodoa.getId(), "Tam: "+nodoa.getTam() + " <- Vector");
+		    			String verbose = "";
+		    			if(nodoa.getTam() != null){
+		    				verbose = "Tam: "+nodoa.getTam();
+		    			}
+		    			else{
+		    				verbose = "Buscando posicion: ?";
+		    			}
+		    			imprimirNodo(nodoa.getId(), verbose  + " <- Vector");
+		    			if(nodoa.getPos() != null){
+		    				printSpaces();
+		    				System.out.println("**Buscando(");
+		    				imprimirAST(nodoa.getPos());
+		    				printSpaces();
+		    				System.out.println(")**");
+		    			}
 		    			nodo = nodoa.getNodo();
 		    		}
 		    		nodov = null;
@@ -79,28 +99,8 @@ public class Util {
 		    		nodoA = (NodoArgList)nodo;
 		    	}
 		    }
-			else if (raiz instanceof  NodoIf)
+			    else if (raiz instanceof  NodoIf){
 		    	System.out.println("If");
-		    else if (raiz instanceof  NodoRepeat)
-		    	System.out.println("Repeat");
-		    
-		    else if (raiz instanceof  NodoAsignacion)
-		    	System.out.println("Asignacion a: "+((NodoAsignacion)raiz).getIdentificador().getNombre());
-
-		    else if (raiz instanceof  NodoLeer)  
-		    	System.out.println("Lectura: "+((NodoLeer)raiz).getIdentificador());
-
-		    else if (raiz instanceof  NodoEscribir)
-		    	System.out.println("Escribir");
-		    
-		    else if (raiz instanceof NodoOperacion
-		    		|| raiz instanceof NodoValor
-		    		|| raiz instanceof NodoIdentificador )
-		    	imprimirNodo(raiz);
-		    else System.out.println("Tipo de nodo desconocido");;
-		    
-		    /* Hago el recorrido recursivo */
-		    if (raiz instanceof  NodoIf){
 		    	printSpaces();
 		    	System.out.println("**Prueba IF**");
 		    	imprimirAST(((NodoIf)raiz).getPrueba());
@@ -114,6 +114,7 @@ public class Util {
 		    	}
 		    }
 		    else if (raiz instanceof  NodoRepeat){
+		    	System.out.println("Repeat");
 		    	printSpaces();
 		    	System.out.println("**Cuerpo REPEAT**");
 		    	imprimirAST(((NodoRepeat)raiz).getCuerpo());
@@ -121,11 +122,37 @@ public class Util {
 		    	System.out.println("**Prueba REPEAT**");
 		    	imprimirAST(((NodoRepeat)raiz).getPrueba());
 		    }
-		    else if (raiz instanceof  NodoAsignacion)
+		    else if (raiz instanceof  NodoAsignacion){
+		    	System.out.println("Asignacion:");
+		    	sangria+=2;
+		    	printSpaces();
+		    	System.out.println("Parte izquierda:");
+		    	imprimirAST(((NodoAsignacion)raiz).getId());
+		    	printSpaces();
+		    	System.out.println("Parte Derecha:");
 		    	imprimirAST(((NodoAsignacion)raiz).getExpresion());
-		    else if (raiz instanceof  NodoEscribir)
+		    	sangria-=2;
+		    }
+		    else if (raiz instanceof  NodoLeer){
+		    	System.out.println("Lectura: ");
+		    	imprimirAST(((NodoLeer)raiz).getIdentificador());
+		    }
+		    else if (raiz instanceof  NodoEscribir){
+		    	System.out.println("Escribir");
 		    	imprimirAST(((NodoEscribir)raiz).getExpresion());
+		    }
+		    else if (raiz instanceof NodoValor){
+		    	System.out.println("Valor");	
+		    	printSpaces();
+		    	imprimirNodo(raiz);
+		    }
+		    else if (raiz instanceof NodoIdentificador ){
+		    	System.out.println("Uso variable");	
+		    	printSpaces();
+		    	imprimirNodo(raiz);
+		    }
 		    else if (raiz instanceof NodoOperacion){
+		    	imprimirNodo(raiz);
 		    	printSpaces();
 		    	System.out.println("**Expr Izquierda Operacion**");
 		    	imprimirAST(((NodoOperacion)raiz).getOpIzquierdo());
@@ -133,6 +160,69 @@ public class Util {
 		    	System.out.println("**Expr Derecha Operacion**");		    	
 		    	imprimirAST(((NodoOperacion)raiz).getOpDerecho());
 		    }
+		    else if (raiz instanceof NodoLogico){
+		    	System.out.println("Operacion: ");
+		    	NodoLogico logico = (NodoLogico)raiz;
+		    	NodoBase nodo = logico.getExp();
+		    	sangria+=2;
+		    	if (nodo != null){
+		    		printSpaces();
+			    	System.out.println("Operacion que retorna un factor");
+		    		imprimirAST(nodo);
+		    	}
+		    	else{
+		    		printSpaces();
+		    		System.out.println("Operacion logica: "+logico.getOperacion());
+			    	sangria+=2;
+		    		printSpaces();
+		    		System.out.println("**Expr Izquierda Operacion**");
+			    	imprimirAST(logico.getOpIzquierdo());
+			    	printSpaces();
+			    	System.out.println("**Expr Derecha Operacion**");	
+			    	imprimirAST(logico.getOpDerecho());
+			    	sangria-=2;
+			    }
+		    	sangria-=2;
+		    }
+		    else if (raiz instanceof NodoCallFunction){
+		    	System.out.println("Llamada a funcion: ");
+		    	imprimirNodo(((NodoCallFunction)raiz).getIdentificador());
+		    	printSpaces();
+		    	if (((NodoCallFunction)raiz).getVariables()!=null){
+		    		System.out.println(" Con parametos ->");
+		    		NodoParamFunction var = (NodoParamFunction)((NodoCallFunction)raiz).getVariables(); 
+		    		while(var!=null){
+		    			imprimirAST(var.getExpresion());
+		    			var = (NodoParamFunction)var.getSiguiente();
+		    		}
+		    	}
+		    	else{
+		    		System.out.println(" Sin parametos");
+		    	}
+		    }
+		    else if (raiz instanceof NodoReturn ){
+		    	System.out.println("Return");	
+		    	imprimirAST(((NodoReturn)raiz).getExpresion());
+		    }
+		    else if (raiz instanceof NodoFor ){
+		    	System.out.println("Instruccion for");	
+		    	sangria+=2;
+		    	printSpaces();
+		    	System.out.println("Inicializacion (asignacion)");
+		    	imprimirAST(((NodoFor)raiz).getInicializacion());
+		    	printSpaces();
+		    	System.out.println("Condicion (logica esprexion)");
+		    	imprimirAST(((NodoFor)raiz).getCondicion());
+		    	printSpaces();
+		    	System.out.println("Incremento (asignacion)");
+		    	imprimirAST(((NodoFor)raiz).getIncremento());
+		    	printSpaces();
+		    	System.out.println("Cuerpo");
+		    	imprimirAST(((NodoFor)raiz).getSentencia());
+		    	sangria-=2;
+		    }
+		    else System.out.println("Tipo de nodo desconocido " + raiz);
+		    
 		    raiz = raiz.getHermanoDerecha();
 		}
 		sangria-=2;
@@ -160,25 +250,44 @@ public class Util {
 		
 		if(	raiz instanceof NodoOperacion ){
 			tipoOp sel=((NodoOperacion) raiz).getOperacion();
+
 			if(sel==tipoOp.menor)
 				System.out.println("<"); 
-			if(sel==tipoOp.igual)
+			else if(sel==tipoOp.igual)
 				System.out.println("=");
-			if(sel==tipoOp.mas)
+			else if(sel==tipoOp.mas)
 				System.out.println("+");
-			if(sel==tipoOp.menos)
+			else if(sel==tipoOp.menos)
 				System.out.println("-");
-			if(sel==tipoOp.por)
+			else if(sel==tipoOp.por)
 				System.out.println("*");
-			if(sel==tipoOp.entre)
+			else if(sel==tipoOp.entre)
 				System.out.println("/");
+			else if(sel==tipoOp.and)
+				System.out.println("and");
+			else if(sel==tipoOp.or)
+				System.out.println("or");
+			else if(sel==tipoOp.mayori)
+				System.out.println(">=");
+			else if(sel==tipoOp.menori)
+				System.out.println("<=");
+			else if(sel==tipoOp.mayor)
+				System.out.println(">");
+			else if(sel==tipoOp.diferente)
+				System.out.println("!=");
 		}
 
 		if(	raiz instanceof NodoValor ){
-			System.out.println("NUM, val= "+ ((NodoValor)raiz).getValor());
+			if (((NodoValor)raiz).getValor()!=null)
+				System.out.println("NUM, val= "+ ((NodoValor)raiz).getValor());
+			else
+				System.out.println("NUM, val= "+ ((NodoValor)raiz).getValorBoolean());
 		}
 
 		if(	raiz instanceof NodoIdentificador ){
+			sangria+=2;
+			printSpaces();
+			sangria-=2;
 			String extra = "";
 			for(String value:extras){
             	extra += value;
