@@ -2,11 +2,11 @@ package ast;
 
 public class NodoVariable extends NodoBase{
 	
-	private String id;
+	private NodoIdentificador id;
 	private NodoBase nodo;
 	private tipoDato tipo;
 	
-	public NodoVariable(String id,NodoBase nodo) {
+	public NodoVariable(NodoIdentificador id,NodoBase nodo) {
 		super();
 		this.id = id;
 		this.nodo = nodo;
@@ -19,7 +19,7 @@ public class NodoVariable extends NodoBase{
 		this.tipo = tipo;
 	}	
 	
-	public NodoVariable(String id) {
+	public NodoVariable(NodoIdentificador id) {
 		super();
 		this.id = id;
 		this.nodo = null;
@@ -33,7 +33,7 @@ public class NodoVariable extends NodoBase{
 		this.tipo = null;
 	}
 	
-	public String getId() {
+	public NodoIdentificador getId() {
 		return id;
 	}
 	
@@ -41,11 +41,11 @@ public class NodoVariable extends NodoBase{
 		return tipo;
 	}
 
-	public NodoBase getnodo() {
+	public NodoBase getNodo() {
 		return nodo;
 	}
 	
-	public void setId(String id) {
+	public void setId(NodoIdentificador id) {
 		this.id = id;
 	}
 	

@@ -1,6 +1,12 @@
+{
 int myfunc(int a,boolean b)
 begin
 	return (a+b);
+end;
+
+boolean myfunc(int a,boolean b)
+begin
+	return false;
 end;
 
 int factorial()
@@ -27,15 +33,17 @@ begin
 		end;
 	end;
 end;
-
+}
 begin 
 	int a,b[1],c;
+	
 	a:=1;
 	c:=a*a+3;
 	boolean d,e,g[3];
 	d:=true;
 	c:=myfunc(a,d);
 
+	{
 	if d!=false then
 		myproc();
 	else
@@ -56,4 +64,5 @@ begin
 	if ((x > 3 and b > 3) or (j < 3 or b)) then
 		x:=1;
 	end;
+	
 end;

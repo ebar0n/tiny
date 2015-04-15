@@ -4,7 +4,7 @@ import java_cup.runtime.*;
 import ast.*;
 
 action code {:
-	private boolean modoDepuracion=true;
+	private boolean modoDepuracion=false;
 	private NodoBase ast=null;
 	private int lineanum=0;
 	
@@ -12,8 +12,6 @@ action code {:
 	public NodoBase getASTroot(){
 		return ast;
 	}
-
-
 
 	public void printModoDepuracion(String message){
 		if(modoDepuracion) {
@@ -29,6 +27,7 @@ parser code {:
 		System.err.println("Error de sintaxis");
 		System.err.println("Linea " + s.left);
 		System.err.println("Columna " + s.right);
+		System.err.println("Sym " + s.sym);
 		System.err.println("########################");
 		System.exit(0);	
 	}
@@ -126,7 +125,16 @@ unit 		::=
 			external_declaration:ed block_sentence:d SEMI
 				{: 
 					printModoDepuracion("regla program");
-					ast = ed;
+					NodoBase hijoActual = ed;
+					if(hijoActual !=null){
+						while(hijoActual.TieneHermano()){
+							hijoActual = hijoActual.getHermanoDerecha();
+						}
+						hijoActual.setHermanoDerecha(d);
+						ast=ed;
+					}else{
+						ast=d;
+					}
 				:}
 			| block_sentence:d SEMI
 				{: 
@@ -136,8 +144,25 @@ unit 		::=
 			;
 
 external_declaration ::=
-			external_declaration declare_function:fd SEMI
+			external_declaration:exd declare_function:fd SEMI
+				{: 
+					printModoDepuracion("\t regla external_declaration -> declare_function SEMI");
+					NodoBase hijoActual = exd;
+					if(hijoActual !=null){
+						while(hijoActual.TieneHermano()){
+							hijoActual = hijoActual.getHermanoDerecha();
+						}
+						hijoActual.setHermanoDerecha(fd);
+						RESULT=exd;
+					}else{
+						RESULT=fd;
+					}
+				:}
 			| declare_function:fd SEMI
+				{: 
+	    			printModoDepuracion("\t regla external_declaration -> declare_function");
+					RESULT=fd;				
+				:}
 			;
 
 declare_variable	::= 
@@ -152,18 +177,18 @@ variable_list	::=
 		ID:variable COMA variable_list:v
 			{: 
 				printModoDepuracion("\t\t regla variable_list -> ID COMA"); 
-				RESULT = new NodoVariable(variable, v);
+				RESULT = new NodoVariable(new NodoIdentificador(variable), v);
 			:}
 		| ID:variable
 			{: 
 				printModoDepuracion("\t\t regla variable_list -> ID"); 
-				RESULT = new NodoVariable(variable);
+				RESULT = new NodoVariable(new NodoIdentificador(variable));
 			:}
 		| ID:variable LCLASP NUM:tam RCLASP COMA variable_list:v
 			{:
 				printModoDepuracion("\t\t regla variable_list -> array_declare COMA"); 
 				if(variable!=null && tam!=null){
-					RESULT= new NodoArray(variable, tam, v);					
+					RESULT= new NodoArray(new NodoIdentificador(variable), tam, v);					
 				}else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla variable_list -> array_declare COMA");
@@ -173,7 +198,7 @@ variable_list	::=
 			{:
 				printModoDepuracion("\t\t regla variable_list -> array_declare"); 
 				if(variable!=null && tam!=null){
-					RESULT= new NodoArray(variable, tam);					
+					RESULT= new NodoArray(new NodoIdentificador(variable), tam);					
 				}else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla variable_list -> array_declare COMA");
@@ -190,7 +215,7 @@ declare_function ::=
 		|	VOID:type ID:valor declarator_function:decl block_sentence:expression 
 			{:
 				printModoDepuracion("\t regla declare_function -> VOID arguments_list_function");
-				RESULT = new NodoFunction(type,valor,decl,expression);
+				RESULT = new NodoFunction(tipoDato.VOID,valor,decl,expression);
 			:}
 		;
 
@@ -214,7 +239,7 @@ declarator_function ::=
 
 block_sentence  ::= 
 		BEGIN sentence_list:expression END 
-			{: 
+			{:
 				printModoDepuracion("regla return_sentence -> block_sentence");
 				RESULT = new NodoBloque(expression);
 			:} 
@@ -344,7 +369,7 @@ assign_sentence ::=
 			{: 
 				printModoDepuracion("\t\t\t regla assign_sentence -> ID");
 				if(variable!=null)
-					RESULT = new NodoAsignacion(variable,ex);
+					RESULT = new NodoAsignacion(new NodoIdentificador(variable),ex);
 				else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla assign_sentence -> ID");
@@ -367,7 +392,7 @@ read_sentence   ::=
 			{: 
 				printModoDepuracion("\t\t\t  regla read_sentence -> ID"); 
 				if(variable!=null)
-					RESULT = new NodoLeer(variable);
+					RESULT = new NodoLeer(new NodoIdentificador(variable));
 				else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla read_sentence -> ID");
@@ -579,7 +604,6 @@ factor      ::=
 			:}
 		| error
 			{: 
-				printModoDepuracion("\t\t\t\t\t\t  regla factor");
 				System.out.println("Ocurrio error en cup regla factor");
 				RESULT=null;
 			:}
@@ -590,7 +614,7 @@ array_var_access	::=
 			{:
 				printModoDepuracion("\t\t\t\t  regla array_var_access");
 				if(variable!=null && pos!=null){
-					RESULT= new NodoArray(variable, pos);					
+					RESULT= new NodoArray(new NodoIdentificador(variable), pos);					
 				}else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla array_var_access");

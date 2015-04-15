@@ -2,24 +2,24 @@ package ast;
 
 public class NodoBloque extends NodoBase{
 
-	private NodoBase base;
+	private NodoBase expression;
 	
-	public NodoBloque(NodoBase expresion) {
+	public NodoBloque(NodoBase expression) {
 		super();
-		this.base = expresion;
+		this.expression = expression;
 	}
 	
 	public NodoBloque() {
 		super();
-		this.base = null;
+		this.expression = null;
 	}
 	
-	public NodoBase getBase() {
-		return base;
+	public NodoBase getExpression() {
+		return expression;
 	}
 	
-	public void setBase(NodoBase base) {
-		this.base = base;
+	public void setExpression(NodoBase expression) {
+		this.expression = expression;
 	}
 	
 }

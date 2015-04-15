@@ -24,7 +24,7 @@ import java_cup.runtime.*;
 
 	private SymbolFactory sf;
 	private int lineanum;
-	private boolean debug = true;
+	private boolean debug = false;
 
 	public void printDebug(String message){
 		if(debug) {
@@ -229,7 +229,8 @@ espacio		= [ \t]+
 
 {identificador}	{
 				printDebug("token ID");
-				return sf.newSymbol("ID",sym.ID,new String((yyline + 1) + " " + (yycolumn + 1) + " " + yytext()) );
+				//return sf.newSymbol("ID",sym.ID,new String((yyline + 1) + " " + (yycolumn + 1) + " " + yytext()) );
+				return sf.newSymbol("ID",sym.ID,new String(yytext()) );
 			}
 
 {nuevalinea} {
