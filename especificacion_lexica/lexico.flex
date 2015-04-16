@@ -34,21 +34,16 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 	private boolean debug = false;
 
 	private Symbol symbol(String name, int sym) {
-	    return symbolFactory.newSymbol(name, sym, new Location(yyline+1,yycolumn+1,yychar), new Location(yyline+1,yycolumn+yylength(),yychar+yylength()));
+	    return csf.newSymbol(name, sym, new ComplexSymbolFactory.Location(yyline+1,yycolumn+1,yychar), new Location(yyline+1,yycolumn+yylength(),yychar+yylength()));
 	}
 
 	private Symbol symbol(String name, int sym, Object val) {
 	    Location left = new Location(yyline+1,yycolumn+1,yychar);
-	    Location right= new Location(yyline+1,yycolumn+yylength(), String.valueOf(yychar)+yylength());
-	    return symbolFactory.newSymbol(name, sym, left, right,val);
+	    Location right= new Location(yyline+1,yycolumn+yylength(), yychar+yylength());
+	    return csf.newSymbol(name, sym, left, right,val);
 	}
 
-	private Symbol symbol(String name, int sym, Object val,int buflength) {
-	    Location left = new Location(yyline+1,yycolumn+yylength()-buflength,yychar+yylength()-buflength);
-	    Location right= new Location(yyline+1,yycolumn+yylength(), yychar+yylength());
-	    return symbolFactory.newSymbol(name, sym, left, right,val);
-	}
-	private void error(String message) {
+	private void error(String message) {	
 	  System.out.println("Error at line "+(yyline+1)+", column "+(yycolumn+1)+" : "+message);
 	}
 
