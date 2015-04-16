@@ -1,26 +1,19 @@
 package compilador;
 import ast.*;
+import java.util.*;
+
 public class RegistroSimbolo {
 	private String identificador;
 	private tipoDato tipo;
-	private int NumLinea;
+	private List<Integer> NumLinea;
 	private int DireccionMemoria;
 
-	//Array
-	private int NumElementos;
-	private int LimInferior;
-	private int LimSuperior;
-
-	//Funcion
-	private int NumParametros;
-	private String[] TipoParametros;
-	
 	//Constructor para una variable
 	public RegistroSimbolo(String identificador,tipoDato tipo, int numLinea, int direccionMemoria) {
 		super();
 		this.identificador = identificador;
 		this.tipo = tipo;
-		this.NumLinea = numLinea;
+		//this.NumLinea = numLinea;
 		this.DireccionMemoria = direccionMemoria;
 	}
 
@@ -28,7 +21,7 @@ public class RegistroSimbolo {
 		return identificador;
 	}
 
-	public int getNumLinea() {
+	public List<Integer> getNumLinea() {
 		return NumLinea;
 	}
 
