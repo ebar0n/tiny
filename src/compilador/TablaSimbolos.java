@@ -30,7 +30,7 @@ public class TablaSimbolos {
 
 		    //ARGUMENTOS DE LAS FUNCIONES
 		    if (raiz instanceof NodoArgList){
-		     	InsertarSimbolo(((NodoArgList)raiz).getIdentificador(),((NodoArgList)raiz).getTipo(),2);
+		     	InsertarSimbolo(((NodoArgList)raiz).getIdentificador().getNombre(),((NodoArgList)raiz).getTipo(),2);
 		     	if(((NodoArgList)raiz).getArgumento()!=null){
 		    		cargarTabla(((NodoArgList)raiz).getArgumento());
 		    	}

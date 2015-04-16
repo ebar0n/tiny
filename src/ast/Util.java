@@ -17,6 +17,7 @@ public class Util {
 		    else if (raiz instanceof NodoFunction){	
 		    	NodoFunction nodo = (NodoFunction)raiz;
 		    	System.out.println("Funcion "+nodo.getTipo());
+		    	imprimirAST(nodo.getDeclaracion());
 		    	imprimirAST(nodo.getExpression());
 		    }
 		    else if (raiz instanceof NodoVariable || raiz instanceof NodoArray ){
@@ -83,21 +84,14 @@ public class Util {
 
 		    	NodoArgList nodoA = (NodoArgList)raiz;
 
-		    	if (nodoA != null)
-		    		System.out.println("Argumentos");
-		    	
-		    	NodoBase nodo = null;
-		    	
-		    	while(nodoA != null){
-		    		//imprimirNodo(nodoA.getId() + " Argumentos de Tipo: " + nodoA.getTipo());
-		    		System.out.println(nodoA.getId() + " Argumentos de Tipo: " + nodoA.getTipo());
-		    		nodo = nodoA.getArgumento();
+		    	if (nodoA != null){
+		    		System.out.println("Argumento tipo: "+nodoA.getTipo());
+		    		printSpaces();
+		    		imprimirNodo(nodoA.getIdentificador());
+		    		if(nodoA.getArgumento()!=null)
+		    			imprimirAST(nodoA.getArgumento());
 		    	}
-		    	nodoA = null;
-
-		    	if(nodo instanceof NodoArgList){
-		    		nodoA = (NodoArgList)nodo;
-		    	}
+		    	
 		    }
 			    else if (raiz instanceof  NodoIf){
 		    	System.out.println("If");

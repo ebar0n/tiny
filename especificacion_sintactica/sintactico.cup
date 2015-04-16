@@ -4,7 +4,7 @@ import java_cup.runtime.*;
 import ast.*;
 
 action code {:
-	private boolean modoDepuracion=true;
+	private boolean modoDepuracion=false;
 	private NodoBase ast=null;
 	private int lineanum=0;
 	
@@ -245,7 +245,7 @@ declarator_function ::=
 	| LPAREN arguments_list_function:ptl RPAREN
 		{:
 			printModoDepuracion("declarator_function -> LPAREN arguments_list_function RPAREN");
-			RESULT = new NodoArgList(ptl);
+			RESULT = ptl;
 		:}
 	;
 block_sentence  ::= 
@@ -260,12 +260,12 @@ arguments_list_function ::=
 		type_specifier:type ID:valor COMA arguments_list_function:arg
 			{:
 				printModoDepuracion("arguments_list_function -> type_specifier ID COMA arguments_list_function");
-				RESULT = new NodoArgList(valor,type,arg);
+				RESULT = new NodoArgList(new NodoIdentificador(valor),type,arg);
 			:}
 		| type_specifier:type ID:valor
 			{:
 				printModoDepuracion("arguments_list_function -> type_specifier ID");
-				RESULT = new NodoArgList(valor,type);
+				RESULT = new NodoArgList(new NodoIdentificador(valor),type);
 			:}
 		;
 
