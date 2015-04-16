@@ -2,6 +2,8 @@ package compilador;
 
 import ast.*;
 import java_cup.runtime.*;
+import java.io.*;
+
 
 public class Compilador {
 	
@@ -13,12 +15,16 @@ public class Compilador {
 
 	public static void main(String[] args) throws Exception {
 		@SuppressWarnings("deprecation")
-		SymbolFactory sf = new DefaultSymbolFactory();
+		ComplexSymbolFactory csf = new ComplexSymbolFactory();
 		parser parser_obj;
+
+//		ScannerBuffer lexer = new ScannerBuffer(new Lexer(new BufferedReader(new FileReader(args[0])),csf));
+
 		if (args.length==0) 
-			parser_obj=new parser(new Scanner(System.in,sf),sf);
+			parser_obj=new parser(new Scanner(System.in,csf),csf);
+			//parser_obj=new parser(lexer,csf);
 		else 
-			parser_obj=new parser(new Scanner(new java.io.FileInputStream(args[0]),sf),sf);
+			parser_obj=new parser(new Scanner(new java.io.FileInputStream(args[0]),csf),csf);
 
 		UtGen.debug=true; //NO muestro mensajes de depuracion del generador (UTGen) para que el codigo sea compatible con la version visual de la TM
 		//Para ver depuracion de analisis sintactico se debe ir al parser.java y colocar modoDepuracion en true

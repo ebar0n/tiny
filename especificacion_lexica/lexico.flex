@@ -2,6 +2,8 @@
 package compilador;
 
 import java_cup.runtime.*;
+import java_cup.runtime.ComplexSymbolFactory;
+import java_cup.runtime.ComplexSymbolFactory.Location;
 
 
 %%
@@ -10,21 +12,45 @@ import java_cup.runtime.*;
 /* Acceso a la columna y fila actual de analisis CUP */
 %line
 %column
+%public
+%class Lexer
 
 /* Llamar Scanner a la clase que contiene el analizador Lexico */
 
 %class Scanner
 /*-- CONSTRUCTOR --*/
 %{
-	public Scanner(java.io.InputStream r, SymbolFactory sf){
+	StringBuffer string = new StringBuffer();
+
+	public Scanner(java.io.InputStream r, ComplexSymbolFactory csf){
 		this(r);
-		this.sf=sf;
+		this.csf=csf;
 		lineanum=0;
 	}
 
-	private SymbolFactory sf;
+//	private SymbolFactory csf;
+	private ComplexSymbolFactory csf;
 	private int lineanum;
 	private boolean debug = false;
+
+	private Symbol symbol(String name, int sym) {
+	    return symbolFactory.newSymbol(name, sym, new Location(yyline+1,yycolumn+1,yychar), new Location(yyline+1,yycolumn+yylength(),yychar+yylength()));
+	}
+
+	private Symbol symbol(String name, int sym, Object val) {
+	    Location left = new Location(yyline+1,yycolumn+1,yychar);
+	    Location right= new Location(yyline+1,yycolumn+yylength(), String.valueOf(yychar)+yylength());
+	    return symbolFactory.newSymbol(name, sym, left, right,val);
+	}
+
+	private Symbol symbol(String name, int sym, Object val,int buflength) {
+	    Location left = new Location(yyline+1,yycolumn+yylength()-buflength,yychar+yylength()-buflength);
+	    Location right= new Location(yyline+1,yycolumn+yylength(), yychar+yylength());
+	    return symbolFactory.newSymbol(name, sym, left, right,val);
+	}
+	private void error(String message) {
+	  System.out.println("Error at line "+(yyline+1)+", column "+(yycolumn+1)+" : "+message);
+	}
 
 	public void printDebug(String message){
 		if(debug) {
@@ -35,7 +61,7 @@ import java_cup.runtime.*;
 %}
 
 %eofval{
-    return sf.newSymbol("EOF",sym.EOF);
+     return symbolFactory.newSymbol("EOF", EOF, new Location(yyline+1,yycolumn+1,yychar), new Location(yyline+1,yycolumn+1,yychar+1));
 %eofval}
 
 digito		= [0-9]
@@ -48,189 +74,189 @@ espacio		= [ \t]+
 %%
 "if"        {	
 				printDebug("token IF");
-				return sf.newSymbol("IF",sym.IF);
+				return symbol("IF",sym.IF);
 			}
 
 "then"      { 
 				printDebug("token THEN");
-				return sf.newSymbol("THEN",sym.THEN);
+				return symbol("THEN",sym.THEN);
 			}
 
 "else"      {	
 				printDebug("token ELSE");
-				return sf.newSymbol("ELSE",sym.ELSE);
+				return symbol("ELSE",sym.ELSE);
 			}
 
 "end"       {	
 				printDebug("token END");
-				return sf.newSymbol("END",sym.END);
+				return symbol("END",sym.END);
 			}
 
 "repeat"    {	
 				printDebug("token REPEAT");
-				return sf.newSymbol("REPEAT",sym.REPEAT);
+				return symbol("REPEAT",sym.REPEAT);
 			}
 
 "until"     {	
 				printDebug("token UNTIL");
-				return sf.newSymbol("UNTIL",sym.UNTIL);
+				return symbol("UNTIL",sym.UNTIL);
 			}
 
 "read"      {	
 				printDebug("token READ");
-				return sf.newSymbol("READ",sym.READ);
+				return symbol("READ",sym.READ);
 			}
 
 "write"     {	
 				printDebug("token WRITE");
-				return sf.newSymbol("WRITE",sym.WRITE);
+				return symbol("WRITE",sym.WRITE);
 			}
 
 "for"		{   
 				printDebug("token FOR");
-				return sf.newSymbol("FOR",sym.FOR);
+				return symbol("FOR",sym.FOR);
 			}
 
 "boolean"	{   
 				printDebug("token BOOLEAN");
-				return sf.newSymbol("BOOLEAN",sym.BOOLEAN);
+				return symbol("BOOLEAN",sym.BOOLEAN);
 			}	
 
 "int"		{   
 				printDebug("token INT");
-				return sf.newSymbol("INT",sym.INT);
+				return symbol("INT",sym.INT);
 			}
 
 "begin"		{   
 				printDebug("token BEGIN");
-				return sf.newSymbol("BEGIN",sym.BEGIN);
+				return symbol("BEGIN",sym.BEGIN);
 			}
 
 "return"	{   
 				printDebug("token RETURN");
-				return sf.newSymbol("RETURN",sym.RETURN);
+				return symbol("RETURN",sym.RETURN);
 			}
 
 "void"		{   
 				printDebug("token VOID");
-				return sf.newSymbol("VOID",sym.VOID);
+				return symbol("VOID",sym.VOID);
 			}
 
 "and"		{   
 				printDebug("token AND");
-				return sf.newSymbol("AND",sym.AND);
+				return symbol("AND",sym.AND);
 			}
 
 "or"		{   
 				printDebug("token OR");
-				return sf.newSymbol("OR",sym.OR);
+				return symbol("OR",sym.OR);
 			}
 
 "true"		{   
 				printDebug("token TRUE");
-				return sf.newSymbol("TRUE",sym.TRUE);
+				return symbol("TRUE",sym.TRUE);
 			}
 
 "false"		{   
 				printDebug("token FALSE");
-				return sf.newSymbol("FALSE",sym.FALSE);
+				return symbol("FALSE",sym.FALSE);
 			}
 
 ">="		{   
 				printDebug("token GE");
-				return sf.newSymbol("GE",sym.GE);
+				return symbol("GE",sym.GE);
 			}
 
 ">"		    {   
 				printDebug("token GT");
-				return sf.newSymbol("GT",sym.GT);
+				return symbol("GT",sym.GT);
 			}
 
 "<="		{   
 				printDebug("token LE");
-				return sf.newSymbol("LE",sym.LE);
+				return symbol("LE",sym.LE);
 			}
 
 "<"         {	
 				printDebug("token LT");
-				return sf.newSymbol("LT",sym.LT);
+				return symbol("LT",sym.LT);
 			}
 
 ","		    {   
 				printDebug("token COMA");
-				return sf.newSymbol("COM",sym.COMA);
+				return symbol("COM",sym.COMA);
 			}
 
 "!="		{   
 				printDebug("token NE");
-				return sf.newSymbol("NE",sym.NE);
+				return symbol("NE",sym.NE);
 			}
 
 ":="        {	
 				printDebug("token ASSIGN");
-				return sf.newSymbol("ASSIGN",sym.ASSIGN);
+				return symbol("ASSIGN",sym.ASSIGN);
 			}
 
 "="         {	
 				printDebug("token EQ");
-				return sf.newSymbol("EQ",sym.EQ);
+				return symbol("EQ",sym.EQ);
 			}
 
 "+"         {	
 				printDebug("token PLUS");
-				return sf.newSymbol("PLUS",sym.PLUS);
+				return symbol("PLUS",sym.PLUS);
 			}
 
 "-"         {	
 				printDebug("token MINUS");
-				return sf.newSymbol("MINUS",sym.MINUS);
+				return symbol("MINUS",sym.MINUS);
 			}
 
 
 "*"         {	
 				printDebug("token TIMES");
-				return sf.newSymbol("TIMES",sym.TIMES);
+				return symbol("TIMES",sym.TIMES);
 			}
 
 "/"         {	
 				printDebug("token OVER");
-				return sf.newSymbol("OVER",sym.OVER);
+				return symbol("OVER",sym.OVER);
 			}
 
 "("         {	
 				printDebug("token LPAREN");
-				return sf.newSymbol("LPAREN",sym.LPAREN);
+				return symbol("LPAREN",sym.LPAREN);
 			}
 
 ")"         {	
 				printDebug("token RPAREN");
-				return sf.newSymbol("RPAREN",sym.RPAREN);
+				return symbol("RPAREN",sym.RPAREN);
 			}
 
 "["		    {   
 				printDebug("token LCLASP");
-				return sf.newSymbol("LCLASP",sym.LCLASP);
+				return symbol("LCLASP",sym.LCLASP);
 			}
 
 "]"		    {   
 				printDebug("token RCLASP");
-				return sf.newSymbol("RCLASP",sym.RCLASP);
+				return symbol("RCLASP",sym.RCLASP);
 			}
 
 ";"         {	
 				printDebug("token SEMI");
-				return sf.newSymbol("SEMI",sym.SEMI);
+				return symbol("SEMI",sym.SEMI);
 			}
 
 {numero}    {	
 				printDebug("token NUM");
-				return sf.newSymbol("NUM",sym.NUM,new Integer(yytext()));
+				return symbol("NUM",sym.NUM,new Integer(yytext()));
 			}
 
 {identificador}	{
 				printDebug("token ID");
-				//return sf.newSymbol("ID",sym.ID,new String((yyline + 1) + " " + (yycolumn + 1) + " " + yytext()) );
-				return sf.newSymbol("ID",sym.ID,new String(yytext()) );
+				//return symbol("ID",sym.ID,new String((yyline + 1) + " " + (yycolumn + 1) + " " + yytext()) );
+				return symbol("ID",sym.ID,new String(yytext()) );
 			}
 
 {nuevalinea} {
