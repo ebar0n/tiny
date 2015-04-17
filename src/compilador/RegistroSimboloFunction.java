@@ -5,13 +5,20 @@ public class RegistroSimboloFunction extends RegistroSimbolo {
 	//Funcion
 	private int NumParametros;
 	private List<String> TipoParametros;
+	private List<String> IdParametros;
 
-        public RegistroSimboloFunction(int NumParametros, List<String> TipoParametros, String identificador, tipoDato tipo, int numLinea, int direccionMemoria) {
-            super(identificador, tipo, numLinea, direccionMemoria);
-            this.NumParametros = NumParametros;
-            this.TipoParametros = TipoParametros;
+
+        public RegistroSimboloFunction(int numParametros, String tipoParametros,String idParametros, String identificador, tipoDato tipo, int numLinea, String ambito) {
+            super(identificador, tipo, numLinea,ambito);
+            this.NumParametros= NumParametros;
+            this.TipoParametros.add(tipoParametros);
+            this.IdParametros.add(idParametros);
         }
-	
+		
+		public RegistroSimboloFunction(String identificador, tipoDato tipo, int numLinea, String ambito){
+			super(identificador, tipo, numLinea, ambito);
+		}
+
         public List<String> getTipoParametros() {
             return TipoParametros;
         }

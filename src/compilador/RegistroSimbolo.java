@@ -5,16 +5,17 @@ import java.util.*;
 public class RegistroSimbolo {
 	private String identificador;
 	private tipoDato tipo;
-	private List<Integer> NumLinea;
+	private List<Integer> NumLinea = new ArrayList<Integer>();
 	private int DireccionMemoria;
+	private String Ambito;
 
 	//Constructor para una variable
-	public RegistroSimbolo(String identificador,tipoDato tipo, int numLinea, int direccionMemoria) {
+	public RegistroSimbolo(String identificador,tipoDato tipo, int numLinea, String ambito) {
 		super();
 		this.identificador = identificador;
 		this.tipo = tipo;
-		//this.NumLinea = numLinea;
-		this.DireccionMemoria = direccionMemoria;
+		this.NumLinea.add(numLinea);
+		this.Ambito = ambito;
 	}
 
 	public String getIdentificador() {

@@ -19,18 +19,33 @@ public class TablaSimbolos {
 	public void cargarTabla(NodoBase raiz){
 		while (raiz != null) {
 	    /* Hago el recorrido recursivo */
-		    System.out.println(raiz);
+
 		    if (raiz instanceof NodoFunction){
-		    	InsertarSimbolo(((NodoFunction)raiz).getIdentificador(),((NodoFunction)raiz).getTipo(),1);
-		    	if(((NodoFunction)raiz).getDeclaracion()!=null){
-		    		cargarTabla(((NodoFunction)raiz).getDeclaracion());
+		    	NodoFunction nodof = (NodoFunction)raiz;
+		    	RegistroSimboloFunction simboloFunction = new RegistroSimboloFunction(
+										nodof.getIdentificador(),
+		    							nodof.getTipo(),
+                                        1,
+                                        "main"
+                                        );
+		    	Integer num_arg = 0;
+		    	if(nodof.getDeclaracion()!=null){
+		    		NodoArgList nodoA = (NodoArgList)nodof.getDeclaracion();		    	
+		    		while(nodoA !=null ){
+		    			InsertarSimbolo(new RegistroSimbolo(nodoA.getIdentificador().getNombre(), nodoA.getTipo(), 1,  nodoA.getIdentificador().getNombre()));
+		    			nodoA = (NodoArgList)nodoA.getArgumento();
+		    			num_arg++;
+		    		}
 		    	}
+		    	simboloFunction.setNumParametros(num_arg);
+		    	InsertarSimbolo((RegistroSimbolo)simboloFunction);
+		    	
 		    	cargarTabla(((NodoFunction)raiz).getExpression());
 		    }
 
 		    //ARGUMENTOS DE LAS FUNCIONES
 		    if (raiz instanceof NodoArgList){
-		     	InsertarSimbolo(((NodoArgList)raiz).getIdentificador().getNombre(),((NodoArgList)raiz).getTipo(),2);
+		     	//InsertarSimbolo(((NodoArgList)raiz).getIdentificador().getNombre(),((NodoArgList)raiz).getTipo(),2);
 		     	if(((NodoArgList)raiz).getArgumento()!=null){
 		    		cargarTabla(((NodoArgList)raiz).getArgumento());
 		    	}
@@ -47,14 +62,14 @@ public class TablaSimbolos {
 
 		    if (raiz instanceof NodoVariable){
 		    	if(((NodoVariable)raiz).getId()!=null){
-		    		InsertarSimbolo(((NodoVariable)raiz).getId().getNombre(),((NodoVariable)raiz).getTipo(),-1);
+		    		//InsertarSimbolo(((NodoVariable)raiz).getId().getNombre(),((NodoVariable)raiz).getTipo(),-1);
 		    	}
 		    	cargarTabla(((NodoVariable)raiz).getNodo());
 		    }
 
 		    if (raiz instanceof NodoArray){
 		    	if(((NodoArray)raiz).getId()!=null){
-		    		InsertarSimbolo(((NodoArray)raiz).getIdentificador().getNombre(),((NodoArray)raiz).getTipo(),-1);
+		    		//InsertarSimbolo(((NodoArray)raiz).getIdentificador().getNombre(),((NodoArray)raiz).getTipo(),-1);
 		    	}
 		    	cargarTabla(((NodoArray)raiz).getNodo());
 		    }
@@ -88,13 +103,11 @@ public class TablaSimbolos {
 	}
 	
 	//true es nuevo no existe se insertara, false ya existe NO se vuelve a insertar 
-	public boolean InsertarSimbolo(String identificador,tipoDato tipo, int numLinea){
-		RegistroSimbolo simbolo;
-		if(tabla.containsKey(identificador)){
+	public boolean InsertarSimbolo(RegistroSimbolo simbolo){
+		if(tabla.containsKey(simbolo.getIdentificador())){
 			return false;
 		}else{
-			simbolo= new RegistroSimbolo(identificador,tipo,numLinea,direccion++);
-			tabla.put(identificador,simbolo);
+			tabla.put(simbolo.getIdentificador(),simbolo);
 			return true;			
 		}
 	}
