@@ -7,19 +7,33 @@ public class RegistroSimbolo {
 	private tipoDato tipo;
 	private List<Integer> NumLinea = new ArrayList<Integer>();
 	private int DireccionMemoria;
-	private String Ambito;
+	private String ambito;
+	private int nivel;
 
 	//Constructor para una variable
-	public RegistroSimbolo(String identificador,tipoDato tipo, int numLinea, String ambito) {
+	public RegistroSimbolo(String identificador,tipoDato tipo, int numLinea, String ambito,int nivel) {
 		super();
 		this.identificador = identificador;
 		this.tipo = tipo;
 		this.NumLinea.add(numLinea);
-		this.Ambito = ambito;
+		this.ambito = ambito;
+		this.nivel = nivel;
+	}
+
+	public RegistroSimbolo(String identificador,int numLinea, String ambito,int nivel) {
+		super();
+		this.identificador = identificador;
+		this.NumLinea.add(numLinea);
+		this.ambito = ambito;
+		this.nivel = nivel;
 	}
 
 	public String getIdentificador() {
-		return identificador;
+		return this.identificador;
+	}
+
+	public String getAmbito() {
+		return this.ambito;
 	}
 
 	public List<Integer> getNumLinea() {
@@ -30,8 +44,12 @@ public class RegistroSimbolo {
 		return DireccionMemoria;
 	}
 
+	public int getNivel() {
+		return nivel;
+	}
+
 	public tipoDato getTipo() {
-		return tipo;
+		return this.tipo;
 	}
 
 	public void setDireccionMemoria(int direccionMemoria) {
