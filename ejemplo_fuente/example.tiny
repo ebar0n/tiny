@@ -8,7 +8,7 @@ begin
 	if d!=false then
 		int var;
 		for(x:=1;x<10;x:=x+1)
-			int fore;
+			int var;
 			if x>=7 and x<10 then
 				boolean if2;
 			end;

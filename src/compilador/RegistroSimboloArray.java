@@ -8,8 +8,8 @@ public class RegistroSimboloArray extends RegistroSimbolo {
 	private int LimInferior;
 	private int LimSuperior;
 
-    public RegistroSimboloArray(int numElementos, String identificador, tipoDato tipo, int numLinea, String ambito, int nivel) {
-        super(identificador, tipo, numLinea,ambito,nivel);
+    public RegistroSimboloArray(int numElementos, String identificador, tipoDato tipo, int numLinea, String ambito,String ambito_padre, int nivel) {
+        super(identificador, tipo, numLinea,ambito,ambito_padre,nivel);
          this.NumElementos = numElementos;
          this.LimInferior = 0;
          this.LimSuperior = numElementos - 1;

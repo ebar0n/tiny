@@ -8,15 +8,15 @@ public class RegistroSimboloFunction extends RegistroSimbolo {
 	private List<String> IdParametros = new ArrayList<String>(); 
 
 
-        public RegistroSimboloFunction(int numParametros, tipoDato tipoParametros,String idParametros, String identificador, tipoDato tipo, int numLinea, String ambito, int nivel) {
-            super(identificador, tipo, numLinea,ambito,nivel);
+        public RegistroSimboloFunction(int numParametros, tipoDato tipoParametros,String idParametros, String identificador, tipoDato tipo, int numLinea, String ambito,String ambito_padre, int nivel) {
+            super(identificador, tipo, numLinea,ambito,ambito_padre,nivel);
             this.NumParametros= NumParametros;
             this.TipoParametros.add(tipoParametros);
             this.IdParametros.add(idParametros);
         }
 		
-		public RegistroSimboloFunction(String identificador, tipoDato tipo, int numLinea, String ambito, int nivel){
-			super(identificador, tipo, numLinea, ambito,nivel);
+		public RegistroSimboloFunction(String identificador, tipoDato tipo, int numLinea, String ambito, String ambito_padre,int nivel){
+			super(identificador, tipo, numLinea, ambito,ambito_padre,nivel);
 		}
 
         public List<tipoDato> getTipoParametros() {
