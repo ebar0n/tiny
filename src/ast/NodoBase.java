@@ -29,9 +29,16 @@ public class NodoBase {
 		return this.symbol;
 	}
 
-	public int getLineanum(){
+	public int getNumLinea(){
 		if (this.symbol != null)
 			return this.symbol.xleft.getLine();
+		else
+			return -1;
+	}
+
+	public int getNumColumn(){
+		if (this.symbol != null)
+			return this.symbol.xleft.getColumn();
 		else
 			return -1;
 	}
@@ -52,7 +59,7 @@ public class NodoBase {
 		this.ambito = ambito;
 	}
 
-	public String getAmbito(String ambito){
+	public String getAmbito(){
 		return this.ambito;
 	}
 }

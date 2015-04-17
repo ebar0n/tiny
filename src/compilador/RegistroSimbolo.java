@@ -1,11 +1,11 @@
 package compilador;
 import ast.*;
 import java.util.*;
-
+import java_cup.runtime.ComplexSymbolFactory.ComplexSymbol;
 public class RegistroSimbolo {
 	private String identificador;
 	private tipoDato tipo;
-	private Integer NumLinea;
+	private ComplexSymbol symbol;
 	private int DireccionMemoria;
 	private String ambito;
 	private String ambito_padre;
@@ -13,11 +13,11 @@ public class RegistroSimbolo {
 	private RegistroSimbolo hermano;
 	private tipoSymbol tipeS;
 	//Constructor para una variable
-	public RegistroSimbolo(String identificador,tipoDato tipo, int numLinea, String ambito,String ambito_padre,int nivel, tipoSymbol tipeS) {
+	public RegistroSimbolo(String identificador,tipoDato tipo, ComplexSymbol symbol, String ambito,String ambito_padre,int nivel, tipoSymbol tipeS) {
 		super();
 		this.identificador = identificador;
 		this.tipo = tipo;
-		this.NumLinea = numLinea;
+		this.symbol = symbol;
 		this.ambito = ambito;
 		this.ambito_padre = ambito_padre;
 		this.nivel = nivel;
@@ -25,10 +25,10 @@ public class RegistroSimbolo {
 		this.tipeS = tipeS;
 	}
 
-	public RegistroSimbolo(String identificador,int numLinea, String ambito,String ambito_padre,int nivel, tipoSymbol tipeS) {
+	public RegistroSimbolo(String identificador,ComplexSymbol symbol, String ambito,String ambito_padre,int nivel, tipoSymbol tipeS) {
 		super();
 		this.identificador = identificador;
-		this.NumLinea = numLinea;
+		this.symbol = symbol;
 		this.ambito = ambito;
 		this.ambito_padre = ambito_padre;
 		this.nivel = nivel;
@@ -37,8 +37,8 @@ public class RegistroSimbolo {
 	}
 
 	
-	public RegistroSimbolo(int numElementos, String identificador, tipoDato tipo, int numLinea, String ambito,String ambito_padre, int nivel, tipoSymbol tipeS) {
-            this(identificador, tipo, numLinea,ambito,ambito_padre,nivel, tipeS);
+	public RegistroSimbolo(int numElementos, String identificador, tipoDato tipo, ComplexSymbol symbol, String ambito,String ambito_padre, int nivel, tipoSymbol tipeS) {
+            this(identificador, tipo, symbol,ambito,ambito_padre,nivel, tipeS);
             this.NumElementos = numElementos;
             this.LimInferior = 0;
             this.LimSuperior = numElementos - 1;
@@ -59,10 +59,6 @@ public class RegistroSimbolo {
 
 	public String getAmbitoPadre() {
 		return this.ambito_padre;
-	}
-
-	public Integer getNumLinea() {
-		return NumLinea;
 	}
 
 	public int getDireccionMemoria() {
@@ -142,5 +138,19 @@ public class RegistroSimbolo {
 	public tipoSymbol getTipeSymbol(){
 		return this.tipeS;
 	};
+
+	public int getNumLinea(){
+		if (this.symbol != null)
+			return this.symbol.xleft.getLine();
+		else
+			return -1;
+	}
+
+	public int getNumColumn(){
+		if (this.symbol != null)
+			return this.symbol.xleft.getColumn();
+		else
+			return -1;
+	}
 
 }

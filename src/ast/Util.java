@@ -47,7 +47,7 @@ public class Util {
 		    	while (nodov!=null || nodoa!=null) {
 		    		
 		    		if (nodov != null){
-		    			imprimirNodo(nodov.getId());
+		    			imprimirNodo(nodov.getIdentificador());
 		    			nodo = nodov.getNodo();
 		    		}
 		    		else if (nodoa != null){
@@ -58,7 +58,7 @@ public class Util {
 		    			else{
 		    				verbose = "Buscando posicion: ?";
 		    			}
-		    			imprimirNodo(nodoa.getId(), verbose  + " <- Vector");
+		    			imprimirNodo(nodoa.getIdentificador(), verbose  + " <- Vector");
 		    			if(nodoa.getPos() != null){
 		    				printSpaces();
 		    				System.out.println("**Buscando(");
@@ -166,7 +166,7 @@ public class Util {
 		    	}
 		    	else{
 		    		printSpaces();
-		    		System.out.println("Operacion logica: "+logico.getOperacion());
+		    		System.out.println("Operacion logica");
 			    	sangria+=2;
 		    		printSpaces();
 		    		System.out.println("**Expr Izquierda Operacion**");

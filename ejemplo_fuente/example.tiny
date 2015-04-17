@@ -1,4 +1,4 @@
-{
+
 int myfunc(int a,boolean b)
 begin
 	int vector[10];
@@ -16,10 +16,10 @@ begin
 		end;
 	end;
 end;
-}
+
 int myfunc2(int a,boolean b)
 begin
-	{
+	
 	int ccccccccccccccccccc;
 	if d!=false then
 		int j;
@@ -28,16 +28,15 @@ begin
 			int ccccccccccccccccccc;
 		end;
 	end;
-	}
+	
 	int ebar0n[4];
 end;
-
 
 begin 
 
 	int a,a,a;
 	int z,z,z;
-	z:=x*t;
+	z:=1<t;
 	
 	if d!=false then
 		int ebar0n;

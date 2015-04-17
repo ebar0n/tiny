@@ -7,9 +7,17 @@ public class Semantica {
 
 	TablaSimbolos ts;
 	
-	public Semantica(){
-		ts = new TablaSimbolos();
+	public Semantica(TablaSimbolos ts){
+		this.ts = ts;
 	}
+	int error_count = 1;
+	boolean declare_var = false;
+	String ambito = "MAIN";
+	
+	public void UpAmbito(){
+		ambito = ((RegistroSimbolo) ts.BuscarSimbolo(ambito)).getAmbito();
+	}	
+
 
 	public void RecorrerArbol(NodoBase raiz){
 		while (raiz != null) {
@@ -17,69 +25,34 @@ public class Semantica {
 			if (raiz instanceof NodoBloque){
 		    	//BLOQUE UNICO
 		    	NodoBloque nodo = (NodoBloque)raiz;
+		    	
+		    	ambito = nodo.getAmbito();
+		    	RecorrerArbol(nodo.getExpression());
+		    	UpAmbito();
 		    }
 		    else if (raiz instanceof NodoFunction){	
 		    	//FUNCIONES
 		    	NodoFunction nodo = (NodoFunction)raiz;
-		    	System.out.println("Funcion "+nodo.getTipo());
+		    	declare_var = true;
+		    	ambito = nodo.getAmbito();
 		    	RecorrerArbol(nodo.getDeclaracion());
+		    	UpAmbito();
+		    	ambito = nodo.getAmbito();
 		    	RecorrerArbol(nodo.getExpression());
+		    	declare_var = false;
+		    	UpAmbito();
 		    }
-		    else if (raiz instanceof NodoVariable || raiz instanceof NodoArray ){
-		    	NodoVariable nodov = null;
-		    	NodoArray nodoa = null;
-		    	
-		    	if (raiz instanceof NodoVariable){
-		    		nodov = (NodoVariable)raiz;
-		    	}
-		    	else if (raiz instanceof NodoArray){
-		    		nodoa = (NodoArray)raiz;
-		    	}
-
-		    	if (nodov != null)
-		    		if(nodov.getTipo()!=null)
-		    			System.out.println("Declarar variable de tipo "+nodov.getTipo());
-		    		else
-		    			System.out.println("Uso variable");	
-		    	else
-		    		if(nodoa.getTipo()!=null)
-		    			System.out.println("Declarar variable de tipo "+nodoa.getTipo());
-		    		else
-		    			System.out.println("Uso variable");	
-		    	
-		    	NodoBase nodo = null;
-
-		    	while (nodov!=null || nodoa!=null) {
-		    		
-		    		if (nodov != null){
-		    			nodo = nodov.getNodo();
-		    		}
-		    		else if (nodoa != null){
-		    			String verbose = "";
-		    			if(nodoa.getTam() != null){
-		    				verbose = "Tam: "+nodoa.getTam();
-		    			}
-		    			else{
-		    				verbose = "Buscando posicion: ?";
-		    			}
-		    			if(nodoa.getPos() != null){
-		    				System.out.println("**Buscando(");
-		    				RecorrerArbol(nodoa.getPos());
-		    			}
-		    			nodo = nodoa.getNodo();
-		    		}
-		    		nodov = null;
-		    		nodoa = null;
-		    		
-		    		if (nodo instanceof NodoVariable){
-		    			nodov = (NodoVariable)nodo;
-		    		}
-		    		else if (nodo instanceof NodoArray){
-		    			nodoa = (NodoArray)nodo;
-		    		}
-
-		    	}
-		    	
+		    else if (raiz instanceof NodoVariable){
+		    	NodoVariable variable = (NodoVariable)raiz;
+		    	declare_var = true;
+		    	RecorrerArbol(variable.getIdentificador());
+		    	RecorrerArbol(variable.getNodo());
+		    	declare_var = false;
+		    }
+		    else if (raiz instanceof NodoArray ){
+		    	NodoArray variable = (NodoArray)raiz;
+		    	RecorrerArbol(variable.getIdentificador());
+		    	RecorrerArbol(variable.getNodo());
 		    }else if(raiz instanceof NodoArgList){
 		    	//ARGUMENTOS FUNCIONES
 		    	NodoArgList nodoA = (NodoArgList)raiz;
@@ -90,22 +63,27 @@ public class Semantica {
 		    	}
 		    	
 		    }
-			    else if (raiz instanceof  NodoIf){
+		    else if (raiz instanceof  NodoIf){
 		    	//PRUEBA IF
+		    	ambito = ((NodoIf)raiz).getAmbito();
 		    	RecorrerArbol(((NodoIf)raiz).getPrueba());
 		    	//THEN IF
-		    	System.out.println("**Then IF**");
 		    	RecorrerArbol(((NodoIf)raiz).getParteThen());
 		    	if(((NodoIf)raiz).getParteElse()!=null){
 		    		//PARTE ELSE
+		    		ambito = ((NodoIf)raiz).getAmbito();
+		    	
 		    		RecorrerArbol(((NodoIf)raiz).getParteElse());
 		    	}
+		    	UpAmbito();
 		    }
 		    else if (raiz instanceof  NodoRepeat){
 		    	//CUERPO REPEAT
+		    	ambito = ((NodoRepeat)raiz).getAmbito();
 		    	RecorrerArbol(((NodoRepeat)raiz).getCuerpo());
 		    	//PRUEBA REPEAT
 		    	RecorrerArbol(((NodoRepeat)raiz).getPrueba());
+		    	UpAmbito();
 		    }
 		    else if (raiz instanceof  NodoAsignacion){
 		    	//ASIGNACION PARTE IZQUIERDA
@@ -125,7 +103,10 @@ public class Semantica {
 		    	//VALOR
 		    }
 		    else if (raiz instanceof NodoIdentificador ){
-		    	//VARIABLE
+		    	if(declare_var)
+		    		SemanticaValidarDeclaracion((NodoIdentificador)raiz);
+		    	else
+		    		SemanticaValidarUsoVariable((NodoIdentificador)raiz);
 		    }
 		    else if (raiz instanceof NodoOperacion){
 		    	//EXPRESION PARTE IZQUIERDA
@@ -142,8 +123,7 @@ public class Semantica {
 		    		RecorrerArbol(nodo);
 		    	}
 		    	else{
-		    		System.out.println("Operacion logica: "+logico.getOperacion());
-			    	//EXP IZQUIERDA OPERACION
+		    		//EXP IZQUIERDA OPERACION
 			    	RecorrerArbol(logico.getOpIzquierdo());
 			    	//EXP DERECHA OPERACION
 			    	RecorrerArbol(logico.getOpDerecho());
@@ -152,7 +132,7 @@ public class Semantica {
 		    else if (raiz instanceof NodoCallFunction){
 		    	//LLMAR A FUNCION
 		    	if (((NodoCallFunction)raiz).getVariables()!=null){
-		    		System.out.println(" Con parametos ->");
+		    		//System.out.println(" Con parametos ->");
 		    		NodoParamFunction var = (NodoParamFunction)((NodoCallFunction)raiz).getVariables(); 
 		    		while(var!=null){
 		    			RecorrerArbol(var.getExpresion());
@@ -160,15 +140,16 @@ public class Semantica {
 		    		}
 		    	}
 		    	else{
-		    		System.out.println(" Sin parametos");
+		    		//System.out.println(" Sin parametos");
 		    	}
 		    }
 		    else if (raiz instanceof NodoReturn ){
-		    	System.out.println("Return");	
+		    	//System.out.println("Return");	
 		    	RecorrerArbol(((NodoReturn)raiz).getExpresion());
 		    }
 		    else if (raiz instanceof NodoFor ){
 		    	//INICIALIZACION CICLO FOR
+		    	ambito = ((NodoFor)raiz).getAmbito();
 		    	RecorrerArbol(((NodoFor)raiz).getInicializacion());
 		    	//CONDICION LOGICA EXPRESION
 		    	RecorrerArbol(((NodoFor)raiz).getCondicion());
@@ -176,10 +157,46 @@ public class Semantica {
 		    	RecorrerArbol(((NodoFor)raiz).getIncremento());
 		    	//CUERPO FOR
 		    	RecorrerArbol(((NodoFor)raiz).getSentencia());
+		    	UpAmbito();
 		    }
-		    else System.out.println("Tipo de nodo desconocido " + raiz);
-		    
+		    else{ 
+		    	//System.out.println("Tipo de nodo desconocido " + raiz);
+		    }
 		    raiz = raiz.getHermanoDerecha();
-		}	
+			}	
 		}
+
+		//Regla 1, validar decaraciones repetidas
+		public void SemanticaValidarDeclaracion(NodoIdentificador identificador){
+			if( identificador != null ){
+				RegistroSimbolo simbolo = ts.BuscarSimbolo(identificador.getNombre(), identificador.getAmbito());
+				if( simbolo.getNumLinea() + simbolo.getNumColumn() != identificador.getNumLinea() + identificador.getNumColumn()){
+					System.out.println("#"+error_count+" -> linea: "+identificador.getNumLinea()+  " -> Variable {"+simbolo.getIdentificador()+"} ya declarada, en la linea: "+simbolo.getNumLinea() + " columna: "+simbolo.getNumColumn());
+					error_count++;
+				}
+				///System.out.println("**Linea: "+simbolo.getNumLinea()+"-> column: "+simbolo.getNumColumn()+"-> symbol: " + simbolo.getTipeSymbol() + " -> key: " + simbolo.getIdentificador());
+                //System.out.println("Var: " + identificador.getNombre() + " amb: " + ambito + " line: " + identificador.getNumLinea() + " col: "+identificador.getNumColumn());
+			}
+		}
+
+		//regla 2, Validar que las variables existen
+		public void SemanticaValidarUsoVariable(NodoIdentificador identificador){
+			if( identificador != null ){
+				//System.out.println("\n\n");
+				//System.out.println("Var: " + identificador.getNombre() + " amb: " + ambito + " line: " + identificador.getNumLinea() + " col: "+identificador.getNumColumn());
+				
+				RegistroSimbolo simbolo = ts.BuscarSimbolo(identificador.getNombre(), ambito);
+				if(simbolo == null){
+					System.out.println("#"+error_count+" -> linea: "+identificador.getNumLinea()+  " -> Variable {"+identificador.getNombre()+"} no ha sido declarada");
+					error_count++;
+				}
+				else
+				if( simbolo.getNumLinea() > identificador.getNumLinea() || (simbolo.getNumLinea() == identificador.getNumLinea()) && ( simbolo.getNumColumn() > identificador.getNumColumn() ))
+				{
+					System.out.println("#"+error_count+" -> linea: "+identificador.getNumLinea()+" -> Variable {"+identificador.getNombre()+"} debe ser declarada antes de ser usada, si existe pero mas adelante en: linea: "+ simbolo.getNumLinea()+" columna: "+simbolo.getNumColumn());
+					error_count++;
+				}
+			}
+		}
+
 	}
