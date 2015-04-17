@@ -169,14 +169,14 @@ public class TablaSimbolos {
 		if(tabla.containsKey(simbolo.getIdentificador())){
 			RegistroSimbolo simbolo_tabla = BuscarSimbolo(simbolo.getIdentificador());
 			if (simbolo_tabla.getAmbito().equals(simbolo.getAmbito())){
-				System.out.println(simbolo.getIdentificador() + " -> " + simbolo.getAmbito() + " -> " + simbolo.getAmbitoPadre() + " -> " + simbolo.getNivel() + " :(");
+				//System.out.println(simbolo.getIdentificador() + " -> " + simbolo.getAmbito() + " -> " + simbolo.getAmbitoPadre() + " -> " + simbolo.getNivel() + " :(");
 				return false;
 			}
 			else{
 				boolean colision = false;
 				RegistroSimbolo simbolo_hermano = simbolo_tabla; 
 				while(true){
-					//System.out.println("(1) "+simbolo.getIdentificador() + " -> " + simbolo.getAmbito() + " -> " + simbolo.getAmbitoPadre());
+					////System.out.println("(1) "+simbolo.getIdentificador() + " -> " + simbolo.getAmbito() + " -> " + simbolo.getAmbitoPadre());
 					
 					if (simbolo_hermano.getAmbito().equals(simbolo.getAmbito())){
 						colision = true;
@@ -226,19 +226,19 @@ public class TablaSimbolos {
             		
             		simbolo_hermano.setHermano(simbolo);
             		
-            		System.out.println(simbolo.getIdentificador() + " -> " + simbolo.getAmbito() + " -> " + simbolo.getAmbitoPadre() + " -> " + simbolo.getNivel() + " :)*");
+            		//System.out.println(simbolo.getIdentificador() + " -> " + simbolo.getAmbito() + " -> " + simbolo.getAmbitoPadre() + " -> " + simbolo.getNivel() + " :)*");
 					
 					tabla.put(simbolo_hermano.getIdentificador(),simbolo_hermano);
 					return true;	
             	}
             	else{
-            		System.out.println(simbolo.getIdentificador() + " -> " + simbolo.getAmbito() + " -> " + simbolo.getAmbitoPadre() + " -> " + simbolo.getNivel() + " :(*");
+            		//System.out.println(simbolo.getIdentificador() + " -> " + simbolo.getAmbito() + " -> " + simbolo.getAmbitoPadre() + " -> " + simbolo.getNivel() + " :(*");
 					return false;
             	}
 				
 			}
 		}else{
-			System.out.println(simbolo.getIdentificador() + " -> " + simbolo.getAmbito() + " -> " + simbolo.getAmbitoPadre() + " -> " + simbolo.getNivel() + " :)");
+			//System.out.println(simbolo.getIdentificador() + " -> " + simbolo.getAmbito() + " -> " + simbolo.getAmbitoPadre() + " -> " + simbolo.getNivel() + " :)");
 			tabla.put(simbolo.getIdentificador(),simbolo);
 			return true;			
 		}
