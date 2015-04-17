@@ -1,7 +1,8 @@
 package compilador;
 
 import java_cup.runtime.*;
-import ast.*;
+import java_cup.runtime.ComplexSymbolFactory.ComplexSymbol;
+import ast.*;	
 
 action code {:
 	private boolean modoDepuracion=true;
@@ -31,11 +32,12 @@ action code {:
 parser code {: 
 
 	public void syntax_error(Symbol s) {
+		ComplexSymbol cs = (ComplexSymbol) s;
 		System.err.println("########################");		
 		System.err.println("Error de sintaxis");
-		System.err.println("Linea " + s.left);
-		System.err.println("Columna " + s.right);
-		System.err.println("Sym " + s.sym);
+		System.err.println("Linea:   " + cs.xleft.getLine());
+		System.err.println("Columna: " + cs.xleft.getColumn());
+		System.err.println("Simbolo: " + cs.getName());
 		System.err.println("########################");
 		System.exit(0);	
 	}

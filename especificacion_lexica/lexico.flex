@@ -31,7 +31,7 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 //	private SymbolFactory csf;
 	private ComplexSymbolFactory csf;
 	private int lineanum;
-	private boolean debug = false;
+	private boolean debug = true;
 
 	private Symbol symbol(String name, int sym) {
 	    return csf.newSymbol(name, sym, new Location(yyline+1,yycolumn+1,yychar), new Location(yyline+1,yycolumn+yylength(),yychar+yylength()));
