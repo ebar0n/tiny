@@ -5,7 +5,7 @@ import java.util.*;
 public class RegistroSimbolo {
 	private String identificador;
 	private tipoDato tipo;
-	private Integer NumLinea
+	private Integer NumLinea;
 	private int DireccionMemoria;
 	private String ambito;
 	private String ambito_padre;
@@ -49,7 +49,7 @@ public class RegistroSimbolo {
 		return this.ambito_padre;
 	}
 
-	public List<Integer> getNumLinea() {
+	public Integer getNumLinea() {
 		return NumLinea;
 	}
 

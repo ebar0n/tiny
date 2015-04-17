@@ -33,10 +33,10 @@ begin
 end;
 
 begin 
-	{
+	
 	int a,a,a;
 	int z,z,z;
-	}
+	z:=x*t;
 	if d!=false then
 		int ebar0n;
 		if d!=false then

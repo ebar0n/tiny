@@ -589,7 +589,6 @@ factor      ::=
 				printModoDepuracion("factor -> ID");
 				if(variable!=null){
 					//System.out.println("Construyendo Nodo ID para Lexema: "+ variable.toString());
-					System.out.println(variable);
 					RESULT= new NodoIdentificador(variable);		
 				}else{
 					RESULT = null;
