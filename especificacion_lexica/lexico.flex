@@ -56,7 +56,7 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 %}
 
 %eofval{
-     return csf.newSymbol("EOF", EOF, new Location(yyline+1,yycolumn+1,yychar), new Location(yyline+1,yycolumn+1,yychar+1));
+     return csf.newSymbol("EOF", sym.EOF, new Location(yyline+1,yycolumn+1,yychar), new Location(yyline+1,yycolumn+1,yychar+1));
 %eofval}
 
 digito		= [0-9]

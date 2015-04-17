@@ -12,13 +12,13 @@ case "$OPTION" in
         echo "# =================================================================== #"
         echo "# ===============Generando analizador sintactico: (CUP)============== #"
         echo "# =================================================================== #"
-        java -jar JAR/java-cup-11a.jar $@ -destdir src/compilador/ especificacion_sintactica/sintactico.cup
+        java -jar JAR/java-cup-11b.jar $@ -destdir src/compilador/ especificacion_sintactica/sintactico.cup
     ;;
 
     "run" )
         FILE=$1
-        javac -sourcepath ./src -classpath ./JAR/java-cup-11a-runtime.jar ./src/compilador/Compilador.java -d build/classes 
-        java -cp ./build/classes:./JAR/java-cup-11a-runtime.jar compilador.Compilador $FILE
+        javac -sourcepath ./src -classpath ./JAR/java-cup-11b-runtime.jar ./src/compilador/Compilador.java -d build/classes 
+        java -cp ./build/classes:./JAR/java-cup-11b-runtime.jar compilador.Compilador $FILE
     ;;
 
 esac
