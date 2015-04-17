@@ -4,27 +4,38 @@ import java.util.*;
 public class RegistroSimboloFunction extends RegistroSimbolo {
 	//Funcion
 	private int NumParametros;
-	private List<String> TipoParametros;
+	private List<tipoDato> TipoParametros = new ArrayList<tipoDato>();
+	private List<String> IdParametros = new ArrayList<String>(); 
 
-        public RegistroSimboloFunction(int NumParametros, List<String> TipoParametros, String identificador, tipoDato tipo, int numLinea, int direccionMemoria) {
-            super(identificador, tipo, numLinea, direccionMemoria);
-            this.NumParametros = NumParametros;
-            this.TipoParametros = TipoParametros;
+
+        public RegistroSimboloFunction(int numParametros, tipoDato tipoParametros,String idParametros, String identificador, tipoDato tipo, int numLinea, String ambito,String ambito_padre, int nivel) {
+            super(identificador, tipo, numLinea,ambito,ambito_padre,nivel);
+            this.NumParametros= NumParametros;
+            this.TipoParametros.add(tipoParametros);
+            this.IdParametros.add(idParametros);
         }
-	
-        public List<String> getTipoParametros() {
+		
+		public RegistroSimboloFunction(String identificador, tipoDato tipo, int numLinea, String ambito, String ambito_padre,int nivel){
+			super(identificador, tipo, numLinea, ambito,ambito_padre,nivel);
+		}
+
+        public List<tipoDato> getTipoParametros() {
             return TipoParametros;
         }
 
-        public void setTipoParametros(List<String> TipoParametros) {
-            this.TipoParametros = TipoParametros;
+        public int getNumParametros() {
+			return NumParametros;
+		}
+
+        public void setTipoParametros(tipoDato tipoParametros) {
+            this.TipoParametros.add(tipoParametros);
+        }
+
+        public void setIdParametros(String idParametros) {
+            this.IdParametros.add(idParametros);
         }
    
-	public int getNumParametros() {
-		return NumParametros;
-	}
-
-	public void setNumParametros(int numParametros) {
-		this.NumParametros = numParametros;
-	}
+		public void setNumParametros(int numParametros) {
+			this.NumParametros = numParametros;
+		}
 }
