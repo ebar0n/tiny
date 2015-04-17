@@ -34,7 +34,7 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 	private boolean debug = false;
 
 	private Symbol symbol(String name, int sym) {
-	    return csf.newSymbol(name, sym, new ComplexSymbolFactory.Location(yyline+1,yycolumn+1,yychar), new Location(yyline+1,yycolumn+yylength(),yychar+yylength()));
+	    return csf.newSymbol(name, sym, new Location(yyline+1,yycolumn+1,yychar), new Location(yyline+1,yycolumn+yylength(),yychar+yylength()));
 	}
 
 	private Symbol symbol(String name, int sym, Object val) {
@@ -56,7 +56,7 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 %}
 
 %eofval{
-     return symbolFactory.newSymbol("EOF", EOF, new Location(yyline+1,yycolumn+1,yychar), new Location(yyline+1,yycolumn+1,yychar+1));
+     return csf.newSymbol("EOF", EOF, new Location(yyline+1,yycolumn+1,yychar), new Location(yyline+1,yycolumn+1,yychar+1));
 %eofval}
 
 digito		= [0-9]
