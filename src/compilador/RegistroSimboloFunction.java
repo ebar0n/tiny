@@ -4,34 +4,38 @@ import java.util.*;
 public class RegistroSimboloFunction extends RegistroSimbolo {
 	//Funcion
 	private int NumParametros;
-	private List<String> TipoParametros;
-	private List<String> IdParametros;
+	private List<tipoDato> TipoParametros = new ArrayList<tipoDato>();
+	private List<String> IdParametros = new ArrayList<String>(); 
 
 
-        public RegistroSimboloFunction(int numParametros, String tipoParametros,String idParametros, String identificador, tipoDato tipo, int numLinea, String ambito) {
-            super(identificador, tipo, numLinea,ambito);
+        public RegistroSimboloFunction(int numParametros, tipoDato tipoParametros,String idParametros, String identificador, tipoDato tipo, int numLinea, String ambito, int nivel) {
+            super(identificador, tipo, numLinea,ambito,nivel);
             this.NumParametros= NumParametros;
             this.TipoParametros.add(tipoParametros);
             this.IdParametros.add(idParametros);
         }
 		
-		public RegistroSimboloFunction(String identificador, tipoDato tipo, int numLinea, String ambito){
-			super(identificador, tipo, numLinea, ambito);
+		public RegistroSimboloFunction(String identificador, tipoDato tipo, int numLinea, String ambito, int nivel){
+			super(identificador, tipo, numLinea, ambito,nivel);
 		}
 
-        public List<String> getTipoParametros() {
+        public List<tipoDato> getTipoParametros() {
             return TipoParametros;
         }
 
-        public void setTipoParametros(List<String> TipoParametros) {
-            this.TipoParametros = TipoParametros;
+        public int getNumParametros() {
+			return NumParametros;
+		}
+
+        public void setTipoParametros(tipoDato tipoParametros) {
+            this.TipoParametros.add(tipoParametros);
+        }
+
+        public void setIdParametros(String idParametros) {
+            this.IdParametros.add(idParametros);
         }
    
-	public int getNumParametros() {
-		return NumParametros;
-	}
-
-	public void setNumParametros(int numParametros) {
-		this.NumParametros = numParametros;
-	}
+		public void setNumParametros(int numParametros) {
+			this.NumParametros = numParametros;
+		}
 }
