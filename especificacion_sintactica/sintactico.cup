@@ -110,11 +110,13 @@ non terminal NodoBase for_sentence;
 non terminal NodoBase return_sentence;
 non terminal NodoBase declare_function;
 non terminal NodoBase block_sentence;
+non terminal NodoBase block_sentence_init;
 non terminal NodoBase arguments_list_function;
 non terminal NodoBase arguments_function;
 non terminal NodoBase function_sentence;
 non terminal NodoBase logical_expression;
 non terminal tipoDato type_specifier;	
+
 
 /* Precedencia de operadores */
 
@@ -188,17 +190,20 @@ variable_list	::=
 			{: 
 				printModoDepuracion("variable_list -> ID COMA variable_list"); 
 				RESULT = new NodoVariable(new NodoIdentificador(variable), v);
+				RESULT.setSymbol((ComplexSymbol)CUP$parser$stack.peek());	
 			:}
 		| ID:variable
 			{: 
 				printModoDepuracion("variable_list -> ID"); 
 				RESULT = new NodoVariable(new NodoIdentificador(variable));
+				RESULT.setSymbol((ComplexSymbol)CUP$parser$stack.peek());	
 			:}
 		| ID:variable LCLASP NUM:tam RCLASP COMA variable_list:v
 			{:
 				printModoDepuracion("variable_list -> ID LCLASP NUM RCLASP COMA variable_list"); 
 				if(variable!=null && tam!=null){
-					RESULT= new NodoArray(new NodoIdentificador(variable), tam, v);					
+					RESULT= new NodoArray(new NodoIdentificador(variable), tam, v);
+					RESULT.setSymbol((ComplexSymbol)CUP$parser$stack.peek());	
 				}else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla variable_list -> ID LCLASP NUM RCLASP COMA variable_list");
@@ -208,7 +213,8 @@ variable_list	::=
 			{:
 				printModoDepuracion("variable_list -> ID LCLASP NUM RCLASP"); 
 				if(variable!=null && tam!=null){
-					RESULT= new NodoArray(new NodoIdentificador(variable), tam);					
+					RESULT= new NodoArray(new NodoIdentificador(variable), tam);
+					RESULT.setSymbol((ComplexSymbol)CUP$parser$stack.peek());
 				}else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla variable_list -> ID LCLASP NUM RCLASP");
@@ -221,11 +227,13 @@ declare_function ::=
 			{:
 				printModoDepuracion("declare_function -> type_specifier ID declarator_function block_sentence");
 				RESULT = new NodoFunction(type,valor,decl,expression);
+				RESULT.setSymbol(expression.getSymbol());
 			:}
 		|	VOID:type ID:valor declarator_function:decl block_sentence:expression 
 			{:
 				printModoDepuracion("declare_function -> VOID declarator_function block_sentence");
 				RESULT = new NodoFunction(tipoDato.VOID,valor,decl,expression);
+				RESULT.setSymbol(expression.getSymbol());
 			:}
 		;
 
@@ -247,14 +255,25 @@ declarator_function ::=
 	| LPAREN arguments_list_function:ptl RPAREN
 		{:
 			printModoDepuracion("declarator_function -> LPAREN arguments_list_function RPAREN");
-			RESULT = ptl;
+			RESULT = ptl;	
 		:}
 	;
-block_sentence  ::= 
-		BEGIN sentence_list:expression END 
+
+block_sentence_init  ::= 
+		BEGIN:init
 			{:
-				printModoDepuracion("block_sentence -> BEGIN sentence_list END");
+				printModoDepuracion("block_sentence -> BEGIN init");
+				RESULT = new NodoBase();
+				RESULT.setSymbol((ComplexSymbol)CUP$parser$stack.peek());	
+			:} 
+		;
+
+block_sentence  ::= 
+		block_sentence_init:init sentence_list:expression END 
+			{:
+				printModoDepuracion("block_sentence -> block_sentence_init sentence_list END");
 				RESULT = new NodoBloque(expression);
+				RESULT.setSymbol(init.getSymbol());
 			:} 
 		;
 
@@ -263,11 +282,13 @@ arguments_list_function ::=
 			{:
 				printModoDepuracion("arguments_list_function -> type_specifier ID COMA arguments_list_function");
 				RESULT = new NodoArgList(new NodoIdentificador(valor),type,arg);
+				RESULT.setSymbol((ComplexSymbol)CUP$parser$stack.peek());	
 			:}
 		| type_specifier:type ID:valor
 			{:
 				printModoDepuracion("arguments_list_function -> type_specifier ID");
 				RESULT = new NodoArgList(new NodoIdentificador(valor),type);
+				RESULT.setSymbol((ComplexSymbol)CUP$parser$stack.peek());	
 			:}
 		;
 
@@ -282,6 +303,7 @@ sentence_list    ::=
 					}
 					hijoActual.setHermanoDerecha(sent);
 					RESULT=ini;
+						
 				}else{
 					RESULT=sent;
 				}
@@ -289,7 +311,7 @@ sentence_list    ::=
 	    | sentence:sent	SEMI
 	    	{: 
 	    		printModoDepuracion("sentence_list -> sentence SEMI");
-				RESULT=sent;				
+				RESULT=sent;			
 			:}
 		;
 

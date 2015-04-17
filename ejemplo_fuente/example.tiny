@@ -29,14 +29,16 @@ begin
 		end;
 	end;
 	}
-	int ebar0n;
+	int ebar0n[4];
 end;
 
+
 begin 
-	
+
 	int a,a,a;
 	int z,z,z;
 	z:=x*t;
+	
 	if d!=false then
 		int ebar0n;
 		if d!=false then
@@ -47,9 +49,10 @@ begin
 	if d!=false then
 		int ebar0n;
 	end;
+
 	
 	boolean myfunc; 
-	
+	{
 	for(x:=1;x<10;x:=x+1)
 		int ccccccccccccccccccc;
 
@@ -57,11 +60,12 @@ begin
 			int ccccccccccccccccccc;
 		end;
 	end;
-
+	}
 	for(x:=1;x<10;x:=x+1)
 		int ccccccccccccccccccc;
 	end;
 
-	int ccccccccccccccccccc;
-
+	int ccccccccccccccccccc[1];
+	
+	int ebar0n[4],h[5],ads,verv;
 end;
