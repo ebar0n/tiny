@@ -145,7 +145,6 @@ public class Semantica {
 		    		System.out.println("Operacion logica: "+logico.getOperacion());
 			    	//EXP IZQUIERDA OPERACION
 			    	RecorrerArbol(logico.getOpIzquierdo());
-			    	printSpaces();
 			    	//EXP DERECHA OPERACION
 			    	RecorrerArbol(logico.getOpDerecho());
 			    }
@@ -184,4 +183,3 @@ public class Semantica {
 		}	
 		}
 	}
-}
