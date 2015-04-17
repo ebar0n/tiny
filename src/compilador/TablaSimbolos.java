@@ -35,7 +35,7 @@ public class TablaSimbolos {
                 NodoFunction nodof = (NodoFunction) raiz;
                 nodof.setAmbito(ambito);
                 RegistroSimbolo simboloFunction = new RegistroSimbolo(
-                        nodof.getIdentificador(),
+                        nodof.getIdentificador().getNombre(),
                         nodof.getTipo(),
                         nodof.getLineanum(),
                         ambito,
@@ -45,7 +45,7 @@ public class TablaSimbolos {
                 );
                 Integer num_arg = 0;
                 ambito_padre = ambito;
-                ambito = nodof.getIdentificador();
+                ambito = nodof.getIdentificador().getNombre();
                 if (nodof.getDeclaracion() != null) {
                     NodoArgList nodoA = (NodoArgList) nodof.getDeclaracion();
                     while (nodoA != null) {

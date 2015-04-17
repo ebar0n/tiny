@@ -3,11 +3,11 @@ package ast;
 public class NodoFunction extends NodoBase{
 
 	private tipoDato tipo;
-	private String identificador;
+	private NodoIdentificador identificador;
 	private NodoBase declaracion;
 	private NodoBase expression;
 	
-	public NodoFunction(tipoDato tipo,String identificador,NodoBase declaracion,NodoBase expression) {
+	public NodoFunction(tipoDato tipo,NodoIdentificador identificador,NodoBase declaracion,NodoBase expression) {
 		super();
 		this.tipo = tipo;
 		this.identificador = identificador;
@@ -15,7 +15,7 @@ public class NodoFunction extends NodoBase{
 		this.expression = expression;
 	}
 
-	public NodoFunction(tipoDato tipo,String identificador,NodoBase expression) {
+	public NodoFunction(tipoDato tipo,NodoIdentificador identificador,NodoBase expression) {
 		super();
 		this.tipo = tipo;
 		this.identificador = identificador;
@@ -38,11 +38,11 @@ public class NodoFunction extends NodoBase{
 		return expression;
 	}
 	
-	public void setIdentificador(String identificador) {
+	public void setIdentificador(NodoIdentificador identificador) {
 		this.identificador = identificador;
 	}
 	
-	public String getIdentificador() {
+	public NodoIdentificador getIdentificador() {
 		return identificador;
 	}
 	
