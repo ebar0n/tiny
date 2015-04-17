@@ -36,7 +36,7 @@ public class Compilador {
 		ast.Util.imprimirAST(root);
 		TablaSimbolos ts = new TablaSimbolos();
 		ts.cargarTabla(root);
-		//ts.ImprimirClaves();
+		ts.ImprimirClaves();
 	    //REALIZAR ACA ANALISIS SEMANTICO
 		//Generador.setTablaSimbolos(ts);
 //		Generador.generarCodigoObjeto(root);
