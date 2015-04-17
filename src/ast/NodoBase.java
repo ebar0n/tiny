@@ -8,6 +8,7 @@ public class NodoBase {
 	 * */
 	
 	private NodoBase HermanoDerecha;
+	private String ambito = null;
 
 	public NodoBase(NodoBase hermanoDerecha) {
 		super();
@@ -31,4 +32,11 @@ public class NodoBase {
 		return (HermanoDerecha!=null);
 	}
 	
+	public void setAmbito(String ambito){
+		this.ambito = ambito;
+	}
+
+	public String getAmbito(String ambito){
+		return this.ambito;
+	}
 }

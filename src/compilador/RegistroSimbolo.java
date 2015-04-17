@@ -5,30 +5,32 @@ import java.util.*;
 public class RegistroSimbolo {
 	private String identificador;
 	private tipoDato tipo;
-	private List<Integer> NumLinea = new ArrayList<Integer>();
+	private Integer NumLinea
 	private int DireccionMemoria;
 	private String ambito;
 	private String ambito_padre;
 	private int nivel;
-
+	private RegistroSimbolo hermano;
 	//Constructor para una variable
 	public RegistroSimbolo(String identificador,tipoDato tipo, int numLinea, String ambito,String ambito_padre,int nivel) {
 		super();
 		this.identificador = identificador;
 		this.tipo = tipo;
-		this.NumLinea.add(numLinea);
+		this.NumLinea = numLinea;
 		this.ambito = ambito;
 		this.ambito_padre = ambito_padre;
 		this.nivel = nivel;
+		this.hermano = null;
 	}
 
 	public RegistroSimbolo(String identificador,int numLinea, String ambito,String ambito_padre,int nivel) {
 		super();
 		this.identificador = identificador;
-		this.NumLinea.add(numLinea);
+		this.NumLinea = numLinea;
 		this.ambito = ambito;
 		this.ambito_padre = ambito_padre;
 		this.nivel = nivel;
+		this.hermano = null;
 	}
 
 	public String getKey() {
@@ -55,6 +57,14 @@ public class RegistroSimbolo {
 		return DireccionMemoria;
 	}
 
+	public RegistroSimbolo getHermano() {
+		return this.hermano;
+	}
+
+	public void setHermano(RegistroSimbolo hermano){
+		this.hermano = hermano;
+	}
+
 	public int getNivel() {
 		return nivel;
 	}
@@ -66,4 +76,5 @@ public class RegistroSimbolo {
 	public void setDireccionMemoria(int direccionMemoria) {
 		DireccionMemoria = direccionMemoria;
 	}
+
 }

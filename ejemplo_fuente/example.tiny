@@ -1,3 +1,4 @@
+{
 int myfunc(int a,boolean b)
 begin
 	int vector[10];
@@ -15,9 +16,52 @@ begin
 		end;
 	end;
 end;
+}
+int myfunc2(int a,boolean b)
+begin
+	{
+	int ccccccccccccccccccc;
+	if d!=false then
+		int j;
+		for(x:=1;x<10;x:=x+1)
+			int ccccccccccccccccccc;
+			int ccccccccccccccccccc;
+		end;
+	end;
+	}
+	int ebar0n;
+end;
 
 begin 
+	{
+	int a,a,a;
+	int z,z,z;
+	}
+	if d!=false then
+		int ebar0n;
+		if d!=false then
+			int ebar0n;
+		end;
+	end;
 
-	int a,b[1],c;
+	if d!=false then
+		int ebar0n;
+	end;
 	
+	boolean myfunc; 
+	
+	for(x:=1;x<10;x:=x+1)
+		int ccccccccccccccccccc;
+
+		for(x:=1;x<10;x:=x+1)
+			int ccccccccccccccccccc;
+		end;
+	end;
+
+	for(x:=1;x<10;x:=x+1)
+		int ccccccccccccccccccc;
+	end;
+
+	int ccccccccccccccccccc;
+
 end;
