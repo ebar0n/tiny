@@ -1,7 +1,7 @@
 package ast;
 
 public class NodoArray extends NodoBase {
-	private NodoIdentificador id;
+	private NodoIdentificador identificador;
 	private Integer tam;
 	private tipoDato tipo;
 	private NodoBase pos;
@@ -9,27 +9,27 @@ public class NodoArray extends NodoBase {
 	
 	public NodoArray(NodoIdentificador id, Integer tam, tipoDato tipo) {
 		super();
-		this.id = id;
+		this.identificador = id;
 		this.tam = tam;
 		this.tipo = tipo;
 	}
 
 	public NodoArray(NodoIdentificador id, Integer tam, NodoBase nodo) {
 		super();
-		this.id = id;
+		this.identificador = id;
 		this.tam = tam;
 		this.nodo = nodo;
 	}
 
 	public NodoArray(NodoIdentificador id, NodoBase pos) {
 		super();
-		this.id = id;
+		this.identificador = id;
 		this.pos = pos;
 	}
 
 	public NodoArray(NodoIdentificador id, Integer tam) {
 		super();
-		this.id = id;
+		this.identificador = id;
 		this.tam = tam;
 		this.nodo = null;
 	}
@@ -39,16 +39,12 @@ public class NodoArray extends NodoBase {
 	}
 
 	public NodoIdentificador getIdentificador(){
-		return this.id;
+		return this.identificador;
 	}
 
 	public NodoBase getPos(){
 		//En construccion, se debe verificar que tipo de nodo es y obtener el valor.
 		return pos;
-	}
-
-	public NodoBase getId() {
-		return id;
 	}
 
 	public Integer getTam() {

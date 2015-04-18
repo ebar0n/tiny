@@ -30,14 +30,20 @@ public class Compilador {
 		//Para ver depuracion de analisis sintactico se debe ir al parser.java y colocar modoDepuracion en true
 		parser_obj.parse();
 		NodoBase root=parser_obj.action_obj.getASTroot();
-		System.out.println();
-		System.out.println("IMPRESION DEL AST GENERADO");
-		System.out.println();
-		ast.Util.imprimirAST(root);
+		//System.out.println();
+		//System.out.println("IMPRESION DEL AST GENERADO");
+		//System.out.println();
+		//ast.Util.imprimirAST(root);
 		TablaSimbolos ts = new TablaSimbolos();
 		ts.cargarTabla(root);
+
 		ts.ImprimirClaves();
 	    //REALIZAR ACA ANALISIS SEMANTICO
+		Semantica semantica = new Semantica(ts);
+		System.out.println("\nBuscando errores semanticos");
+		semantica.RecorrerArbol(root);
+		System.out.println("#"+(semantica.error_count-1)+" error(es) detectados semanticamente");
+					
 		//Generador.setTablaSimbolos(ts);
 //		Generador.generarCodigoObjeto(root);
 	}

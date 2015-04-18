@@ -110,11 +110,13 @@ non terminal NodoBase for_sentence;
 non terminal NodoBase return_sentence;
 non terminal NodoBase declare_function;
 non terminal NodoBase block_sentence;
+non terminal NodoBase block_sentence_init;
 non terminal NodoBase arguments_list_function;
 non terminal NodoBase arguments_function;
 non terminal NodoBase function_sentence;
 non terminal NodoBase logical_expression;
 non terminal tipoDato type_specifier;	
+non terminal NodoIdentificador init_id;
 
 /* Precedencia de operadores */
 
@@ -183,32 +185,44 @@ declare_variable	::=
 			:}
 		;
 
+init_id 		::=
+		ID:variable
+			{:
+				RESULT = new NodoIdentificador(variable);
+				RESULT.setSymbol((ComplexSymbol)CUP$parser$stack.peek());	
+			:}
+		;
+
 variable_list	::= 
-		ID:variable COMA variable_list:v
+		init_id:variable COMA variable_list:v
 			{: 
 				printModoDepuracion("variable_list -> ID COMA variable_list"); 
-				RESULT = new NodoVariable(new NodoIdentificador(variable), v);
+				RESULT = new NodoVariable(variable, v);
+				RESULT.setSymbol(variable.getSymbol());	
 			:}
-		| ID:variable
+		| init_id:variable
 			{: 
 				printModoDepuracion("variable_list -> ID"); 
-				RESULT = new NodoVariable(new NodoIdentificador(variable));
+				RESULT = new NodoVariable(variable);
+				RESULT.setSymbol(variable.getSymbol());	
 			:}
-		| ID:variable LCLASP NUM:tam RCLASP COMA variable_list:v
+		| init_id:variable LCLASP NUM:tam RCLASP COMA variable_list:v
 			{:
 				printModoDepuracion("variable_list -> ID LCLASP NUM RCLASP COMA variable_list"); 
 				if(variable!=null && tam!=null){
-					RESULT= new NodoArray(new NodoIdentificador(variable), tam, v);					
+					RESULT= new NodoArray(variable, tam, v);
+					RESULT.setSymbol(variable.getSymbol());		
 				}else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla variable_list -> ID LCLASP NUM RCLASP COMA variable_list");
 				}
 			:}
-		| ID:variable LCLASP NUM:tam RCLASP
+		| init_id:variable LCLASP NUM:tam RCLASP
 			{:
 				printModoDepuracion("variable_list -> ID LCLASP NUM RCLASP"); 
 				if(variable!=null && tam!=null){
-					RESULT= new NodoArray(new NodoIdentificador(variable), tam);					
+					RESULT= new NodoArray(variable, tam);
+					RESULT.setSymbol(variable.getSymbol());	
 				}else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla variable_list -> ID LCLASP NUM RCLASP");
@@ -217,15 +231,17 @@ variable_list	::=
 		;
 	
 declare_function ::= 
-		type_specifier:type ID:valor declarator_function:decl block_sentence:expression 
+		type_specifier:type init_id:variable declarator_function:decl block_sentence:expression 
 			{:
 				printModoDepuracion("declare_function -> type_specifier ID declarator_function block_sentence");
-				RESULT = new NodoFunction(type,valor,decl,expression);
+				RESULT = new NodoFunction(type,variable,decl,expression);
+				RESULT.setSymbol(variable.getSymbol());
 			:}
-		|	VOID:type ID:valor declarator_function:decl block_sentence:expression 
+		|	VOID:type init_id:variable declarator_function:decl block_sentence:expression 
 			{:
 				printModoDepuracion("declare_function -> VOID declarator_function block_sentence");
-				RESULT = new NodoFunction(tipoDato.VOID,valor,decl,expression);
+				RESULT = new NodoFunction(tipoDato.VOID,variable,decl,expression);
+				RESULT.setSymbol(variable.getSymbol());
 			:}
 		;
 
@@ -247,27 +263,40 @@ declarator_function ::=
 	| LPAREN arguments_list_function:ptl RPAREN
 		{:
 			printModoDepuracion("declarator_function -> LPAREN arguments_list_function RPAREN");
-			RESULT = ptl;
+			RESULT = ptl;	
 		:}
 	;
-block_sentence  ::= 
-		BEGIN sentence_list:expression END 
+
+block_sentence_init  ::= 
+		BEGIN:init
 			{:
-				printModoDepuracion("block_sentence -> BEGIN sentence_list END");
+				printModoDepuracion("block_sentence -> BEGIN init");
+				RESULT = new NodoBase();
+				RESULT.setSymbol((ComplexSymbol)CUP$parser$stack.peek());	
+			:} 
+		;
+
+block_sentence  ::= 
+		block_sentence_init:init sentence_list:expression END 
+			{:
+				printModoDepuracion("block_sentence -> block_sentence_init sentence_list END");
 				RESULT = new NodoBloque(expression);
+				RESULT.setSymbol(init.getSymbol());
 			:} 
 		;
 
 arguments_list_function ::= 
-		type_specifier:type ID:valor COMA arguments_list_function:arg
+		type_specifier:type init_id:valor COMA arguments_list_function:arg
 			{:
 				printModoDepuracion("arguments_list_function -> type_specifier ID COMA arguments_list_function");
-				RESULT = new NodoArgList(new NodoIdentificador(valor),type,arg);
+				RESULT = new NodoArgList(valor,type,arg);
+				RESULT.setSymbol((ComplexSymbol)CUP$parser$stack.peek());	
 			:}
-		| type_specifier:type ID:valor
+		| type_specifier:type init_id:valor
 			{:
 				printModoDepuracion("arguments_list_function -> type_specifier ID");
-				RESULT = new NodoArgList(new NodoIdentificador(valor),type);
+				RESULT = new NodoArgList(valor,type);
+				RESULT.setSymbol((ComplexSymbol)CUP$parser$stack.peek());	
 			:}
 		;
 
@@ -282,6 +311,7 @@ sentence_list    ::=
 					}
 					hijoActual.setHermanoDerecha(sent);
 					RESULT=ini;
+						
 				}else{
 					RESULT=sent;
 				}
@@ -289,7 +319,7 @@ sentence_list    ::=
 	    | sentence:sent	SEMI
 	    	{: 
 	    		printModoDepuracion("sentence_list -> sentence SEMI");
-				RESULT=sent;				
+				RESULT=sent;			
 			:}
 		;
 
@@ -378,11 +408,13 @@ repeat_sentence ::=
 		;
 
 assign_sentence ::= 
-		ID:variable ASSIGN logical_expression:ex	
+		init_id:variable ASSIGN logical_expression:ex	
 			{: 
 				printModoDepuracion("assign_sentence -> ID ASSIGN");
-				if(variable!=null)
-					RESULT = new NodoAsignacion(new NodoIdentificador(variable),ex);
+				if(variable!=null){
+					RESULT = new NodoAsignacion(variable,ex);
+					RESULT.setSymbol(variable.getSymbol());
+				}
 				else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla assign_sentence -> ID");
@@ -391,8 +423,10 @@ assign_sentence ::=
 		| array_var_access:vesc	ASSIGN logical_expression:ex
 			{: 
 				printModoDepuracion("assign_sentence -> array_var_access");
-				if(vesc!=null && ex!=null)
+				if(vesc!=null && ex!=null){
 					RESULT = new NodoAsignacion((NodoArray)vesc,ex);
+					RESULT.setSymbol( vesc.getSymbol() );
+				}
 				else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla assign_sentence -> array_var_access");
@@ -401,11 +435,13 @@ assign_sentence ::=
 		;
 
 read_sentence   ::=
-		READ ID:variable
+		READ init_id:variable
 			{: 
 				printModoDepuracion("read_sentence -> ID"); 
-				if(variable!=null)
-					RESULT = new NodoLeer(new NodoIdentificador(variable));
+				if(variable!=null){
+					RESULT = new NodoLeer(variable);
+					RESULT.setSymbol( variable.getSymbol() );
+				}
 				else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla read_sentence -> ID");
@@ -414,8 +450,10 @@ read_sentence   ::=
 		| READ array_var_access:variable
 			{: 
 				printModoDepuracion("read_sentence -> array_var_access"); 
-				if(variable!=null)
+				if(variable!=null){
 					RESULT = new NodoLeer(variable);
+					RESULT.setSymbol( variable.getSymbol() );
+				}
 				else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla read_sentence -> array_var_access");
@@ -452,15 +490,17 @@ return_sentence ::=
 			:};
 
 function_sentence ::= 
-		ID:valor LPAREN arguments_function:variables RPAREN 
+		init_id:variable LPAREN arguments_function:variables RPAREN 
 			{:
 				printModoDepuracion("function_sentence -> arguments_function");
-				RESULT = new NodoCallFunction(new NodoIdentificador(valor),variables);
+				RESULT = new NodoCallFunction(variable,variables);
+				RESULT.setSymbol(variable.getSymbol());
 			:}
-		| ID:valor LPAREN RPAREN
+		| init_id:variable LPAREN RPAREN
 			{:
 				printModoDepuracion("function_sentence -> not arguments_function");
-				RESULT = new NodoCallFunction(new NodoIdentificador(valor));
+				RESULT = new NodoCallFunction(variable);
+				RESULT.setSymbol(variable.getSymbol());
 			:}
 		;
 
@@ -584,12 +624,12 @@ factor      ::=
 					System.out.println("Ocurrio error en cup regla factor -> NUM NEGATIVO");
 				}
 			:}
-		| ID:variable
+		| init_id:variable
 			{: 
 				printModoDepuracion("factor -> ID");
 				if(variable!=null){
 					//System.out.println("Construyendo Nodo ID para Lexema: "+ variable.toString());
-					RESULT= new NodoIdentificador(variable);		
+					RESULT= variable;		
 				}else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla factor -> ID");
@@ -623,11 +663,12 @@ factor      ::=
 		;
 
 array_var_access	::= 
-		ID:variable LCLASP additive_expression:pos RCLASP
+		init_id:variable LCLASP additive_expression:pos RCLASP
 			{:
 				printModoDepuracion("array_var_access");
 				if(variable!=null && pos!=null){
-					RESULT= new NodoArray(new NodoIdentificador(variable), pos);					
+					RESULT= new NodoArray(variable, pos);	
+					RESULT.setSymbol(variable.getSymbol());				
 				}else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla array_var_access");

@@ -2,39 +2,39 @@ package ast;
 
 public class NodoVariable extends NodoBase{
 	
-	private NodoIdentificador id;
+	private NodoIdentificador identificador;
 	private NodoBase nodo;
 	private tipoDato tipo;
 	
 	public NodoVariable(NodoIdentificador id,NodoBase nodo) {
 		super();
-		this.id = id;
+		this.identificador = id;
 		this.nodo = nodo;
 		this.tipo= null;
 	}
 	public NodoVariable(NodoBase nodo,tipoDato tipo) {
 		super();
-		this.id = null;
+		this.identificador = null;
 		this.nodo = nodo;
 		this.tipo = tipo;
 	}	
 	
 	public NodoVariable(NodoIdentificador id) {
 		super();
-		this.id = id;
+		this.identificador = id;
 		this.nodo = null;
 		this.tipo = null;
 	}
 	
 	public NodoVariable() {
 		super();
-		this.id = null;
+		this.identificador = null;
 		this.nodo = null;
 		this.tipo = null;
 	}
 	
-	public NodoIdentificador getId() {
-		return id;
+	public NodoIdentificador getIdentificador() {
+		return this.identificador;
 	}
 	
 	public tipoDato getTipo() {
@@ -45,8 +45,8 @@ public class NodoVariable extends NodoBase{
 		return nodo;
 	}
 	
-	public void setId(NodoIdentificador id) {
-		this.id = id;
+	public void setIdentificador(NodoIdentificador id) {
+		this.identificador = id;
 	}
 	
 	public void setTipo(tipoDato tipo) {

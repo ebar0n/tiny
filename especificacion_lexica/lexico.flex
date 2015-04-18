@@ -31,7 +31,7 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 //	private SymbolFactory csf;
 	private ComplexSymbolFactory csf;
 	private int lineanum;
-	private boolean debug = true;
+	private boolean debug = false;
 
 	private Symbol symbol(String name, int sym) {
 	    return csf.newSymbol(name, sym, new Location(yyline+1,yycolumn+1,yychar), new Location(yyline+1,yycolumn+yylength(),yychar+yylength()));
@@ -62,7 +62,7 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 digito		= [0-9]
 numero		= {digito}+
 letra			= [a-zA-Z]
-identificador	= {letra}+{digito}*
+identificador	= {letra}+{digito}*{letra}*{digito}*
 nuevalinea		= \n | \n\r | \r\n
 espacio		= [ \t]+
 
