@@ -12,8 +12,9 @@ public class Semantica {
 	}
 	int error_count = 1;
 	boolean declare_var = false;
-	String ambito = "MAIN";
-	
+	String ambito = "MAIN", Parte_for = null, variable_for = null;
+	int num_uso = 0,num_uso_inc = 0, ciclo_for = 0 , linea_for = 0; //<- for
+
 	public void UpAmbito(){
 		ambito = ((RegistroSimbolo) ts.BuscarSimbolo(ambito)).getAmbito();
 	}	
@@ -107,6 +108,8 @@ public class Semantica {
 		    		SemanticaValidarDeclaracion((NodoIdentificador)raiz);
 		    	else
 		    		SemanticaValidarUsoVariable((NodoIdentificador)raiz);
+                if(ciclo_for == 1)
+                    SemanticaCicloFor((NodoIdentificador)raiz,Parte_for);
 		    }
 		    else if (raiz instanceof NodoOperacion){
 		    	//EXPRESION PARTE IZQUIERDA
@@ -149,16 +152,24 @@ public class Semantica {
 		    }
 		    else if (raiz instanceof NodoFor ){
 		    	//INICIALIZACION CICLO FOR
+                ciclo_for = 1;
 		    	ambito = ((NodoFor)raiz).getAmbito();
+		    	Parte_for = "INICIALIZACION";
 		    	RecorrerArbol(((NodoFor)raiz).getInicializacion());
-		    	//CONDICION LOGICA EXPRESION
+                //CONDICION LOGICA EXPRESION
+                Parte_for = "CONDICION";
 		    	RecorrerArbol(((NodoFor)raiz).getCondicion());
 		    	//INCREMENTO ASIGNACION
+		    	
+		    	Parte_for = "INCREMENTO";
 		    	RecorrerArbol(((NodoFor)raiz).getIncremento());
 		    	//CUERPO FOR
+		    	ciclo_for = 0;
+		    	Parte_for = null;
 		    	RecorrerArbol(((NodoFor)raiz).getSentencia());
+		    	SemanticaCicloForValidar();
 		    	UpAmbito();
-		    }
+            }
 		    else{ 
 		    	//System.out.println("Tipo de nodo desconocido " + raiz);
 		    }
@@ -198,5 +209,29 @@ public class Semantica {
 				}
 			}
 		}
-
+                
+        //Regla 3, Ciclo FOR
+        public void SemanticaCicloFor(NodoIdentificador identificador,String parte_for){
+            if(identificador != null){
+                RegistroSimbolo simbolo = ts.BuscarSimbolo(identificador.getNombre(), ambito);
+                if(num_uso == 0 && parte_for == "INICIALIZACION"){
+            		variable_for = simbolo.getIdentificador();
+            		linea_for = identificador.getNumLinea();
+            		System.out.println("La variable del for es: " + variable_for);
+            	}if(parte_for == "CONDICION" && variable_for == simbolo.getIdentificador())
+            		num_uso++;
+            	if(parte_for == "INCREMENTO" && variable_for == simbolo.getIdentificador())
+            		num_uso_inc++;
+            }
+		}
+		//Regla 3, Validacion del Ciclo FOR
+		public void SemanticaCicloForValidar(){ 
+        	if(num_uso_inc < 2 || num_uso < 1){
+        		error_count++;	
+        		System.out.println("#"+error_count+" -> linea: "+linea_for+" -> Variable {"+variable_for+"} revisar parametros del for");
+        	}
+        	num_uso_inc = 0;
+        	num_uso = 0;
+        	variable_for = null;
+        }
 	}
