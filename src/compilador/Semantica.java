@@ -6,6 +6,8 @@ import ast.*;
 public class Semantica {
 
 	TablaSimbolos ts;
+        tipoDato funcion_actual;//guarda el tipo de dato de la funcion que esta recorriendo
+        int Existe_return; //verifica si hay al menos un return en la funcion que esta siendo recorrida
 	
 	public Semantica(TablaSimbolos ts){
 		this.ts = ts;
@@ -33,12 +35,23 @@ public class Semantica {
 		    else if (raiz instanceof NodoFunction){	
 		    	//FUNCIONES
 		    	NodoFunction nodo = (NodoFunction)raiz;
+                        
+                        //Tipo de funcion
+                        funcion_actual = nodo.getTipo();
 		    	declare_var = true;
-		    	ambito = nodo.getAmbito();
+		    	ambito = nodo.getAmbito();      
 		    	RecorrerArbol(nodo.getDeclaracion());
 		    	UpAmbito();
 		    	ambito = nodo.getAmbito();
+                        
+                        Existe_return = 0;
 		    	RecorrerArbol(nodo.getExpression());
+                        
+                        //Verifico si despues del recorrido encontro almenos un return
+                        if(Existe_return < 1 && funcion_actual.compareTo(tipoDato.VOID)!=0){
+                         SemanticaReturnFuncion(nodo);//hay error, no consiguio almenos un return
+                        }
+                        
 		    	declare_var = false;
 		    	UpAmbito();
 		    }
@@ -147,6 +160,10 @@ public class Semantica {
 		    }
 		    else if (raiz instanceof NodoReturn ){
 		    	//System.out.println("Return");	
+                        if(funcion_actual.compareTo(tipoDato.VOID)!=0){
+                            Existe_return++;
+                        }
+                        
 		    	RecorrerArbol(((NodoReturn)raiz).getExpresion());
 		    }
 		    else if (raiz instanceof NodoFor ){
@@ -214,17 +231,17 @@ public class Semantica {
                             nodo = (NodoBase) nodo_logico.getExp();
                             }
                             else if(nodo_logico.getOpIzquierdo()!=null){
-                                System.out.println("NODOIZQUIERDO");
+                                //System.out.println("NODOIZQUIERDO");
                                 nodo = (NodoBase) nodo_logico.getOpIzquierdo();
                             }
                             else if(nodo_logico.getOpDerecho()!=null){
-                                System.out.println("NODODERECHO");
+                                //System.out.println("NODODERECHO");
                                 nodo = (NodoBase) nodo_logico.getOpDerecho();
                             }           
                         }
                         
                         if(nodo instanceof NodoOperacion){
-                                System.out.println("NODOOPERACION");
+                                //System.out.println("NODOOPERACION");
                                 NodoOperacion nodo_operacion = (NodoOperacion) nodo;
                                
                         }
@@ -236,8 +253,8 @@ public class Semantica {
                             if(simbolo.getTipo().compareTo(tipoDato.BOOLEAN)!=0){
                              System.out.println("#"+error_count+" -> linea: "+nodo_identificador.getNumLinea()+  " -> Variable {"+nodo_identificador.getNombre()+"} no es parte de un expression valida para el ciclo repeat");   
                              error_count++;
-                             nodo=null;
-                            }    
+                            } 
+                            nodo=null;
                         }
                         
                         if(nodo instanceof NodoValor){
@@ -246,22 +263,29 @@ public class Semantica {
                             if(nodo_valor.getValorBoolean()==null){
                              System.out.println("#"+error_count+" -> linea: "+nodo_valor.getNumLinea()+  " -> constante no es parte de un expression valida para el ciclo repeat");   
                              error_count++;
-                             nodo=null;
-                            }     
+                            }
+                            nodo=null;
                         }
                         
                         if(nodo instanceof NodoCallFunction){
-                            System.out.println("NODOFUNCION");
+                            //System.out.println("NODOFUNCION");
                             NodoCallFunction nodo_funcion = (NodoCallFunction) nodo;
                             RegistroSimbolo simbolo = ts.BuscarSimbolo(nodo_funcion.getIdentificador().getNombre());
                             if(simbolo.getTipo().compareTo(tipoDato.BOOLEAN)!=0){
                              System.out.println("#"+error_count+" -> linea: "+nodo_funcion.getNumLinea()+  " -> Variable {"+nodo_funcion.getIdentificador().getNombre()+"} no es parte de un expression valida para el ciclo repeat");   
                              error_count++;
-                             nodo=null;
-                            }  
+                            }
+                            nodo=null;
                         }
                         
                     }while(nodo!=null);
+                }
+                
+                public void SemanticaReturnFuncion(NodoFunction funcion){
+                        
+                    System.out.println("#"+error_count+" -> linea: "+funcion.getNumLinea()+  " -> funcion {"+funcion.getIdentificador().getNombre()+"} no ha encontrado un return");   
+                    error_count++;
+                    
                 }
 
 	}
