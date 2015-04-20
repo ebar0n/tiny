@@ -197,7 +197,7 @@ public class Semantica {
 							//Falsa alarma, el simbolo existe pero en el main, y esta declarado otra vez en una funcion
 						}
 						else{
-							System.out.println("N°"+error_count+" (Regla#1)-> linea: "+identificador.getNumLinea()+  " -> Variable {"+simbolo.getIdentificador()+"} ya declarada, en la linea: "+simbolo.getNumLinea() + " columna: "+simbolo.getNumColumn());
+							System.out.println("N°"+error_count+" (Regla#1.1)-> linea: "+identificador.getNumLinea()+  " -> Variable {"+simbolo.getIdentificador()+"} ya declarada, en la linea: "+simbolo.getNumLinea() + " columna: "+simbolo.getNumColumn());
 							error_count++
 						;}
 					}
@@ -206,13 +206,13 @@ public class Semantica {
         	}
 		}
 
-		//Regla 2, validar decaraciones repetidas
+		//Regla 1, validar decaraciones repetidas de funciones
 		public void SemanticaValidarDeclaracionTipoFuntions(NodoIdentificador identificador){
 			if( identificador != null ){
 				//System.out.println("Var: " + identificador.getNombre() + " amb: " + ambito + " line: " + identificador.getNumLinea() + " col: "+identificador.getNumColumn());
 				RegistroSimbolo simbolo = ts.BuscarSimboloIsFunction(identificador.getNombre());
 					if( simbolo.getNumLinea() + simbolo.getNumColumn() != identificador.getNumLinea() + identificador.getNumColumn()){
-						System.out.println("N°"+error_count+" (Regla#1)-> linea: "+identificador.getNumLinea()+  " -> Funcion {"+simbolo.getIdentificador()+"} ya declarada, en la linea: "+simbolo.getNumLinea() + " columna: "+simbolo.getNumColumn());
+						System.out.println("N°"+error_count+" (Regla#1.2)-> linea: "+identificador.getNumLinea()+  " -> Funcion {"+simbolo.getIdentificador()+"} ya declarada, en la linea: "+simbolo.getNumLinea() + " columna: "+simbolo.getNumColumn());
 						error_count++;
 					}
 				//System.out.println("**Linea: "+simbolo.getNumLinea()+"-> column: "+simbolo.getNumColumn()+"-> symbol: " + simbolo.getTipeSymbol() + " -> key: " + simbolo.getIdentificador());
