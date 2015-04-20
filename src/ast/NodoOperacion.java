@@ -5,6 +5,7 @@ public class NodoOperacion extends NodoBase {
 	private NodoBase opIzquierdo;
 	private NodoBase opDerecho;
 	private tipoOp operacion;
+	private tipoDato tipo;
 	
 	public NodoOperacion(NodoBase opIzquierdo, tipoOp tipoOperacion, NodoBase opDerecho) {
 		super();
@@ -39,6 +40,15 @@ public class NodoOperacion extends NodoBase {
 	public tipoOp getOperacion() {
 		return operacion;
 	}
+
+	public void setTipoDato(tipoDato tipo) {
+		this.tipo = tipo;
+	}
+
+	public tipoDato getTipoDato() {
+		return this.tipo;
+	}
+
 
 	
 }
