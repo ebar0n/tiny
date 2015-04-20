@@ -10,10 +10,13 @@ public class Semantica {
 	public Semantica(TablaSimbolos ts){
 		this.ts = ts;
 	}
-	int error_count = 1;
+	int error_count = 1, warning_count = 0;
 	boolean declare_var = false;
-	String ambito = "MAIN", Parte_for = null, variable_for = null;
-	int num_uso = 0,num_uso_inc = 0, ciclo_for = 0 , linea_for = 0; //<- for
+	String ambito = "MAIN";
+
+	//Variables de Ciclo FOR
+	String Parte_for = null, variable_for = null;
+	int num_uso = 0,num_uso_inc = 0, ciclo_for = 0 , linea_for = 0;
 
 	public void UpAmbito(){
 		ambito = ((RegistroSimbolo) ts.BuscarSimbolo(ambito)).getAmbito();
@@ -217,7 +220,7 @@ public class Semantica {
                 if(num_uso == 0 && parte_for == "INICIALIZACION"){
             		variable_for = simbolo.getIdentificador();
             		linea_for = identificador.getNumLinea();
-            		System.out.println("La variable del for es: " + variable_for);
+            		//System.out.println("La variable del for es: " + variable_for);
             	}if(parte_for == "CONDICION" && variable_for == simbolo.getIdentificador())
             		num_uso++;
             	if(parte_for == "INCREMENTO" && variable_for == simbolo.getIdentificador())
@@ -227,8 +230,8 @@ public class Semantica {
 		//Regla 3, Validacion del Ciclo FOR
 		public void SemanticaCicloForValidar(){ 
         	if(num_uso_inc < 2 || num_uso < 1){
-        		error_count++;	
-        		System.out.println("#"+error_count+" -> linea: "+linea_for+" -> Variable {"+variable_for+"} revisar parametros del for");
+        		warning_count++;
+        		System.out.println("#"+warning_count+" -> linea: "+linea_for+" -> Variable {"+variable_for+"} Warning revisar parametros del for");
         	}
         	num_uso_inc = 0;
         	num_uso = 0;
