@@ -21,12 +21,12 @@ begin
 	end;
 end;
 
-int myfunckl()
+int myfunckll()
 begin
 	int vector[10];
 end;
 
-int myfuncl(int a,boolean b)
+int myfunckl(int a,boolean b)
 begin
 	int vector[10];
 	int vectora[1],cc;
@@ -44,11 +44,12 @@ end;
 
 begin 
 
-	int a,d,vector,c;
+	int a,d,vector,c[2];
 
 	int x,z,t; z:=1<t;
-	
-	if d!=false then
+	vector:=1;
+	c[1]:=1;
+	if myfuncl(myfuncl(), myfuncl() + 1) then
 		if d!=false then
 			for(x:=1;x<10;x:=x+1)
 				int var;

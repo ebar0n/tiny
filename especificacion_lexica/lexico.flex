@@ -64,12 +64,11 @@ numero		= {digito}+
 letra			= [a-zA-Z]
 
 /**Identificadores tipo python, pero se usa el de tiny**/
-/*
+
 combinacion = [-_]*{digito}*[-_]*{digito}*
 identificador	= {letra}+{combinacion}*{letra}*{combinacion}*
-*/
 
-identificador	= {letra}+
+/*identificador	= {letra}+*/
 
 nuevalinea		= \n | \n\r | \r\n
 espacio		= [ \t]+

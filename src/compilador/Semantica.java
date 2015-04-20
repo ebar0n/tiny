@@ -13,6 +13,7 @@ public class Semantica {
 	int error_count = 1;
 	boolean declare_var = false;
 	String ambito = TablaSimbolos.conts_ambito_global;
+	boolean is_array = false;
 	
 	public void UpAmbito(){
 		if( ambito == TablaSimbolos.conts_ambito_global ){
@@ -36,13 +37,16 @@ public class Semantica {
 		    	//FUNCIONES
 		    	NodoFunction nodo = (NodoFunction)raiz;
 		    	SemanticaValidarDeclaracionTipoFuntions(nodo.getIdentificador());
+		    	
 		    	declare_var = true;
 		    	ambito = nodo.getAmbito();
 		    	RecorrerArbol(nodo.getDeclaracion());
 		    	UpAmbito();
 		    	ambito = nodo.getAmbito();
-		    	RecorrerArbol(nodo.getExpression());
 		    	declare_var = false;
+		    	
+		    	RecorrerArbol(nodo.getExpression());
+
 		    	UpAmbito();
 		    }
 		    else if (raiz instanceof NodoVariable){
@@ -54,8 +58,13 @@ public class Semantica {
 		    }
 		    else if (raiz instanceof NodoArray ){
 		    	NodoArray variable = (NodoArray)raiz;
+		    	
+		    	is_array = true;
 		    	RecorrerArbol(variable.getIdentificador());
+		    	is_array = false;
+		    	
 		    	RecorrerArbol(variable.getNodo());
+
 		    }else if(raiz instanceof NodoArgList){
 		    	//ARGUMENTOS FUNCIONES
 		    	NodoArgList nodoA = (NodoArgList)raiz;
@@ -106,7 +115,10 @@ public class Semantica {
 		    	//VALOR
 		    }
 		    else if (raiz instanceof NodoIdentificador ){
-		    	if(declare_var){
+		    	if(declare_var == true){
+		    		if( raiz.getAmbito() == null ){
+		    			raiz.setAmbito(ambito);
+		    		}
 		    		SemanticaValidarDeclaracionTipoVariable((NodoIdentificador)raiz);
 		    	}
 		    	else{
@@ -151,6 +163,7 @@ public class Semantica {
 		    }
 		    else if (raiz instanceof NodoReturn ){
 		    	//System.out.println("Return");	
+
 		    	RecorrerArbol(((NodoReturn)raiz).getExpresion());
 		    }
 		    else if (raiz instanceof NodoFor ){
@@ -199,7 +212,7 @@ public class Semantica {
 				//System.out.println("Var: " + identificador.getNombre() + " amb: " + ambito + " line: " + identificador.getNumLinea() + " col: "+identificador.getNumColumn());
 				RegistroSimbolo simbolo = ts.BuscarSimboloIsFunction(identificador.getNombre());
 					if( simbolo.getNumLinea() + simbolo.getNumColumn() != identificador.getNumLinea() + identificador.getNumColumn()){
-						System.out.println("N°"+error_count+" (Regla#1)-> linea: "+identificador.getNumLinea()+  " -> Variable {"+simbolo.getIdentificador()+"} ya declarada, en la linea: "+simbolo.getNumLinea() + " columna: "+simbolo.getNumColumn());
+						System.out.println("N°"+error_count+" (Regla#1)-> linea: "+identificador.getNumLinea()+  " -> Funcion {"+simbolo.getIdentificador()+"} ya declarada, en la linea: "+simbolo.getNumLinea() + " columna: "+simbolo.getNumColumn());
 						error_count++;
 					}
 				//System.out.println("**Linea: "+simbolo.getNumLinea()+"-> column: "+simbolo.getNumColumn()+"-> symbol: " + simbolo.getTipeSymbol() + " -> key: " + simbolo.getIdentificador());
@@ -221,12 +234,41 @@ public class Semantica {
 				if( simbolo.getNumLinea() > identificador.getNumLinea() || (simbolo.getNumLinea() == identificador.getNumLinea()) && ( simbolo.getNumColumn() > identificador.getNumColumn() ))
 				{	
 					if( simbolo.getAmbito() == TablaSimbolos.conts_ambito_global && ts.EstoyDentroDeUnaFuncion(ts.BuscarSimbolo(identificador.getAmbito()))){
-						//falsa alarma, tengo la variable declarada en el main, y lla uso en una funcion
+						//falsa alarma, tengo la variable declarada en el main, y la uso en una funcion
+						//verificar tipo de variable, normal o array
+						verificarUsoTipoVar(identificador, simbolo);
 					}
 					else{
 						System.out.println("N°"+error_count+" (Regla#2)-> linea: "+identificador.getNumLinea()+" -> Variable {"+identificador.getNombre()+"} debe ser declarada antes de ser usada, si existe pero mas adelante en: linea: "+ simbolo.getNumLinea()+" columna: "+simbolo.getNumColumn());
 						error_count++;
 					}
+				}
+				else{
+					verificarUsoTipoVar(identificador, simbolo);
+					//verificar tipo de variable, normal o array
+				}
+			}
+		}
+		
+		//Regla 3
+		public void verificarUsoTipoVar(NodoIdentificador identificador, RegistroSimbolo simbolo){
+			if( simbolo.getTipeSymbol() == tipoSymbol.ARRAY ){
+				if (this.is_array == false){
+					System.out.println("N°"+error_count+" (Regla#3)-> linea: "+identificador.getNumLinea()+" -> Variable {"+identificador.getNombre()+"} se usa de forma indebida, fue declarada como array");
+					error_count++;
+				}
+			}
+			else{
+				if( simbolo.getTipeSymbol() == tipoSymbol.VAR ){
+					if (this.is_array == true){
+						System.out.println("N°"+error_count+" (Regla#3)-> linea: "+identificador.getNumLinea()+" -> Variable {"+identificador.getNombre()+"} se usa de forma indebida, fue declarada como variable");
+						error_count++;
+					}
+				}
+				else{
+					//este error no deberia darse
+					System.out.println("N°"+error_count+" (Regla#3)-> linea: "+identificador.getNumLinea()+" -> identificador {"+identificador.getNombre()+"} no se reconoce como variable o array");
+					error_count++;
 				}
 			}
 		}
