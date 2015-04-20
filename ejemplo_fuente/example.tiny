@@ -1,5 +1,7 @@
+
 int myfunc(int a,boolean b)
 begin
+	return true;
 	int vector[10],myfunc;
 	int x,aa,vectora[1],cc;
 	boolean vectorb[3],vectorc[3],vectord;
@@ -24,6 +26,13 @@ end;
 int myfunckll()
 begin
 	int vector[10];
+	return 1;
+end;
+
+void myfunckllvoid()
+begin
+	int vector[10];
+	return;
 end;
 
 int myfunckl(int a,boolean b)
@@ -37,6 +46,7 @@ begin
 		x:=1;
 		for(x:=1;x<10;x:=x+1)
 			int ejempl;
+			return 1;
 		end;
 	end;
 	int ebaron[4];
