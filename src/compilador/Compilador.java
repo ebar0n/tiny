@@ -36,17 +36,17 @@ public class Compilador {
 		//ast.Util.imprimirAST(root);
 		TablaSimbolos ts = new TablaSimbolos();
 		ts.cargarTabla(root);
-
 		ts.ImprimirClaves();
 	    //REALIZAR ACA ANALISIS SEMANTICO
 		Semantica semantica = new Semantica(ts);
 		System.out.println("\nBuscando errores semanticos");
 		semantica.RecorrerArbol(root);
+
 		System.out.println("#"+(semantica.error_count-1)+" error(es) detectados semanticamente");
-		System.out.println("#"+(semantica.warning_count)+" Warnings detectados");
+		System.out.println("#"+(semantica.warning_count-1)+" Warning(s) detectados");
 					
 		//Generador.setTablaSimbolos(ts);
-//		Generador.generarCodigoObjeto(root);
+		//Generador.generarCodigoObjeto(root);
 	}
 
 }
