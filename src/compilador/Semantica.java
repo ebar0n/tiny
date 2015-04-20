@@ -82,7 +82,9 @@ public class Semantica {
 		    	ambito = ((NodoRepeat)raiz).getAmbito();
 		    	RecorrerArbol(((NodoRepeat)raiz).getCuerpo());
 		    	//PRUEBA REPEAT
+                        SemanticaValidarUntil(((NodoRepeat)raiz).getPrueba());
 		    	RecorrerArbol(((NodoRepeat)raiz).getPrueba());
+                        
 		    	UpAmbito();
 		    }
 		    else if (raiz instanceof  NodoAsignacion){
@@ -198,5 +200,68 @@ public class Semantica {
 				}
 			}
 		}
+                
+                public void SemanticaValidarUntil(NodoBase nodo){
+                    //generado por cristopher  
+                    
+                    do{
+                        
+                        if(nodo instanceof NodoLogico){
+                            NodoLogico nodo_logico =(NodoLogico) nodo;
+                            //System.out.println("NODOLOGICO");
+                            
+                            if(nodo_logico.getExp()!=null){
+                            nodo = (NodoBase) nodo_logico.getExp();
+                            }
+                            else if(nodo_logico.getOpIzquierdo()!=null){
+                                System.out.println("NODOIZQUIERDO");
+                                nodo = (NodoBase) nodo_logico.getOpIzquierdo();
+                            }
+                            else if(nodo_logico.getOpDerecho()!=null){
+                                System.out.println("NODODERECHO");
+                                nodo = (NodoBase) nodo_logico.getOpDerecho();
+                            }           
+                        }
+                        
+                        if(nodo instanceof NodoOperacion){
+                                System.out.println("NODOOPERACION");
+                                NodoOperacion nodo_operacion = (NodoOperacion) nodo;
+                               
+                        }
+                        
+                        if(nodo instanceof NodoIdentificador){
+                            //System.out.println("NODOIDENTIFICADOR");
+                            NodoIdentificador nodo_identificador = (NodoIdentificador) nodo;
+                            RegistroSimbolo simbolo = ts.BuscarSimbolo(nodo_identificador.getNombre());
+                            if(simbolo.getTipo().compareTo(tipoDato.BOOLEAN)!=0){
+                             System.out.println("#"+error_count+" -> linea: "+nodo_identificador.getNumLinea()+  " -> Variable {"+nodo_identificador.getNombre()+"} no es parte de un expression valida para el ciclo repeat");   
+                             error_count++;
+                             nodo=null;
+                            }    
+                        }
+                        
+                        if(nodo instanceof NodoValor){
+                            //System.out.println("NODOVALOR");
+                            NodoValor nodo_valor = (NodoValor) nodo;
+                            if(nodo_valor.getValorBoolean()==null){
+                             System.out.println("#"+error_count+" -> linea: "+nodo_valor.getNumLinea()+  " -> constante no es parte de un expression valida para el ciclo repeat");   
+                             error_count++;
+                             nodo=null;
+                            }     
+                        }
+                        
+                        if(nodo instanceof NodoCallFunction){
+                            System.out.println("NODOFUNCION");
+                            NodoCallFunction nodo_funcion = (NodoCallFunction) nodo;
+                            RegistroSimbolo simbolo = ts.BuscarSimbolo(nodo_funcion.getIdentificador().getNombre());
+                            if(simbolo.getTipo().compareTo(tipoDato.BOOLEAN)!=0){
+                             System.out.println("#"+error_count+" -> linea: "+nodo_funcion.getNumLinea()+  " -> Variable {"+nodo_funcion.getIdentificador().getNombre()+"} no es parte de un expression valida para el ciclo repeat");   
+                             error_count++;
+                             nodo=null;
+                            }  
+                        }
+                        
+                    }while(nodo!=null);
+                }
 
 	}

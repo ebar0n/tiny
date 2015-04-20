@@ -400,7 +400,7 @@ if_sentence ::=
 	;
 
 repeat_sentence ::= 
-		REPEAT sentence_list:sl UNTIL expression:ex
+		REPEAT sentence_list:sl UNTIL logical_expression:ex
 			{: 
 				printModoDepuracion("repeat_sentence -> REPEAT sentence_list UNTIL expression");
 				RESULT = new NodoRepeat(sl,ex);
