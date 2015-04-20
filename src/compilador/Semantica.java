@@ -12,10 +12,12 @@ public class Semantica {
 	}
 	int error_count = 1;
 	boolean declare_var = false;
-	String ambito = "MAIN";
+	String ambito = TablaSimbolos.conts_ambito_global;
 	
 	public void UpAmbito(){
-		ambito = ((RegistroSimbolo) ts.BuscarSimbolo(ambito)).getAmbito();
+		if( ambito == TablaSimbolos.conts_ambito_global ){
+			ambito = ((RegistroSimbolo) ts.BuscarSimbolo(ambito)).getAmbito();
+		}
 	}	
 
 
@@ -33,6 +35,7 @@ public class Semantica {
 		    else if (raiz instanceof NodoFunction){	
 		    	//FUNCIONES
 		    	NodoFunction nodo = (NodoFunction)raiz;
+		    	SemanticaValidarDeclaracionTipoFuntions(nodo.getIdentificador());
 		    	declare_var = true;
 		    	ambito = nodo.getAmbito();
 		    	RecorrerArbol(nodo.getDeclaracion());
@@ -103,10 +106,13 @@ public class Semantica {
 		    	//VALOR
 		    }
 		    else if (raiz instanceof NodoIdentificador ){
-		    	if(declare_var)
-		    		SemanticaValidarDeclaracion((NodoIdentificador)raiz);
-		    	else
-		    		SemanticaValidarUsoVariable((NodoIdentificador)raiz);
+		    	if(declare_var){
+		    		SemanticaValidarDeclaracionTipoVariable((NodoIdentificador)raiz);
+		    	}
+		    	else{
+		    		raiz.setAmbito(ambito);
+		    		SemanticaValidarUsoDeVariables((NodoIdentificador)raiz);
+		    	}
 		    }
 		    else if (raiz instanceof NodoOperacion){
 		    	//EXPRESION PARTE IZQUIERDA
@@ -166,35 +172,61 @@ public class Semantica {
 			}	
 		}
 
-		//Regla 1, validar decaraciones repetidas
-		public void SemanticaValidarDeclaracion(NodoIdentificador identificador){
+		//Regla 1, validar decaraciones repetidas de variables
+		public void SemanticaValidarDeclaracionTipoVariable(NodoIdentificador identificador){
 			if( identificador != null ){
+				//System.out.println("Var: " + identificador.getNombre() + " amb: " + ambito + " line: " + identificador.getNumLinea() + " col: "+identificador.getNumColumn());
 				RegistroSimbolo simbolo = ts.BuscarSimbolo(identificador.getNombre(), identificador.getAmbito());
-				if( simbolo.getNumLinea() + simbolo.getNumColumn() != identificador.getNumLinea() + identificador.getNumColumn()){
-					System.out.println("#"+error_count+" -> linea: "+identificador.getNumLinea()+  " -> Variable {"+simbolo.getIdentificador()+"} ya declarada, en la linea: "+simbolo.getNumLinea() + " columna: "+simbolo.getNumColumn());
-					error_count++;
-				}
-				///System.out.println("**Linea: "+simbolo.getNumLinea()+"-> column: "+simbolo.getNumColumn()+"-> symbol: " + simbolo.getTipeSymbol() + " -> key: " + simbolo.getIdentificador());
-                //System.out.println("Var: " + identificador.getNombre() + " amb: " + ambito + " line: " + identificador.getNumLinea() + " col: "+identificador.getNumColumn());
-			}
+				if (simbolo.getTipeSymbol() != tipoSymbol.FUNCTION){
+					if( simbolo.getNumLinea() + simbolo.getNumColumn() != identificador.getNumLinea() + identificador.getNumColumn()){
+						
+						if(TablaSimbolos.conts_ambito_global == simbolo.getAmbito() && simbolo.getAmbito()==ts.BuscarSimbolo(identificador.getAmbito()).getAmbito()){
+							//Falsa alarma, el simbolo existe pero en el main, y esta declarado otra vez en una funcion
+						}
+						else{
+							System.out.println("N°"+error_count+" (Regla#1)-> linea: "+identificador.getNumLinea()+  " -> Variable {"+simbolo.getIdentificador()+"} ya declarada, en la linea: "+simbolo.getNumLinea() + " columna: "+simbolo.getNumColumn());
+							error_count++
+						;}
+					}
+					//System.out.println("**Linea: "+simbolo.getNumLinea()+"-> column: "+simbolo.getNumColumn()+"-> symbol: " + simbolo.getTipeSymbol() + " -> key: " + simbolo.getIdentificador());
+            	}
+        	}
+		}
+
+		//Regla 2, validar decaraciones repetidas
+		public void SemanticaValidarDeclaracionTipoFuntions(NodoIdentificador identificador){
+			if( identificador != null ){
+				//System.out.println("Var: " + identificador.getNombre() + " amb: " + ambito + " line: " + identificador.getNumLinea() + " col: "+identificador.getNumColumn());
+				RegistroSimbolo simbolo = ts.BuscarSimboloIsFunction(identificador.getNombre());
+					if( simbolo.getNumLinea() + simbolo.getNumColumn() != identificador.getNumLinea() + identificador.getNumColumn()){
+						System.out.println("N°"+error_count+" (Regla#1)-> linea: "+identificador.getNumLinea()+  " -> Variable {"+simbolo.getIdentificador()+"} ya declarada, en la linea: "+simbolo.getNumLinea() + " columna: "+simbolo.getNumColumn());
+						error_count++;
+					}
+				//System.out.println("**Linea: "+simbolo.getNumLinea()+"-> column: "+simbolo.getNumColumn()+"-> symbol: " + simbolo.getTipeSymbol() + " -> key: " + simbolo.getIdentificador());
+            }
 		}
 
 		//regla 2, Validar que las variables existen
-		public void SemanticaValidarUsoVariable(NodoIdentificador identificador){
+		public void SemanticaValidarUsoDeVariables(NodoIdentificador identificador){
 			if( identificador != null ){
 				//System.out.println("\n\n");
-				//System.out.println("Var: " + identificador.getNombre() + " amb: " + ambito + " line: " + identificador.getNumLinea() + " col: "+identificador.getNumColumn());
-				
-				RegistroSimbolo simbolo = ts.BuscarSimbolo(identificador.getNombre(), ambito);
+				//System.out.println("Validando => Var: " + identificador.getNombre() + " amb: " + ambito + " line: " + identificador.getNumLinea() + " col: "+identificador.getNumColumn());
+				//System.out.println("Validando => Var: " + identificador.getNombre() + " amb: " + identificador.getAmbito() + " line: " + identificador.getNumLinea() + " col: "+identificador.getNumColumn());
+				RegistroSimbolo simbolo = ts.BuscarSimbolo(identificador.getNombre(), identificador.getAmbito());
 				if(simbolo == null){
-					System.out.println("#"+error_count+" -> linea: "+identificador.getNumLinea()+  " -> Variable {"+identificador.getNombre()+"} no ha sido declarada");
+					System.out.println("N°"+error_count+" (Regla#2)-> linea: "+identificador.getNumLinea()+  " -> Variable {"+identificador.getNombre()+"} no ha sido declarada");
 					error_count++;
 				}
 				else
 				if( simbolo.getNumLinea() > identificador.getNumLinea() || (simbolo.getNumLinea() == identificador.getNumLinea()) && ( simbolo.getNumColumn() > identificador.getNumColumn() ))
-				{
-					System.out.println("#"+error_count+" -> linea: "+identificador.getNumLinea()+" -> Variable {"+identificador.getNombre()+"} debe ser declarada antes de ser usada, si existe pero mas adelante en: linea: "+ simbolo.getNumLinea()+" columna: "+simbolo.getNumColumn());
-					error_count++;
+				{	
+					if( simbolo.getAmbito() == TablaSimbolos.conts_ambito_global && ts.EstoyDentroDeUnaFuncion(ts.BuscarSimbolo(identificador.getAmbito()))){
+						//falsa alarma, tengo la variable declarada en el main, y lla uso en una funcion
+					}
+					else{
+						System.out.println("N°"+error_count+" (Regla#2)-> linea: "+identificador.getNumLinea()+" -> Variable {"+identificador.getNombre()+"} debe ser declarada antes de ser usada, si existe pero mas adelante en: linea: "+ simbolo.getNumLinea()+" columna: "+simbolo.getNumColumn());
+						error_count++;
+					}
 				}
 			}
 		}

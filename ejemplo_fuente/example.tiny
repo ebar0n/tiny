@@ -1,70 +1,91 @@
-
 int myfunc(int a,boolean b)
 begin
-	int vector[10];
-	int a,vector1[1],c;
-	boolean vector2[3],vector3[3],vector4;
+	int vector[10],myfunc;
+	int aa,vectora[1],cc;
+	boolean vectorb[3],vectorc[3],vectord;
 	boolean c,d,e;
+	int varc;
 
+	int ds;
+
+	x:=1;
 	if d!=false then
-		int var;
-		for(x:=1;x<10;x:=x+1)
-			int var;
-			if x>=7 and x<10 then
-				boolean if2;
+		if d!=false then
+			for(x:=1;x<10;x:=x+1)
+				int vara;
+				if x>=7 and x<10 then
+					boolean ifk;
+				end;
 			end;
 		end;
 	end;
 end;
 
-int myfunc2(int a,boolean b)
+int myfunckl()
 begin
-	
+	int vector[10];
+end;
+
+int myfuncl(int a,boolean b)
+begin
+	int vector[10];
+	int vectora[1],cc;
 	int ccccccccccccccccccc;
+	x:=1;
 	if d!=false then
 		int j;
+		x:=1;
 		for(x:=1;x<10;x:=x+1)
-			int ccccccccccccccccccc;
-			int ccccccccccccccccccc;
+			int ejempl;
 		end;
 	end;
-	
-	int ebar0n[4];
+	int ebaron[4];
 end;
 
 begin 
 
-	int a,a,a;
-	int z,z,z;
-	z:=1<t;
+	int a,d,vector,c;
+
+	int x,z,t; z:=1<t;
 	
 	if d!=false then
-		int ebar0n;
 		if d!=false then
-			int ebar0n;
+			for(x:=1;x<10;x:=x+1)
+				int var;
+				if x>=7 and x<10 then
+					boolean ifa;
+				end;
+			end;
+			int var;
+			
 		end;
 	end;
 
 	if d!=false then
-		int ebar0n;
+		if d!=false then
+			int ebaron;
+		end;
+	end;
+
+	if d!=false then
+		int ebaron;
 	end;
 
 	
-	boolean myfunc; 
-	{
-	for(x:=1;x<10;x:=x+1)
-		int ccccccccccccccccccc;
-
+	boolean myfunc,b; 
+	
+	for(x:=1;x< myfunc( a,b ) ;x:=x+1)
+		
 		for(x:=1;x<10;x:=x+1)
 			int ccccccccccccccccccc;
 		end;
 	end;
-	}
+	
 	for(x:=1;x<10;x:=x+1)
 		int ccccccccccccccccccc;
 	end;
 
 	int ccccccccccccccccccc[1];
 	
-	int ebar0n[4],h[5],ads,verv;
+	int ebaron[4],h[5],ads,verv;
 end;
