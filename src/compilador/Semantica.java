@@ -67,7 +67,7 @@ public class Semantica {
                 }
                         
 		    	declare_var = false;
-
+		    	funcion_actual = tipoDato.VOID;
 		    	UpAmbito();
 		    }
 		    else if (raiz instanceof NodoVariable){
