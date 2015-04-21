@@ -20,6 +20,12 @@ public class TablaSimbolos {
     private int if_ambito_cont = 1;
     private int for_ambito_cont = 1;
     private int repeat_ambito_cont = 1;
+    /*
+        La ubicacion en memoria de las variables se hace de manera uniforma,
+        Entero y booleanos ocupan el mismo espacio, los vectores a su vez,
+        ocupan el espacio dependiento de su tamaño
+    */
+    private int ContDireccionMemoria = 0;
 
     public TablaSimbolos() {
         super();
@@ -276,26 +282,8 @@ public class TablaSimbolos {
                         colision = true;
                         break;
                     } else {
-                        /*
-                        //Buscando padre
-                        RegistroSimbolo simbolo_ambito_padre = simbolo_tabla;
-                        while (simbolo_ambito_padre != null) {
-                            //busco padre inmediato
-                            if (simbolo_ambito_padre.getAmbito().equals(simbolo.getAmbitoPadre())) {
-                                colision = true;
-                                break;
-                            } else {
-                                colision = ResolverPadres(simbolo_ambito_padre, BuscarSimbolo(simbolo.getAmbito()));
-
-                                if (colision) {
-                                    break;
-                                }
-                            }
-                            simbolo_ambito_padre = simbolo_ambito_padre.getHermano();
-                        }*/
 
                         colision = ResolverPadres(simbolo_hermano, BuscarSimbolo(simbolo.getAmbito()));
-
 
                         if (simbolo_hermano.getHermano() != null) {
                             simbolo_hermano = simbolo_hermano.getHermano();
@@ -306,6 +294,7 @@ public class TablaSimbolos {
                 }
 
                 if (colision == false) {
+                    AsyncMemorySymbol(simbolo);
                     simbolo_hermano.setHermano(simbolo);
                     tabla.put(simbolo_tabla.getIdentificador(), simbolo_tabla);
                     if( Debug_Carcar )
@@ -318,10 +307,23 @@ public class TablaSimbolos {
                 }
             }
         } else {
+            AsyncMemorySymbol(simbolo);
             tabla.put(simbolo.getIdentificador(), simbolo);
             if( Debug_Carcar )
                 System.out.println("Tipo symbol: " + simbolo.getTipeSymbol() + " -> key: " + simbolo.getIdentificador() + " -> " + simbolo.getAmbito() + " -> " + simbolo.getAmbitoPadre() + " -> " + simbolo.getNivel() + " :)");
             return true;
+        }
+    }
+
+    public void AsyncMemorySymbol(RegistroSimbolo simbolo){
+        if( simbolo.getTipeSymbol() == tipoSymbol.VAR ){
+            simbolo.setDireccionMemoria( this.ContDireccionMemoria );
+            this.ContDireccionMemoria+=1;
+        }
+        else
+        if( simbolo.getTipeSymbol() == tipoSymbol.ARRAY ){
+            simbolo.setDireccionMemoria( this.ContDireccionMemoria );
+            this.ContDireccionMemoria+=simbolo.getNumElementos();
         }
     }
 
@@ -426,7 +428,7 @@ public class TablaSimbolos {
             String s = (String) it.next();
             RegistroSimbolo simbolo = BuscarSimbolo(s);
             while (simbolo != null) {
-                System.out.print("Key: " + s + ", Line: "+simbolo.getNumLineaDeclare()+", Col: "+simbolo.getNumColumnDeclare()+", Type: " + simbolo.getTipeSymbol() +  ", Type var: " + simbolo.getTipo() + ", Amb: " + simbolo.getAmbito() + ", Amb_p: " + simbolo.getAmbitoPadre());
+                System.out.print("Key: " + s + ", Line: "+simbolo.getNumLineaDeclare()+", Col: "+simbolo.getNumColumnDeclare()+", Type: " + simbolo.getTipeSymbol() +  ", Type var: " + simbolo.getTipo() + ", Amb: " + simbolo.getAmbito() + ", Amb_p: " + simbolo.getAmbitoPadre() + ", Dir: "+simbolo.getDireccionMemoria());
                 if( simbolo.getExistInitialize() == true )
                     System.out.println(", Init: Si, Line: " +simbolo.getNumLineaInitialize() );
                 else

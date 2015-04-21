@@ -8,12 +8,13 @@ public class RegistroSimbolo {
 	private tipoDato tipo;
 	private ComplexSymbol symbolDeclare;
     private ComplexSymbol symbolInitialize;
-	private int DireccionMemoria;
+	private int DireccionMemoria = -1;
 	private String ambito;
 	private String ambito_padre;
 	private int nivel;
 	private RegistroSimbolo hermano;
 	private tipoSymbol tipeS;
+	
 	//Constructor para una variable
 	public RegistroSimbolo(String identificador,tipoDato tipo, ComplexSymbol symbol, String ambito,String ambito_padre,int nivel, tipoSymbol tipeS) {
 		super();
@@ -87,7 +88,7 @@ public class RegistroSimbolo {
 	}
 
 	public void setDireccionMemoria(int direccionMemoria) {
-		DireccionMemoria = direccionMemoria;
+		this.DireccionMemoria = direccionMemoria;
 	}
 
 
