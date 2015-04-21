@@ -32,6 +32,7 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 	private ComplexSymbolFactory csf;
 	private int lineanum;
 	private boolean debug = false;
+	public int error_count = 1;
 
 	private Symbol symbol(String name, int sym) {
 	    return csf.newSymbol(name, sym, new Location(yyline+1,yycolumn+1,yychar), new Location(yyline+1,yycolumn+yylength(),yychar+yylength()));
@@ -275,9 +276,6 @@ espacio		= [ \t]+
 			}
 
 .           {
-				System.err.println("########################");		
-				System.err.println("Error lexico");
-				System.err.println("linea " + (yyline+1) + ", columna " + (yycolumn+1) + " -> " + yytext() + "\n");
-				System.err.println("########################");
-				System.exit(0);	
+				System.out.println("#Error (Lexico)-> Linea " + (yyline+1) + ", Columna " + (yycolumn+1) + " -> " + yytext());
+				this.error_count++;	
 			}

@@ -8,7 +8,6 @@ action code {:
 	private boolean modoDepuracion=false;
 	private NodoBase ast=null;
 	private int lineanum=0;
-	
 	//Debe ser llamada solo despues de un parse(), en caso contrario retornara null siempre;
 	public NodoBase getASTroot(){
 		return ast;
@@ -30,16 +29,12 @@ action code {:
 :}
 
 parser code {: 
-
+	
+	public int error_count = 1;
 	public void syntax_error(Symbol s) {
 		ComplexSymbol cs = (ComplexSymbol) s;
-		System.err.println("########################");		
-		System.err.println("Error de sintaxis");
-		System.err.println("Linea:   " + cs.xleft.getLine());
-		System.err.println("Columna: " + cs.xleft.getColumn());
-		System.err.println("Simbolo: " + cs.getName());
-		System.err.println("########################");
-		System.exit(0);	
+		System.out.println("#Error (Sintactico)-> Linea " + (cs.xleft.getLine()) + ", Columna " + (cs.xleft.getColumn()) + " -> " + cs.getName());
+		this.error_count++;	
 	}
 
 	public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception { 
@@ -215,6 +210,7 @@ variable_list	::=
 				}else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla variable_list -> ID LCLASP NUM RCLASP COMA variable_list");
+					System.exit(1);
 				}
 			:}
 		| init_id:variable LCLASP NUM:tam RCLASP
@@ -226,6 +222,7 @@ variable_list	::=
 				}else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla variable_list -> ID LCLASP NUM RCLASP");
+					System.exit(1);
 				}
 			:}
 		;
@@ -381,6 +378,7 @@ sentence ::=
 			:}
         | error
         	{: 
+        		RESULT = null;
         		System.out.println("Ocurrio error en cup regla sentence");
         		System.exit(1);
 			:}
@@ -418,6 +416,7 @@ assign_sentence ::=
 				else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla assign_sentence -> ID");
+					System.exit(1);
 				}
 			:}
 		| array_var_access:vesc	ASSIGN logical_expression:ex
@@ -430,6 +429,7 @@ assign_sentence ::=
 				else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla assign_sentence -> array_var_access");
+					System.exit(1);
 				}
 			:}
 		;
@@ -445,6 +445,7 @@ read_sentence   ::=
 				else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla read_sentence -> ID");
+					System.exit(1);
 				}
 			:}
 		| READ array_var_access:variable
@@ -457,6 +458,7 @@ read_sentence   ::=
 				else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla read_sentence -> array_var_access");
+					System.exit(1);
 				}
 			:}
 		;
@@ -630,6 +632,7 @@ factor      ::=
 				}else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla factor -> NUM");
+					System.exit(1);
 				}
 			:}
 		| MINUS NUM:valor 
@@ -641,6 +644,7 @@ factor      ::=
 				}else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla factor -> NUM NEGATIVO");
+					System.exit(1);
 				}
 			:}
 		| init_id:variable
@@ -653,6 +657,7 @@ factor      ::=
 				}else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla factor -> ID");
+					System.exit(1);
 				}
 			:}
 		| TRUE   
@@ -683,6 +688,7 @@ factor      ::=
 			{: 
 				System.out.println("Ocurrio error en cup regla factor");
 				RESULT=null;
+				System.exit(1);
 			:}
 		;
 
@@ -696,6 +702,7 @@ array_var_access	::=
 				}else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla array_var_access");
+					System.exit(1);
 				}
 			:}	
 		;
