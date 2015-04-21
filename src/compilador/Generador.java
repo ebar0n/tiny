@@ -77,8 +77,14 @@ public class Generador {
 			generarEscribir(nodo);
 		}else if (nodo instanceof NodoValor){
 			generarValor(nodo);
+		}else if (nodo instanceof NodoFor){
+			generarFor(nodo);	
+		}else if (nodo instanceof NodoArgList){
+			generarArgList(nodo);	
 		}else if (nodo instanceof NodoIdentificador){
 			generarIdentificador(nodo);
+		}else if (nodo instanceof NodoCallFunction){
+			generarCallFunction(nodo);			
 		}else if (nodo instanceof NodoOperacion){
 			generarOperacion(nodo);
                 }else if (nodo instanceof NodoBloque){
@@ -101,15 +107,34 @@ public class Generador {
 	private static void generarFuncion(NodoBase nodo) {
 		NodoFunction nodof = (NodoFunction) nodo;
 		generar(nodof.getExpression());
+		generar(nodof.getDeclaracion());
 	}
 
 	private static void generarVariable(NodoBase nodo) {
 		NodoVariable nodov = (NodoVariable) nodo;
 	}	
 
+	private static void generarArgList(NodoBase nodo) {
+		NodoArgList nodov = (NodoArgList) nodo;
+	}	
+
 	private static void generarLogico(NodoBase nodo) {
 		NodoLogico nodol = (NodoLogico) nodo;
+		if(nodol != null) {
+			if(nodol.getOpIzquierdo() != null)
+				generar(nodol.getOpIzquierdo());
+			if(nodol.getOpDerecho() != null) 
+				generar(nodol.getOpDerecho());
+		}
 	}
+
+	private static void generarFor(NodoBase nodo) {
+		NodoFor nodof = (NodoFor) nodo;
+	}	
+
+	private static void generarCallFunction(NodoBase nodo) {
+		NodoCallFunction nodocf = (NodoCallFunction) nodo;
+	}	
 
 	private static void generarIf(NodoBase nodo){
     	NodoIf n = (NodoIf)nodo;
