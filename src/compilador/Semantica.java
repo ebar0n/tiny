@@ -195,24 +195,7 @@ public class Semantica {
 					tipoD = null;
 				}
 			    
-			    if (tipoD != null && tipoI != null){
-			    	if (tipoI == tipoD) {
-			    		if (tipoI == tipoDato.INT){
-			    			System.out.println("ERROR DE TIPOS, Verifique la operacion de la linea tal");
-			    		}else{
-			    			logico.setTipoDato(tipoI);
-			    			//System.out.println(tipoI);
-			    		}
-			    	}else{
-			    		System.out.println("ERROR DE TIPOS, Verifique la operacion de la linea tal");
-			    	}
-			    }else if (tipoD == null){
-			    	logico.setTipoDato(tipoI);
-			    	//System.out.println(tipoI);
-			    }else if (tipoI == null){
-			    	logico.setTipoDato(tipoD);
-			    	//System.out.println(tipoD);
-			    }
+				SemanticaValidarTipoLogico(tipoI,tipoD,logico);
 		    }
 		    else if (raiz instanceof NodoCallFunction){
 		    	//LLMAR A FUNCION
@@ -414,7 +397,7 @@ public class Semantica {
     	variable_for = null;
     }
 
-    //Regla 3, Verificacion de tipos de datos
+    //Regla 6, Verificacion de tipos de datos
 	public void SemanticaValidarTipo(NodoBase nodo){
 		//System.out.println(nodo);
 		if (nodo instanceof NodoOperacion){
@@ -438,7 +421,7 @@ public class Semantica {
 				tipoOp operacion = ((NodoOperacion)nodo).getOperacion();
 				if (tipoI ==  tipoDato.BOOLEAN){
 					if (operacion != tipoOp.igual && operacion != tipoOp.diferente){
-						System.out.println("ERROR DE TIPOS, Verifique la operacion de la linea tal");
+						System.out.println("# (Regla#6)-> linea: "+nodo.getNumLinea()+  " -> inconsistencia en los tipos de la operacion");
 					}
 
 				}else if  (tipoI == tipoDato.INT){
@@ -454,7 +437,7 @@ public class Semantica {
 				((NodoOperacion)nodo).setTipoDato(tipoI);
 				//System.out.println(tipoI);
 			}else{
-				System.out.println("ERROR DE TIPOS, Verifique la operacion de la linea tal");
+				System.out.println("# (Regla#6)-> linea: "+nodo.getNumLinea()+  " -> inconsistencia en los tipos de la operacion");
 			}
 		}else if (nodo instanceof NodoValor){
 			tipo = ((NodoValor)nodo).getTipoDato();
@@ -465,25 +448,46 @@ public class Semantica {
 			RegistroSimbolo simbolo = ts.BuscarSimbolo(((NodoArray)nodo).getIdentificador().getNombre(), ambito);
 		    tipo = simbolo.getTipo();
 		}else if (nodo instanceof NodoCallFunction){
-			RegistroSimbolo simbolo = ts.BuscarSimbolo(((NodoCallFunction)nodo).getIdentificador().getNombre(), ambito);
+			RegistroSimbolo simbolo = ts.BuscarSimboloIsFunction(((NodoCallFunction)nodo).getIdentificador().getNombre());		    
 		    tipo = simbolo.getTipo();
 		}
+	}
+
+	public void SemanticaValidarTipoLogico(tipoDato tipoI,tipoDato tipoD,NodoLogico logico){
+	    if (tipoD != null && tipoI != null){
+	    	if (tipoI == tipoD) {
+	    		if (tipoI == tipoDato.INT){
+	    			System.out.println("# (Regla#6)-> linea: "+logico.getNumLinea()+  " -> inconsistencia en los tipos de la operacion");
+	    		}else{
+	    			logico.setTipoDato(tipoI);
+	    		}
+	    	}else{
+	    		System.out.println("# (Regla#6)-> linea: "+logico.getNumLinea()+  " -> inconsistencia en los tipos de la operacion");
+	    	}
+	    }else if (tipoD == null){
+	    	logico.setTipoDato(tipoI);
+	    }else if (tipoI == null){
+	    	logico.setTipoDato(tipoD);
+	    }
 	}
 
     public void SemanticaValidarAsignacion(NodoBase identificador,NodoBase expresion){
 		tipoDato tipoI = null;
 		tipoDato tipoD;
+		String nombre = "";
 		if (identificador instanceof NodoIdentificador){
 			RegistroSimbolo simbolo = ts.BuscarSimbolo(((NodoIdentificador)identificador).getNombre(), ambito);
 			tipoI =  simbolo.getTipo();
+			nombre = ((NodoIdentificador)identificador).getNombre();
 		}else if (identificador instanceof NodoArray){
 			RegistroSimbolo simbolo = ts.BuscarSimbolo(((NodoArray)identificador).getIdentificador().getNombre(), ambito);
 			tipoI =  simbolo.getTipo();
+			nombre = ((NodoArray)identificador).getIdentificador().getNombre();
 		}	
 		tipoD = ((NodoLogico)expresion).getTipoDato();
 
 		if (tipoI != tipoD){
-			System.out.println("ERROR DE ASIGNACION, LA EXPRESION NO CORRESPONDE CON LA ASIGNACION");
+    		System.out.println("# (Regla#6.1)-> linea: "+identificador.getNumLinea()+" -> Variable {"+nombre+"} Tipo de dato de la asginacion no corresponde con el tipo de dato de la expresion");
 		}
 	}
 
