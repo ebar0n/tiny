@@ -13,6 +13,6 @@ begin
 	int a;
 	int j[3];
 	boolean b;
-	a:= 1+2+a+j[1]+Entero(a,a);
-	a:= 3+a+Boleano(a,a);
+	a:= 1-2<a+j[1]+1;
+	b:= true and true and 1;
 end;

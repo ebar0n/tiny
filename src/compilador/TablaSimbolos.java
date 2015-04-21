@@ -269,7 +269,7 @@ public class TablaSimbolos {
     }
 
     public RegistroSimbolo BuscarSimbolo(String identificador, String ambito) {
-        System.out.println("Linea: --------------------------("+identificador+"-"+ambito+")---------------------------");
+        //System.out.println("Linea: --------------------------("+identificador+"-"+ambito+")---------------------------");
             
         if( tabla.containsKey(identificador) ){
         	

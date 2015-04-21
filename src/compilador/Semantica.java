@@ -15,7 +15,7 @@ public class Semantica {
 	String ambito = "MAIN"; 
 	
 	//Verificacion de tipo
-	tipoDato tipoPadre = null;
+	tipoDato tipo = null;
 	boolean tipoBandera = true;
 	
 	String Parte_for = null, variable_for = null;
@@ -126,13 +126,58 @@ public class Semantica {
 		    }
 		    else if (raiz instanceof NodoLogico){
 		    	//OPERACIONES
+		    	tipoDato tipoI;
+				tipoDato tipoD;
 		    	NodoLogico logico = (NodoLogico)raiz;
 		    	//EXP IZQUIERDA OPERACION
 			    RecorrerArbol(logico.getOpIzquierdo());
 			    SemanticaValidarTipo(logico.getOpIzquierdo());
+			    if (logico.getOpIzquierdo() != null){
+				    if (logico.getOpIzquierdo() instanceof NodoOperacion){
+						tipoI =  ((NodoOperacion)logico.getOpIzquierdo()).getTipoDato();
+					}else{
+						tipoI = tipo;
+					}
+				}else{
+					tipoI = null;
+				}
 			    //EXP DERECHA OPERACION
 			    RecorrerArbol(logico.getOpDerecho());
 			    SemanticaValidarTipo(logico.getOpDerecho());
+			    if (logico.getOpDerecho() != null){
+				    if (logico.getOpDerecho() instanceof NodoOperacion){
+						tipoD =  ((NodoOperacion)logico.getOpDerecho()).getTipoDato();
+					}else{
+						tipoD = tipo;
+					}
+				}else {
+					tipoD = null;
+				}
+			    
+			    if (tipoD != null && tipoI != null){
+			    	if (tipoI == tipoD) {
+			    		if (tipoI == tipoDato.INT){
+			    			System.out.println("ERROR DE TIPOS, Verifique la operacion de la linea tal");
+			    		}else{
+			    			logico.setTipoDato(tipoI);
+			    			//System.out.println(tipoI);
+			    		}
+			    	}else{
+			    		System.out.println("ERROR DE TIPOS, Verifique la operacion de la linea tal");
+			    	}
+			    }else if (tipoD == null){
+			    	logico.setTipoDato(tipoI);
+			    	//System.out.println(tipoI);
+			    }else if (tipoI == null){
+			    	logico.setTipoDato(tipoD);
+			    	//System.out.println(tipoD);
+			    }
+
+
+
+			    System.out.println("FIN LOGICO");
+			    
+
 		    }
 		    else if (raiz instanceof NodoCallFunction){
 		    	//LLMAR A FUNCION
@@ -211,11 +256,66 @@ public class Semantica {
 
 		//Regla 3, Verificacion de tipos de datos
 		public void SemanticaValidarTipo(NodoBase nodo){
+			//System.out.println(nodo);
 			if (nodo instanceof NodoOperacion){
-				System.out.println(nodo);
-				tipoDato tipo = null;
+				tipoDato tipoI;
+				tipoDato tipoD;
+				//System.out.println(((NodoOperacion)nodo).getOperacion());
+				SemanticaValidarTipo(((NodoOperacion)nodo).getOpIzquierdo());
+				if (((NodoOperacion)nodo).getOpIzquierdo() instanceof NodoOperacion){
+					tipoI =  ((NodoOperacion)((NodoOperacion)nodo).getOpIzquierdo()).getTipoDato();
+				}else{
+					tipoI = tipo;
+				}
+				SemanticaValidarTipo(((NodoOperacion)nodo).getOpDerecho());
+				if (((NodoOperacion)nodo).getOpDerecho() instanceof NodoOperacion){
+					tipoD =  ((NodoOperacion)((NodoOperacion)nodo).getOpDerecho()).getTipoDato();
+				}else{
+					tipoD = tipo;
+				}
 				
+
+				if (tipoI == tipoD){
+					tipoOp operacion = ((NodoOperacion)nodo).getOperacion();
+					if (tipoI ==  tipoDato.BOOLEAN){
+						if (operacion != tipoOp.igual && operacion != tipoOp.diferente){
+							System.out.println("ERROR DE TIPOS, Verifique la operacion de la linea tal");
+						}
+
+					}else if  (tipoI == tipoDato.INT){
+						if (operacion == tipoOp.menor
+						 || operacion == tipoOp.mayor
+						 || operacion == tipoOp.mayori
+						 || operacion == tipoOp.menori
+						 || operacion == tipoOp.diferente
+						 || operacion == tipoOp.igual){
+							tipoI = tipoDato.BOOLEAN;
+						}
+					}
+					((NodoOperacion)nodo).setTipoDato(tipoI);
+					//System.out.println(tipoI);
+				}else{
+					System.out.println("ERROR DE TIPOS, Verifique la operacion de la linea tal");
+				}
+			}else if (nodo instanceof NodoValor){
+				tipo = ((NodoValor)nodo).getTipoDato();
+			}else if (nodo instanceof NodoIdentificador){
+				RegistroSimbolo simbolo = ts.BuscarSimbolo(((NodoIdentificador)nodo).getNombre(), ambito);
+			    tipo = simbolo.getTipo();
+			}else if (nodo instanceof NodoArray){
+				RegistroSimbolo simbolo = ts.BuscarSimbolo(((NodoArray)nodo).getIdentificador().getNombre(), ambito);
+			    tipo = simbolo.getTipo();
+			}else if (nodo instanceof NodoCallFunction){
+				RegistroSimbolo simbolo = ts.BuscarSimbolo(((NodoCallFunction)nodo).getIdentificador().getNombre(), ambito);
+			    tipo = simbolo.getTipo();
+			}
+
+
+
+				//System.out.println(((NodoOperacion)nodo).getOperacion());
+				/*
 				if (((NodoOperacion)nodo).getOpDerecho() != null){
+					//System.out.println("Derecho");
 			    	if (((NodoOperacion)nodo).getOpDerecho() instanceof NodoValor){
 						tipo = ((NodoValor)((NodoOperacion)nodo).getOpDerecho()).getTipoDato();
 			    	}else if (((NodoOperacion)nodo).getOpDerecho() instanceof NodoIdentificador){
@@ -225,17 +325,20 @@ public class Semantica {
 						RegistroSimbolo simbolo = ts.BuscarSimbolo(((NodoArray)((NodoOperacion)nodo).getOpDerecho()).getIdentificador().getNombre(), ambito);
 			    		tipo = simbolo.getTipo();
 			    	}else if (((NodoOperacion)nodo).getOpDerecho() instanceof NodoCallFunction){
-						RegistroSimbolo simbolo = ts.BuscarSimbolo(((NodoCallFunction)((NodoOperacion)nodo).getOpDerecho()).getIdentificador().getNombre(), ambito);
-			    		tipo = simbolo.getTipo();
+						//RegistroSimbolo simbolo = ts.BuscarSimbolo(((NodoCallFunction)((NodoOperacion)nodo).getOpDerecho()).getIdentificador().getNombre(), ambito);
+			    		//tipo = simbolo.getTipo();
 			    	}
 			    	else {
+			    		//System.out.println("Derecho1");
 			    		SemanticaValidarTipo(((NodoOperacion)nodo).getOpDerecho());
 			    	}
 
 		    	}
+		    	
 		    	VerificarTipo(tipo);
 
 				if (((NodoOperacion)nodo).getOpIzquierdo() != null){
+					System.out.println("Izquierdo");
 			    	if (((NodoOperacion)nodo).getOpIzquierdo() instanceof NodoValor){
 						tipo = ((NodoValor)((NodoOperacion)nodo).getOpIzquierdo()).getTipoDato();
 			    	}else if (((NodoOperacion)nodo).getOpIzquierdo() instanceof NodoIdentificador){
@@ -245,10 +348,11 @@ public class Semantica {
 						RegistroSimbolo simbolo = ts.BuscarSimbolo(((NodoArray)((NodoOperacion)nodo).getOpIzquierdo()).getIdentificador().getNombre(), ambito);
 			    		tipo = simbolo.getTipo();
 			    	}else if (((NodoOperacion)nodo).getOpIzquierdo() instanceof NodoCallFunction){
-						RegistroSimbolo simbolo = ts.BuscarSimbolo(((NodoCallFunction)((NodoOperacion)nodo).getOpIzquierdo()).getIdentificador().getNombre(), ambito);
-			    		tipo = simbolo.getTipo();
+						//RegistroSimbolo simbolo = ts.BuscarSimbolo(((NodoCallFunction)((NodoOperacion)nodo).getOpIzquierdo()).getIdentificador().getNombre(), ambito);
+			    		//tipo = simbolo.getTipo();
 			    	}
 			    	else {
+			    		System.out.println("Izquierdo1");
 			    		SemanticaValidarTipo(((NodoOperacion)nodo).getOpIzquierdo());
 			    	}
 		    	}
@@ -256,14 +360,15 @@ public class Semantica {
 
 		    	if (tipoBandera){
 		    		((NodoOperacion)nodo).setTipoDato(tipoPadre);
+		    		//System.out.println(tipoPadre);
 		    	}else {
 		    		System.out.println("Error en los tipos no coinciden");
 		    	}
-
-			}
+				*/
+			
 			
 		}
-
+		/*
 		public void VerificarTipo(tipoDato tipo){
 			if (tipo != null){
 				if (tipoPadre == null){
@@ -273,7 +378,7 @@ public class Semantica {
 				} else{
 				}
 			}
-		}
+		}*/
 		
 
 

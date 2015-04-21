@@ -157,7 +157,7 @@ public class Util {
 		    else if (raiz instanceof NodoLogico){
 		    	System.out.println("Operacion: ");
 		    	NodoLogico logico = (NodoLogico)raiz;
-		    	NodoBase nodo = logico.getExp();
+		    	NodoBase nodo = null;
 		    	sangria+=2;
 		    	if (nodo != null){
 		    		printSpaces();
