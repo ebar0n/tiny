@@ -342,6 +342,21 @@ public class TablaSimbolos {
         return false;
     }
 
+    public boolean ResolverPadresMinimo(RegistroSimbolo arrastre, RegistroSimbolo simbolo_ambito) {
+        //busco padre en la cadena    
+        if (arrastre != null && simbolo_ambito!=null) {
+            //busco padre inmediato
+            if (arrastre.getAmbito().equals(simbolo_ambito.getIdentificador())) {
+                return true;
+            } else {
+                if (simbolo_ambito.getIdentificador() != conts_ambito_global && simbolo_ambito.getIdentificador() != conts_ambito_functions) {
+                    return ResolverPadresMinimo(arrastre, BuscarSimbolo(simbolo_ambito.getAmbito()));
+                }
+            }
+        }
+        return false;
+    }
+
     public boolean EstoyDentroDeUnaFuncion(RegistroSimbolo arrastre) {
         //busco padre en la cadena    
         if (arrastre != null) {

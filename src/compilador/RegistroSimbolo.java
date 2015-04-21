@@ -168,14 +168,14 @@ public class RegistroSimbolo {
 	}
 
 	public int getNumLineaInitialize(){
-		if (this.symbolDeclare != null)
+		if (this.symbolInitialize != null)
 			return this.symbolInitialize.xleft.getLine();
 		else
 			return -1;
 	}
 
 	public int getNumColumnInitialize(){
-		if (this.symbolDeclare != null)
+		if (this.symbolInitialize != null)
 			return this.symbolInitialize.xleft.getColumn();
 		else
 			return -1;
