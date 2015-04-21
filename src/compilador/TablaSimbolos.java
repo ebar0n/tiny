@@ -308,7 +308,7 @@ public class TablaSimbolos {
             String s = (String) it.next();
             RegistroSimbolo simbolo = BuscarSimbolo(s);
             while (simbolo != null) {
-                System.out.print("Linea: "+simbolo.getNumLinea()+"-> column: "+simbolo.getNumColumn()+"-> symbol: " + simbolo.getTipeSymbol() + " -> key: " + s + " tipo retorno: " + simbolo.getTipo() + " ambito: " + simbolo.getAmbito() + " ambito padre: " + simbolo.getAmbitoPadre() + " nivel: " + String.valueOf(simbolo.getNivel()));
+                System.out.print(String.format("Linea: %4d | column: %4d | symbol: %10s | key: %13s | tipo: %5s | ambito: %13s | ambito_padre: %5s | nivel: %s", simbolo.getNumLinea(), simbolo.getNumColumn(), simbolo.getTipeSymbol(), s, simbolo.getTipo(), simbolo.getAmbito(), simbolo.getAmbitoPadre(), String.valueOf(simbolo.getNivel())));
                 System.out.println("");
 
                 simbolo = simbolo.getHermano();
