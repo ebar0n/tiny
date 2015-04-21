@@ -3,33 +3,44 @@ int myfunc(int a,boolean b)
 begin
 	return true;
 	int vector[10],myfunc;
-	int x,aa,vectora[1],cc;
+	int aa,vectora[1],cc;
 	boolean vectorb[3],vectorc[3],vectord;
 	boolean c,d,e;
 	int varc;
 
 	int ds;
+	return myfunc(1,false);
 
-	x:=1;
+	d:=myfunckll();
 	if d!=false then
 		if d!=false then
-			for(x:=1;x<10;x:=x+1)
+			for(x:=1;x=-1;x:=x+1)
 				int vara;
-				if x>=7 and x<10 then
+				int xx;xx:=1;
+				if xx>=7 and xx<10 then
 					boolean ifk;
+					for(x:=1;x=myfunc(1,false);x:=x+1)
+						if xx>=7 and xx<10 then
+							for(x:=1; x!=myfunc(myfunc(1,false),true);x:=x+1)
+								if xx>=7 and xx<10 then
+									boolean ifkddd;
+								end;
+							end;
+						end;
+					end;
 				end;
 			end;
 		end;
 	end;
 end;
 
-int myfunckll()
+boolean myfunckll()
 begin
 	int vector[10];
 	return 1;
 end;
 
-void myfunckllvoid()
+void myfuncl()
 begin
 	int vector[10];
 	return;
@@ -38,9 +49,11 @@ end;
 int myfunckl(int a,boolean b)
 begin
 	int vector[10];
-	int vectora[1],cc;
+	int vectora[1],cc,x;
 	int ccccccccccccccccccc;
-	x:=1;
+	x:=-1;
+	boolean d;
+	d:=true;
 	if d!=false then
 		int j;
 		x:=1;
@@ -55,11 +68,13 @@ end;
 begin 
 
 	int a,d,vector,c[2],edwar;
-	int z,x,t; z:=1<t;
+	boolean z;
+	int x,t;t:=1; z:=1<t;
 	vector:=1;
 	c[1]:=2;
-	if myfuncl(myfuncl(), myfuncl() + 1) then
-		if d!=false then
+	d:=myfunckl(1,myfunckll());
+	if myfunckl(myfunckl(1,false), (3+1) > 1) > 3 then
+		if d!=(-1) then
 			for(x:=1;x<10;x:=x+1)
 				int var;
 				if x>=7 and x<10 then
@@ -71,13 +86,14 @@ begin
 		end;
 	end;
 
-	if d!=false then
-		if d!=false then
+	d:=myfunckl(myfunckl(1,false), (3+1) > 1);
+	if d!=((((((((-1*2)*myfunckl(myfunckl(1,false), (3+1) > 1)))))))) then
+		if d!=(d*(-1)) then
 			int ebaron;
 		end;
 	end;
 
-	if d!=false then
+	if d!=1*1*1*1/2*1-myfunckl(1,false) then
 		int ebaron;
 	end;
 
@@ -99,4 +115,5 @@ begin
 	int ccccccccccccccccccc[1];
 	
 	int ebaron[4],h[5],ads,verv;
+	return;
 end;

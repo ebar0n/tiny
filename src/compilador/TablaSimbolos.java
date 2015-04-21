@@ -125,7 +125,7 @@ public class TablaSimbolos {
                 RegistroSimbolo simbolo = this.BuscarSimbolo(nodo.getIdentificador().getNombre(), nodo.getAmbito());
                 if( simbolo != null && simbolo.getExistInitialize() == false){
                     //si no es usado al otro lado, es una asignacion valida
-                    System.out.println(nodo.getIdentificador().getNombre());
+                    //System.out.println(nodo.getIdentificador().getNombre());
                     if( SearhIdentificadorExist(nodo.getIdentificador().getNombre(), ((NodoAsignacion)raiz).getExpresion() ) == false ){
                         simbolo.setSymbolInitialize(nodo.getSymbol());   
                     }
@@ -153,7 +153,7 @@ public class TablaSimbolos {
             if (raiz instanceof NodoIf) {
                 String ambito_aux = "IF_" + String.valueOf(nivel) + "_" + String.valueOf(if_ambito_cont);
                 String ambito_aux_padre = conts_ambito_global_padre;
-                raiz.setAmbito(ambito);
+                raiz.setAmbito(ambito_aux);
                 InsertarSimbolo(new RegistroSimbolo(ambito_aux,  raiz.getSymbol(), ambito, ambito_padre, nivel, tipoSymbol.AMBITO));
                 
                 RegistroSimbolo registro_else = new RegistroSimbolo(ambito_aux + "_ELSE",  raiz.getSymbol(), ambito, ambito_padre, nivel, tipoSymbol.AMBITO);
@@ -179,7 +179,7 @@ public class TablaSimbolos {
             if (raiz instanceof NodoRepeat) {
                 String ambito_aux = "REPEAT_" + String.valueOf(nivel) + "_" + String.valueOf(repeat_ambito_cont);
                 String ambito_aux_padre = conts_ambito_global_padre;
-                raiz.setAmbito(ambito);
+                raiz.setAmbito(ambito_aux);
                 InsertarSimbolo(new RegistroSimbolo(ambito_aux, raiz.getSymbol(), ambito, ambito_padre, nivel, tipoSymbol.AMBITO));
                 ambito_aux_padre = ambito_padre;
                 ambito_padre = ambito;
@@ -197,7 +197,7 @@ public class TablaSimbolos {
             if (raiz instanceof NodoFor) {
                 String ambito_aux = "FOR_" + String.valueOf(nivel) + "_" + String.valueOf(for_ambito_cont);
                 String ambito_aux_padre = conts_ambito_global_padre;
-                raiz.setAmbito(ambito);
+                raiz.setAmbito(ambito_aux);
                 InsertarSimbolo(new RegistroSimbolo(ambito_aux, raiz.getSymbol(), ambito, ambito_padre, nivel, tipoSymbol.AMBITO));
                 ambito_aux_padre = ambito_padre;
                 ambito_padre = ambito;
@@ -336,6 +336,21 @@ public class TablaSimbolos {
             } else {
                 if (simbolo_ambito.getAmbito() != conts_ambito_global && simbolo_ambito.getAmbito() != conts_ambito_functions) {
                     return ResolverPadres(arrastre, BuscarSimbolo(simbolo_ambito.getAmbito()));
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean ResolverPadresMinimo(RegistroSimbolo arrastre, RegistroSimbolo simbolo_ambito) {
+        //busco padre en la cadena    
+        if (arrastre != null && simbolo_ambito!=null) {
+            //busco padre inmediato
+            if (arrastre.getAmbito().equals(simbolo_ambito.getIdentificador())) {
+                return true;
+            } else {
+                if (simbolo_ambito.getIdentificador() != conts_ambito_global && simbolo_ambito.getIdentificador() != conts_ambito_functions) {
+                    return ResolverPadresMinimo(arrastre, BuscarSimbolo(simbolo_ambito.getAmbito()));
                 }
             }
         }
