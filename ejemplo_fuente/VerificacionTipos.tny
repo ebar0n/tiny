@@ -16,8 +16,8 @@ begin
 	boolean j[3];
 	boolean b;
 	Entero();
-	if 1<2 then
-		a:=3;
-	end; 
-	
+	int xx;xx:=1;
+	if xx>=7 and xx<10 then
+		boolean ifk;
+	end;	
 end;
