@@ -459,6 +459,9 @@ public class TablaSimbolos {
         return BuscarSimbolo(Clave).getDireccionMemoria();
     }
 
+    public int getDireccion(String Clave, String ambito){
+            return BuscarSimbolo(Clave, ambito).getDireccionMemoria();
+    }
     /*
      * TODO:
      * 1. Crear lista con las lineas de codigo donde la variable es usada.

@@ -107,7 +107,9 @@ public class Generador {
 	private static void generarFuncion(NodoBase nodo) {
 		NodoFunction nodof = (NodoFunction) nodo;
 		generar(nodof.getExpression());
+                
 		generar(nodof.getDeclaracion());
+                
 	}
 
 	private static void generarVariable(NodoBase nodo) {
@@ -116,6 +118,15 @@ public class Generador {
 
 	private static void generarArgList(NodoBase nodo) {
 		NodoArgList nodov = (NodoArgList) nodo;
+                int direccion;
+                
+                if(nodov.getArgumento()!=null)
+                    generarArgList(nodov.getArgumento());
+                
+                direccion = tablaSimbolos.getDireccion(nodov.getIdentificador().getNombre(),nodov.getAmbito());
+                
+                UtGen.emitirRM("LD", UtGen.AC, ++desplazamientoTmp, UtGen.MP, "cargo el registro AC con el valor de la pila");
+                UtGen.emitirRM("ST", UtGen.AC, direccion, UtGen.GP, "Guardo en la direccion");
 	}	
 
 	private static void generarLogico(NodoBase nodo) {
