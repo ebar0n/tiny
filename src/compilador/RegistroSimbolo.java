@@ -36,6 +36,7 @@ public class RegistroSimbolo {
 		this.ambito_padre = ambito_padre;
 		this.nivel = nivel;
 		this.hermano = null;
+		this.symbolInitialize = null;
 		this.tipeS = tipeS;
 	}
 
@@ -45,6 +46,7 @@ public class RegistroSimbolo {
         this.NumElementos = numElementos;
         this.LimInferior = 0;
         this.LimSuperior = numElementos - 1;
+        this.symbolInitialize = null;
         //array
     }
 
@@ -161,19 +163,19 @@ public class RegistroSimbolo {
 	}
 
 	public boolean getExistInitialize(){
-		return this.symbolDeclare != null;
+		return this.symbolInitialize != null;
 	}
 
 	public int getNumLineaInitialize(){
 		if (this.symbolDeclare != null)
-			return this.symbolDeclare.xleft.getLine();
+			return this.symbolInitialize.xleft.getLine();
 		else
 			return -1;
 	}
 
 	public int getNumColumnInitialize(){
 		if (this.symbolDeclare != null)
-			return this.symbolDeclare.xleft.getColumn();
+			return this.symbolInitialize.xleft.getColumn();
 		else
 			return -1;
 	}

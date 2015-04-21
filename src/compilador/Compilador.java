@@ -37,7 +37,7 @@ public class Compilador {
 		
 		TablaSimbolos ts = new TablaSimbolos();
 		ts.cargarTabla(root);
-		//ts.ImprimirClaves();
+		ts.ImprimirClaves();
 	    //REALIZAR ACA ANALISIS SEMANTICO
 		Semantica semantica = new Semantica(ts);
 		System.out.println("\nBuscando errores semanticos");

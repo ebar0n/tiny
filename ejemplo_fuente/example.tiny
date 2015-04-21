@@ -54,7 +54,7 @@ end;
 
 begin 
 
-	int a,d,vector,c[2];
+	int a,d,vector,c[2],edwar;
 	int z,x,t; z:=1<t;
 	vector:=1;
 	c[1]:=2;

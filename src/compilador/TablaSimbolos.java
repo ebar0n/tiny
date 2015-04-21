@@ -119,6 +119,7 @@ public class TablaSimbolos {
                 RegistroSimbolo simbolo = this.BuscarSimbolo(nodo.getIdentificador().getNombre(), nodo.getAmbito());
                 if( simbolo != null && simbolo.getExistInitialize() == false){
                     //si no es usado al otro lado, es una asignacion valida
+                    System.out.println(nodo.getIdentificador().getNombre());
                     if( SearhIdentificadorExist(nodo.getIdentificador().getNombre(), ((NodoAsignacion)raiz).getExpresion() ) == false ){
                         simbolo.setSymbolInitialize(nodo.getSymbol());   
                     }
@@ -425,8 +426,11 @@ public class TablaSimbolos {
             String s = (String) it.next();
             RegistroSimbolo simbolo = BuscarSimbolo(s);
             while (simbolo != null) {
-                System.out.print("Key: " + s + " -> Linea: "+simbolo.getNumLineaDeclare()+" -> column: "+simbolo.getNumColumnDeclare()+" -> symbol: " + simbolo.getTipeSymbol() +  " -> tipo retorno: " + simbolo.getTipo() + " ambito: " + simbolo.getAmbito() + " ambito padre: " + simbolo.getAmbitoPadre() + " nivel: " + String.valueOf(simbolo.getNivel()));
-                System.out.println("");
+                System.out.print("Key: " + s + ", Line: "+simbolo.getNumLineaDeclare()+", Col: "+simbolo.getNumColumnDeclare()+", Type: " + simbolo.getTipeSymbol() +  ", Type var: " + simbolo.getTipo() + ", Amb: " + simbolo.getAmbito() + ", Amb_p: " + simbolo.getAmbitoPadre());
+                if( simbolo.getExistInitialize() == true )
+                    System.out.println(", Init: Si, Line: " +simbolo.getNumLineaInitialize() );
+                else
+                    System.out.println(", Init: NO");
 
                 simbolo = simbolo.getHermano();
                
