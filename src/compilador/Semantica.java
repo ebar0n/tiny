@@ -534,32 +534,34 @@ public class Semantica {
 	//REGLA 7, LLAMADA A FUNCIONES
 	public void SemanticaValidarCallFunction(NodoIdentificador identificador,NodoBase variables){
 		RegistroSimbolo simbolo = ts.BuscarSimboloIsFunction(identificador.getNombre());
-		int num_par = 0;
-		List<tipoDato> tipoParametros = new ArrayList<tipoDato>();
-		if (variables!=null){
-		    NodoParamFunction var = (NodoParamFunction)variables;
-		    tipoDato tipoI;
-    		while(var!=null){
-    			RecorrerArbol(var.getExpresion());
-    			tipoI = ((NodoLogico)var.getExpresion()).getTipoDato();
-    			tipoParametros.add(tipoI);
-    			var = (NodoParamFunction)var.getSiguiente();
-    			num_par++;
-    		}
-		}
-		
-		if (num_par != simbolo.getNumParametros()){
-    		System.out.println("# (Regla#7)-> linea: "+identificador.getNumLinea()+" -> Funcion {"+identificador.getNombre()+"} Numero de parametros de la llamada diferente al de la definicion");
-		}else{
-			boolean bandera =false;
-			for(int x=0;x<tipoParametros.size();x++) {
-				if (tipoParametros.get(x) != simbolo.getTipoParametros().get(x)){
-					bandera = true;
-					break;
-				}
+		if( simbolo != null ){
+			int num_par = 0;
+			List<tipoDato> tipoParametros = new ArrayList<tipoDato>();
+			if (variables!=null){
+			    NodoParamFunction var = (NodoParamFunction)variables;
+			    tipoDato tipoI;
+	    		while(var!=null){
+	    			RecorrerArbol(var.getExpresion());
+	    			tipoI = ((NodoLogico)var.getExpresion()).getTipoDato();
+	    			tipoParametros.add(tipoI);
+	    			var = (NodoParamFunction)var.getSiguiente();
+	    			num_par++;
+	    		}
 			}
-			if (bandera){
-				System.out.println("# (Regla#7)-> linea: "+identificador.getNumLinea()+" -> Funcion {"+identificador.getNombre()+"} Tipos de datos no corresponden con la llamada de la funcion");
+			
+			if (num_par != simbolo.getNumParametros()){
+	    		System.out.println("#Error (Regla#7)-> linea: "+identificador.getNumLinea()+" -> Funcion {"+identificador.getNombre()+"} Numero de parametros de la llamada diferente al de la definicion");
+			}else{
+				boolean bandera =false;
+				for(int x=0;x<tipoParametros.size();x++) {
+					if (tipoParametros.get(x) != simbolo.getTipoParametros().get(x)){
+						bandera = true;
+						break;
+					}
+				}
+				if (bandera){
+					System.out.println("#Error (Regla#7)-> linea: "+identificador.getNumLinea()+" -> Funcion {"+identificador.getNombre()+"} Tipos de datos no corresponden con la llamada de la funcion");
+				}
 			}
 		}
 	}
@@ -567,7 +569,7 @@ public class Semantica {
 	public void SemanticaValidarCondicionalLogico(NodoBase condicion){
 		tipoDato tipoI = ((NodoLogico)condicion).getTipoDato();
 		if (tipoI != tipoDato.BOOLEAN){
-			System.out.println("# (Regla#8)-> linea: "+((NodoLogico)condicion).getNumLinea()+" -> La condicion tiene que ser de tipo booleano");
+			System.out.println("#Error (Regla#8)-> linea: "+((NodoLogico)condicion).getNumLinea()+" -> La condicion tiene que ser de tipo booleano");
 		}
 	}
 
