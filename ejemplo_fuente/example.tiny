@@ -62,9 +62,9 @@ begin
 	int x,t;t:=1; z:=1<t;
 	vector:=1;
 	c[1]:=2;
-	d:=sdfsdfd();
-	if myfunckll1(myfunckll1(), myfuncl() + 1) then
-		if d!=false then
+	d:=myfunckl(1,myfunckll());
+	if myfunckl(myfunckl(1,false), (3+1) > 1) > 3 then
+		if d!=(-1) then
 			for(x:=1;x<10;x:=x+1)
 				int var;
 				if x>=7 and x<10 then
@@ -76,13 +76,14 @@ begin
 		end;
 	end;
 
-	if d!=false then
-		if d!=false then
+	d:=myfunckl(myfunckl(1,false), (3+1) > 1);
+	if d!=((((((((-1*2)*myfunckl(myfunckl(1,false), (3+1) > 1)))))))) then
+		if d!=(d*(-1)) then
 			int ebaron;
 		end;
 	end;
 
-	if d!=false then
+	if d!=1*1*1*1/2*1-myfunckl(1,false) then
 		int ebaron;
 	end;
 

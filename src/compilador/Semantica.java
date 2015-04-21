@@ -551,6 +551,7 @@ public class Semantica {
 			
 			if (num_par != simbolo.getNumParametros()){
 	    		System.out.println("#Error (Regla#7.1)-> linea: "+identificador.getNumLinea()+" -> Funcion {"+identificador.getNombre()+"} Numero de parametros de la llamada diferente al de la definicion");
+				error_count++;
 			}else{
 				boolean bandera =false;
 				for(int x=0;x<tipoParametros.size();x++) {
@@ -561,11 +562,13 @@ public class Semantica {
 				}
 				if (bandera){
 					System.out.println("#Error (Regla#7.2)-> linea: "+identificador.getNumLinea()+" -> Funcion {"+identificador.getNombre()+"} Tipos de datos no corresponden con la llamada de la funcion");
+					error_count++;
 				}
 			}
 		}
 		else{
 			System.out.println("#Error (Regla#7.3)-> linea: "+identificador.getNumLinea()+" -> Funcion {"+identificador.getNombre()+"} no esta declarada");	
+			error_count++;
 		}
 	}
 	//Regla 8, validar condicionales
@@ -573,6 +576,7 @@ public class Semantica {
 		tipoDato tipoI = ((NodoLogico)condicion).getTipoDato();
 		if (tipoI != tipoDato.BOOLEAN){
 			System.out.println("#Error (Regla#8)-> linea: "+((NodoLogico)condicion).getNumLinea()+" -> La condicion tiene que ser de tipo booleano");
+			error_count++;
 		}
 	}
 
