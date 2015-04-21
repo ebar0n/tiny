@@ -1,6 +1,7 @@
 package compilador;
 
 import ast.*;
+import java.util.*;
 
 
 public class Semantica {
@@ -17,8 +18,7 @@ public class Semantica {
 
 	//Verificacion de tipo
 	tipoDato tipo = null;
-	boolean tipoBandera = true;
-	
+
 	//Variables de Ciclo FOR
 	String Parte_for = null, variable_for = null;
 	int num_uso = 0,num_uso_inc = 0, ciclo_for = 0 , linea_for = 0;
@@ -100,6 +100,7 @@ public class Semantica {
 		    	//PRUEBA IF
 		    	ambito = ((NodoIf)raiz).getAmbito();
 		    	RecorrerArbol(((NodoIf)raiz).getPrueba());
+		    	SemanticaValidarCondicionalLogico(((NodoIf)raiz).getPrueba());
 		    	//THEN IF
 		    	RecorrerArbol(((NodoIf)raiz).getParteThen());
 		    	if(((NodoIf)raiz).getParteElse()!=null){
@@ -117,6 +118,8 @@ public class Semantica {
 		    	//PRUEBA REPEAT
                 //SemanticaValidarUntil(((NodoRepeat)raiz).getPrueba());
 		    	RecorrerArbol(((NodoRepeat)raiz).getPrueba());
+		    	SemanticaValidarCondicionalLogico(((NodoRepeat)raiz).getPrueba());
+
                         
 		    	UpAmbito();
 		    }
@@ -198,18 +201,22 @@ public class Semantica {
 				SemanticaValidarTipoLogico(tipoI,tipoD,logico);
 		    }
 		    else if (raiz instanceof NodoCallFunction){
-		    	//LLMAR A FUNCION
-		    	if (((NodoCallFunction)raiz).getVariables()!=null){
+		    	//LLAMAR A FUNCION
+		    	SemanticaValidarCallFunction(((NodoCallFunction)raiz).getIdentificador(),((NodoCallFunction)raiz).getVariables());
+		    	/*if (((NodoCallFunction)raiz).getVariables()!=null){
+		    		SemanticaValidarCallFunction(((NodoCallFunction)raiz).getVariables());
 		    		//System.out.println(" Con parametos ->");
+		    		/*
 		    		NodoParamFunction var = (NodoParamFunction)((NodoCallFunction)raiz).getVariables(); 
 		    		while(var!=null){
 		    			RecorrerArbol(var.getExpresion());
 		    			var = (NodoParamFunction)var.getSiguiente();
 		    		}
+		    		
 		    	}
 		    	else{
-		    		//System.out.println(" Sin parametos");
-		    	}
+		    		SemanticaValidarCallFunction(null);//System.out.println(" Sin parametos");
+		    	}*/
 		    }
 		    else if (raiz instanceof NodoReturn ){
 		    	//System.out.println("Return");	
@@ -239,6 +246,7 @@ public class Semantica {
                 //CONDICION LOGICA EXPRESION
                 //Parte_for = "CONDICION";
 		    	RecorrerArbol(((NodoFor)raiz).getCondicion());
+		    	SemanticaValidarCondicionalLogico(((NodoFor)raiz).getCondicion());
 		    	//INCREMENTO ASIGNACION
 		    	
 		    	//Parte_for = "INCREMENTO";
@@ -521,5 +529,47 @@ public class Semantica {
 			error_count++;
 		}
 	}
+
+
+	//REGLA 7, LLAMADA A FUNCIONES
+	public void SemanticaValidarCallFunction(NodoIdentificador identificador,NodoBase variables){
+		RegistroSimbolo simbolo = ts.BuscarSimboloIsFunction(identificador.getNombre());
+		int num_par = 0;
+		List<tipoDato> tipoParametros = new ArrayList<tipoDato>();
+		if (variables!=null){
+		    NodoParamFunction var = (NodoParamFunction)variables;
+		    tipoDato tipoI;
+    		while(var!=null){
+    			RecorrerArbol(var.getExpresion());
+    			tipoI = ((NodoLogico)var.getExpresion()).getTipoDato();
+    			tipoParametros.add(tipoI);
+    			var = (NodoParamFunction)var.getSiguiente();
+    			num_par++;
+    		}
+		}
+		
+		if (num_par != simbolo.getNumParametros()){
+    		System.out.println("# (Regla#7)-> linea: "+identificador.getNumLinea()+" -> Funcion {"+identificador.getNombre()+"} Numero de parametros de la llamada diferente al de la definicion");
+		}else{
+			boolean bandera =false;
+			for(int x=0;x<tipoParametros.size();x++) {
+				if (tipoParametros.get(x) != simbolo.getTipoParametros().get(x)){
+					bandera = true;
+					break;
+				}
+			}
+			if (bandera){
+				System.out.println("# (Regla#7)-> linea: "+identificador.getNumLinea()+" -> Funcion {"+identificador.getNombre()+"} Tipos de datos no corresponden con la llamada de la funcion");
+			}
+		}
+	}
+	//Regla 8, validar condicionales
+	public void SemanticaValidarCondicionalLogico(NodoBase condicion){
+		tipoDato tipoI = ((NodoLogico)condicion).getTipoDato();
+		if (tipoI != tipoDato.BOOLEAN){
+			System.out.println("# (Regla#8)-> linea: "+((NodoLogico)condicion).getNumLinea()+" -> La condicion tiene que ser de tipo booleano");
+		}
+	}
+
 
 }
