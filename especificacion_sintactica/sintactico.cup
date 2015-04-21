@@ -482,13 +482,11 @@ return_sentence ::=
 			{: 
 				printModoDepuracion("return_sentence -> logical_expression");
 				RESULT = new NodoReturn(fact);
-				RESULT.setSymbol((ComplexSymbol)CUP$parser$stack.peek());
 			:}
 		| RETURN 
 			{: 
 				printModoDepuracion("return_sentence -> empty");
 				RESULT = new NodoReturn();
-				RESULT.setSymbol((ComplexSymbol)CUP$parser$stack.peek());
 			:};
 
 function_sentence ::= 

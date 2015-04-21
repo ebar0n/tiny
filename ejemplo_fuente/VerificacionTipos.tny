@@ -1,11 +1,13 @@
-int Entero(int a,boolean b)
+int Entero()
 begin
 	int vector[10];
+	return vector[10];
 end;
 
-boolean Boleano(int a,boolean b)
+boolean Boleano(int a,boolean b,int c)
 begin
 	int vector[10];
+	return vector[10];
 end;
 
 
@@ -13,7 +15,9 @@ begin
 	int a;
 	boolean j[3];
 	boolean b;
-	a:= 1+2;
-	b:= true and true;
-	j[2]:= true and true;
+	Entero();
+	if 1<2 then
+		a:=3;
+	end; 
+	
 end;
