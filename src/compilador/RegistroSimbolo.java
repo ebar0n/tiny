@@ -2,10 +2,12 @@ package compilador;
 import ast.*;
 import java.util.*;
 import java_cup.runtime.ComplexSymbolFactory.ComplexSymbol;
+
 public class RegistroSimbolo {
 	private String identificador;
 	private tipoDato tipo;
-	private ComplexSymbol symbol;
+	private ComplexSymbol symbolDeclare;
+    private ComplexSymbol symbolInitialize;
 	private int DireccionMemoria;
 	private String ambito;
 	private String ambito_padre;
@@ -17,18 +19,19 @@ public class RegistroSimbolo {
 		super();
 		this.identificador = identificador;
 		this.tipo = tipo;
-		this.symbol = symbol;
+		this.symbolDeclare = symbol;
 		this.ambito = ambito;
 		this.ambito_padre = ambito_padre;
 		this.nivel = nivel;
 		this.hermano = null;
 		this.tipeS = tipeS;
+		this.symbolInitialize = null;
 	}
 
 	public RegistroSimbolo(String identificador,ComplexSymbol symbol, String ambito,String ambito_padre,int nivel, tipoSymbol tipeS) {
 		super();
 		this.identificador = identificador;
-		this.symbol = symbol;
+		this.symbolDeclare = symbol;
 		this.ambito = ambito;
 		this.ambito_padre = ambito_padre;
 		this.nivel = nivel;
@@ -38,12 +41,12 @@ public class RegistroSimbolo {
 
 	
 	public RegistroSimbolo(int numElementos, String identificador, tipoDato tipo, ComplexSymbol symbol, String ambito,String ambito_padre, int nivel, tipoSymbol tipeS) {
-            this(identificador, tipo, symbol,ambito,ambito_padre,nivel, tipeS);
-            this.NumElementos = numElementos;
-            this.LimInferior = 0;
-            this.LimSuperior = numElementos - 1;
-            //array
-        }
+        this(identificador, tipo, symbol,ambito,ambito_padre,nivel, tipeS);
+        this.NumElementos = numElementos;
+        this.LimInferior = 0;
+        this.LimSuperior = numElementos - 1;
+        //array
+    }
 
 	public String getKey() {
 		return this.identificador +"/"+ this.getAmbito();
@@ -139,16 +142,38 @@ public class RegistroSimbolo {
 		return this.tipeS;
 	};
 
-	public int getNumLinea(){
-		if (this.symbol != null)
-			return this.symbol.xleft.getLine();
+	public int getNumLineaDeclare(){
+		if (this.symbolDeclare != null)
+			return this.symbolDeclare.xleft.getLine();
 		else
 			return -1;
 	}
 
-	public int getNumColumn(){
-		if (this.symbol != null)
-			return this.symbol.xleft.getColumn();
+	public int getNumColumnDeclare(){
+		if (this.symbolDeclare != null)
+			return this.symbolDeclare.xleft.getColumn();
+		else
+			return -1;
+	}
+
+	public void setSymbolInitialize(ComplexSymbol symbol){
+		this.symbolInitialize = symbol;
+	}
+
+	public boolean getExistInitialize(){
+		return this.symbolDeclare != null;
+	}
+
+	public int getNumLineaInitialize(){
+		if (this.symbolDeclare != null)
+			return this.symbolDeclare.xleft.getLine();
+		else
+			return -1;
+	}
+
+	public int getNumColumnInitialize(){
+		if (this.symbolDeclare != null)
+			return this.symbolDeclare.xleft.getColumn();
 		else
 			return -1;
 	}

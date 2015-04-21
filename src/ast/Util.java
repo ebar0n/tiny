@@ -121,7 +121,7 @@ public class Util {
 		    	sangria+=2;
 		    	printSpaces();
 		    	System.out.println("Parte izquierda:");
-		    	imprimirAST(((NodoAsignacion)raiz).getId());
+		    	imprimirAST(((NodoAsignacion)raiz).getIdentificador());
 		    	printSpaces();
 		    	System.out.println("Parte Derecha:");
 		    	imprimirAST(((NodoAsignacion)raiz).getExpresion());

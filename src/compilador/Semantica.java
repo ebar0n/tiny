@@ -75,9 +75,9 @@ public class Semantica {
 		    else if (raiz instanceof NodoArray ){
 		    	NodoArray variable = (NodoArray)raiz;
 		    	
-		    	is_array = true;
+		    	this.is_array = true;
 		    	RecorrerArbol(variable.getIdentificador());
-		    	is_array = false;
+		    	this.is_array = false;
 		    	
 		    	RecorrerArbol(variable.getNodo());
 
@@ -117,7 +117,7 @@ public class Semantica {
 		    }
 		    else if (raiz instanceof  NodoAsignacion){
 		    	//ASIGNACION PARTE IZQUIERDA
-		    	RecorrerArbol(((NodoAsignacion)raiz).getId());
+		    	RecorrerArbol(((NodoAsignacion)raiz).getIdentificadorOrArray());
 		    	//ASIGNACION PARTE DERECHA
 		    	RecorrerArbol(((NodoAsignacion)raiz).getExpresion());
 		    }
@@ -233,20 +233,20 @@ public class Semantica {
 	//Regla 1, validar decaraciones repetidas de variables
 	public void SemanticaValidarDeclaracionTipoVariable(NodoIdentificador identificador){
 		if( identificador != null ){
-			//System.out.println("Var: " + identificador.getNombre() + " amb: " + ambito + " line: " + identificador.getNumLinea() + " col: "+identificador.getNumColumn());
+			//System.out.println("Var: " + identificador.getNombre() + " amb: " + ambito + " line: " + identificador.getNumLineaDeclare() + " col: "+identificador.getNumColumnDeclare());
 			RegistroSimbolo simbolo = ts.BuscarSimbolo(identificador.getNombre(), identificador.getAmbito());
 			if (simbolo.getTipeSymbol() != tipoSymbol.FUNCTION){
-				if( simbolo.getNumLinea() + simbolo.getNumColumn() != identificador.getNumLinea() + identificador.getNumColumn()){
+				if( simbolo.getNumLineaDeclare() + simbolo.getNumColumnDeclare() != identificador.getNumLinea() + identificador.getNumColumn()){
 					
 					if(TablaSimbolos.conts_ambito_global == simbolo.getAmbito() && simbolo.getAmbito()==ts.BuscarSimbolo(identificador.getAmbito()).getAmbito()){
 						//Falsa alarma, el simbolo existe pero en el main, y esta declarado otra vez en una funcion
 					}
 					else{
-						System.out.println("N°"+error_count+" (Regla#1.1)-> linea: "+identificador.getNumLinea()+  " -> Variable {"+simbolo.getIdentificador()+"} ya declarada, en la linea: "+simbolo.getNumLinea() + " columna: "+simbolo.getNumColumn());
+						System.out.println("# (Regla#1.1)-> linea: "+identificador.getNumLinea()+  " -> Variable {"+simbolo.getIdentificador()+"} ya declarada, en la linea: "+simbolo.getNumLineaDeclare() + " columna: "+simbolo.getNumColumnDeclare());
 						error_count++
 					;}
 				}
-				//System.out.println("**Linea: "+simbolo.getNumLinea()+"-> column: "+simbolo.getNumColumn()+"-> symbol: " + simbolo.getTipeSymbol() + " -> key: " + simbolo.getIdentificador());
+				//System.out.println("**Linea: "+simbolo.getNumLineaDeclare()+"-> column: "+simbolo.getNumColumnDeclare()+"-> symbol: " + simbolo.getTipeSymbol() + " -> key: " + simbolo.getIdentificador());
         	}
     	}
 	}
@@ -254,13 +254,13 @@ public class Semantica {
 	//Regla 1, validar decaraciones repetidas de funciones
 	public void SemanticaValidarDeclaracionTipoFuntions(NodoIdentificador identificador){
 		if( identificador != null ){
-			//System.out.println("Var: " + identificador.getNombre() + " amb: " + ambito + " line: " + identificador.getNumLinea() + " col: "+identificador.getNumColumn());
+			//System.out.println("Var: " + identificador.getNombre() + " amb: " + ambito + " line: " + identificador.getNumLineaDeclare() + " col: "+identificador.getNumColumnDeclare());
 			RegistroSimbolo simbolo = ts.BuscarSimboloIsFunction(identificador.getNombre());
-				if( simbolo.getNumLinea() + simbolo.getNumColumn() != identificador.getNumLinea() + identificador.getNumColumn()){
-					System.out.println("N°"+error_count+" (Regla#1.2)-> linea: "+identificador.getNumLinea()+  " -> Funcion {"+simbolo.getIdentificador()+"} ya declarada, en la linea: "+simbolo.getNumLinea() + " columna: "+simbolo.getNumColumn());
+				if( simbolo.getNumLineaDeclare() + simbolo.getNumColumnDeclare() != identificador.getNumLinea() + identificador.getNumColumn()){
+					System.out.println("# (Regla#1.2)-> linea: "+identificador.getNumLinea()+  " -> Funcion {"+simbolo.getIdentificador()+"} ya declarada, en la linea: "+simbolo.getNumLineaDeclare() + " columna: "+simbolo.getNumColumnDeclare());
 					error_count++;
 				}
-			//System.out.println("**Linea: "+simbolo.getNumLinea()+"-> column: "+simbolo.getNumColumn()+"-> symbol: " + simbolo.getTipeSymbol() + " -> key: " + simbolo.getIdentificador());
+			//System.out.println("**Linea: "+simbolo.getNumLineaDeclare()+"-> column: "+simbolo.getNumColumnDeclare()+"-> symbol: " + simbolo.getTipeSymbol() + " -> key: " + simbolo.getIdentificador());
         }
 	}
 
@@ -268,15 +268,15 @@ public class Semantica {
 	public void SemanticaValidarUsoDeVariables(NodoIdentificador identificador){
 		if( identificador != null ){
 			//System.out.println("\n\n");
-			//System.out.println("Validando => Var: " + identificador.getNombre() + " amb: " + ambito + " line: " + identificador.getNumLinea() + " col: "+identificador.getNumColumn());
-			//System.out.println("Validando => Var: " + identificador.getNombre() + " amb: " + identificador.getAmbito() + " line: " + identificador.getNumLinea() + " col: "+identificador.getNumColumn());
+			//System.out.println("Validando => Var: " + identificador.getNombre() + " amb: " + ambito + " line: " + identificador.getNumLineaDeclare() + " col: "+identificador.getNumColumnDeclare());
+			//System.out.println("Validando => Var: " + identificador.getNombre() + " amb: " + identificador.getAmbito() + " line: " + identificador.getNumLineaDeclare() + " col: "+identificador.getNumColumnDeclare());
 			RegistroSimbolo simbolo = ts.BuscarSimbolo(identificador.getNombre(), identificador.getAmbito());
 			if(simbolo == null){
-				System.out.println("N°"+error_count+" (Regla#2)-> linea: "+identificador.getNumLinea()+  " -> Variable {"+identificador.getNombre()+"} no ha sido declarada");
+				System.out.println("# (Regla#2)-> linea: "+identificador.getNumLinea()+  " -> Variable {"+identificador.getNombre()+"} no ha sido declarada");
 				error_count++;
 			}
 			else
-			if( simbolo.getNumLinea() > identificador.getNumLinea() || (simbolo.getNumLinea() == identificador.getNumLinea()) && ( simbolo.getNumColumn() > identificador.getNumColumn() ))
+			if( simbolo.getNumLineaDeclare() > identificador.getNumLinea() || (simbolo.getNumLineaDeclare() == identificador.getNumLinea()) && ( simbolo.getNumColumnDeclare() > identificador.getNumColumn() ))
 			{	
 				if( simbolo.getAmbito() == TablaSimbolos.conts_ambito_global && ts.EstoyDentroDeUnaFuncion(ts.BuscarSimbolo(identificador.getAmbito()))){
 					//falsa alarma, tengo la variable declarada en el main, y la uso en una funcion
@@ -284,7 +284,7 @@ public class Semantica {
 					verificarUsoTipoVar(identificador, simbolo);
 				}
 				else{
-					System.out.println("N°"+error_count+" (Regla#2)-> linea: "+identificador.getNumLinea()+" -> Variable {"+identificador.getNombre()+"} debe ser declarada antes de ser usada, si existe pero mas adelante en: linea: "+ simbolo.getNumLinea()+" columna: "+simbolo.getNumColumn());
+					System.out.println("# (Regla#2)-> linea: "+identificador.getNumLinea()+" -> Variable {"+identificador.getNombre()+"} debe ser declarada antes de ser usada, si existe pero mas adelante en: linea: "+ simbolo.getNumLineaDeclare()+" columna: "+simbolo.getNumColumnDeclare());
 					error_count++;
 				}
 			}
@@ -299,20 +299,21 @@ public class Semantica {
 	public void verificarUsoTipoVar(NodoIdentificador identificador, RegistroSimbolo simbolo){
 		if( simbolo.getTipeSymbol() == tipoSymbol.ARRAY ){
 			if (this.is_array == false){
-				System.out.println("N°"+error_count+" (Regla#3)-> linea: "+identificador.getNumLinea()+" -> Variable {"+identificador.getNombre()+"} se usa de forma indebida, fue declarada como array");
+				System.out.println(identificador.getAmbito() + " - " + simbolo.getAmbito() + " " + this.is_array);
+				System.out.println("# (Regla#3)-> linea: "+identificador.getNumLinea()+" -> Variable {"+identificador.getNombre()+"} se usa de forma indebida, fue declarada como array");
 				error_count++;
 			}
 		}
 		else{
 			if( simbolo.getTipeSymbol() == tipoSymbol.VAR ){
 				if (this.is_array == true){
-					System.out.println("N°"+error_count+" (Regla#3)-> linea: "+identificador.getNumLinea()+" -> Variable {"+identificador.getNombre()+"} se usa de forma indebida, fue declarada como variable");
+					System.out.println("# (Regla#3)-> linea: "+identificador.getNumLinea()+" -> Variable {"+identificador.getNombre()+"} se usa de forma indebida, fue declarada como variable");
 					error_count++;
 				}
 			}
 			else{
 				//este error no deberia darse
-				System.out.println("N°"+error_count+" (Regla#3)-> linea: "+identificador.getNumLinea()+" -> identificador {"+identificador.getNombre()+"} no se reconoce como variable o array");
+				System.out.println("# (Regla#3)-> linea: "+identificador.getNumLinea()+" -> identificador {"+identificador.getNombre()+"} no se reconoce como variable o array");
 				error_count++;
 			}
 		}
@@ -352,7 +353,7 @@ public class Semantica {
                 NodoIdentificador nodo_identificador = (NodoIdentificador) nodo;
                 RegistroSimbolo simbolo = ts.BuscarSimbolo(nodo_identificador.getNombre());
                 if(simbolo.getTipo().compareTo(tipoDato.BOOLEAN)!=0){
-                 System.out.println("N°"+error_count+" -> linea: "+nodo_identificador.getNumLinea()+  " -> Variable {"+nodo_identificador.getNombre()+"} no es parte de un expression valida para el ciclo repeat");   
+                 System.out.println("# -> linea: "+nodo_identificador.getNumLineaDeclare()+  " -> Variable {"+nodo_identificador.getNombre()+"} no es parte de un expression valida para el ciclo repeat");   
                  error_count++;
                 } 
                 nodo=null;
@@ -362,7 +363,7 @@ public class Semantica {
                 //System.out.println("NODOVALOR");
                 NodoValor nodo_valor = (NodoValor) nodo;
                 if(nodo_valor.getValorBoolean()==null){
-                 System.out.println("N°"+error_count+" -> linea: "+nodo_valor.getNumLinea()+  " -> constante no es parte de un expression valida para el ciclo repeat");   
+                 System.out.println("# -> linea: "+nodo_valor.getNumLineaDeclare()+  " -> constante no es parte de un expression valida para el ciclo repeat");   
                  error_count++;
                 }
                 nodo=null;
@@ -373,7 +374,7 @@ public class Semantica {
                 NodoCallFunction nodo_funcion = (NodoCallFunction) nodo;
                 RegistroSimbolo simbolo = ts.BuscarSimbolo(nodo_funcion.getIdentificador().getNombre());
                 if(simbolo.getTipo().compareTo(tipoDato.BOOLEAN)!=0){
-                 System.out.println("N°"+error_count+" -> linea: "+nodo_funcion.getNumLinea()+  " -> Variable {"+nodo_funcion.getIdentificador().getNombre()+"} no es parte de un expression valida para el ciclo repeat");   
+                 System.out.println("# -> linea: "+nodo_funcion.getNumLineaDeclare()+  " -> Variable {"+nodo_funcion.getIdentificador().getNombre()+"} no es parte de un expression valida para el ciclo repeat");   
                  error_count++;
                 }
                 nodo=null;
@@ -385,14 +386,14 @@ public class Semantica {
     //Regla 5.1, validacion de return 
     public void SemanticaReturnFuncionNoExist(NodoFunction funcion){
             
-        System.out.println("N°"+error_count+" (Regla#5.1)-> linea: "+funcion.getNumLinea()+  " -> funcion {"+funcion.getIdentificador().getNombre()+"} no ha encontrado un return");   
+        System.out.println("# (Regla#5.1)-> linea: "+funcion.getNumLinea()+  " -> funcion {"+funcion.getIdentificador().getNombre()+"} no ha encontrado un return");   
         error_count++;
         
     }
     //Regla 5.2, validacion de return 
     public void SemanticaReturnFuncionInvalid(NodoReturn nodo, boolean retornar_valor){
             
-        System.out.print("N°"+error_count+" (Regla#5.2)-> linea: "+nodo.getNumLinea()+  " -> return invalido para la funcion, ");   
+        System.out.print("# (Regla#5.2)-> linea: "+nodo.getNumLinea()+  " -> return invalido para la funcion, ");   
         if( retornar_valor==true )
         	System.out.println(" **debe retornar un valor**");
        	else
@@ -409,7 +410,7 @@ public class Semantica {
             if( simbolo != null ){
                 if(num_uso == 0 && parte_for == "INICIALIZACION"){
 
-            		//System.out.println("La variable del for es: " + identificador.getNombre() + " ambito: " +ambito + "-" + identificador.getAmbito() +  " linea: " +identificador.getNumLinea());
+            		//System.out.println("La variable del for es: " + identificador.getNombre() + " ambito: " +ambito + "-" + identificador.getAmbito() +  " linea: " +identificador.getNumLineaDeclare());
             		//System.out.println(simbolo);
             		variable_for = simbolo.getIdentificador();
             		linea_for = identificador.getNumLinea();

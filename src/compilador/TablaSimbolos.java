@@ -69,7 +69,7 @@ public class TablaSimbolos {
                 ambito = conts_ambito_global;
                 ambito_padre = conts_ambito_global_padre;
             }
-
+            else
             if (raiz instanceof NodoBloque) {
                 if (ambito == conts_ambito_global || (ambito==null && ambito_padre==null)) {
                     if (ambito == conts_ambito_global ){
@@ -88,7 +88,7 @@ public class TablaSimbolos {
                 nivel++;
                 cargarTabla(((NodoBloque) raiz).getExpression());
             }
-
+            else
             if (raiz instanceof NodoVariable) {
                 NodoVariable nodo = (NodoVariable) raiz;
                 if (nodo.getTipo() != null) {
@@ -102,7 +102,7 @@ public class TablaSimbolos {
 
                 cargarTabla(nodo.getNodo());
             }
-
+            else
             if (raiz instanceof NodoArray) {
                 NodoArray nodoA = (NodoArray) raiz;
                 if (nodoA.getIdentificador() != null) {
@@ -112,12 +112,37 @@ public class TablaSimbolos {
                 }
                 cargarTabla(((NodoArray) raiz).getNodo());
             }
-
-            if (raiz instanceof NodoLogico) {
-                cargarTabla(((NodoLogico) raiz).getOpIzquierdo());
-                cargarTabla(((NodoLogico) raiz).getOpDerecho());
+            else
+            if (raiz instanceof  NodoAsignacion){
+                NodoAsignacion nodo = (NodoAsignacion)raiz;
+                nodo.setAmbito(ambito);
+                RegistroSimbolo simbolo = this.BuscarSimbolo(nodo.getIdentificador().getNombre(), nodo.getAmbito());
+                if( simbolo != null && simbolo.getExistInitialize() == false){
+                    //si no es usado al otro lado, es una asignacion valida
+                    if( SearhIdentificadorExist( ((NodoAsignacion)raiz).getExpresion() ) == false ){
+                        //simbolo.setSymbolInitialize(nodo.getSymbol());   
+                    }
+                }
             }
-
+            else if (raiz instanceof  NodoLeer){
+                //LECTURA, tambien es asignacion
+                NodoIdentificador nodo = null;
+                if( ((NodoLeer)raiz).getIdentificador() instanceof NodoIdentificador ){
+                    nodo = (NodoIdentificador)((NodoLeer)raiz).getIdentificador();
+                }
+                else
+                if (((NodoLeer)raiz).getIdentificador() instanceof NodoArray){
+                    nodo = ((NodoArray)(((NodoLeer)raiz).getIdentificador())).getIdentificador();
+                }
+                if (nodo != null){
+                    nodo.setAmbito(ambito);
+                    RegistroSimbolo simbolo = this.BuscarSimbolo(nodo.getNombre(), nodo.getAmbito());
+                    if( simbolo.getExistInitialize() == false){
+                        //simbolo.setSymbolInitialize(nodo.getSymbol());
+                    }
+                }
+            }
+            else
             if (raiz instanceof NodoIf) {
                 String ambito_aux = "IF_" + String.valueOf(nivel) + "_" + String.valueOf(if_ambito_cont);
                 String ambito_aux_padre = conts_ambito_global_padre;
@@ -142,7 +167,9 @@ public class TablaSimbolos {
                 nivel--;
                 ambito = ambito_padre;
                 ambito_padre = ambito_aux_padre;
-            } else if (raiz instanceof NodoRepeat) {
+            }
+            else 
+            if (raiz instanceof NodoRepeat) {
                 String ambito_aux = "REPEAT_" + String.valueOf(nivel) + "_" + String.valueOf(repeat_ambito_cont);
                 String ambito_aux_padre = conts_ambito_global_padre;
                 raiz.setAmbito(ambito);
@@ -158,7 +185,9 @@ public class TablaSimbolos {
                 nivel--;
                 ambito = ambito_padre;
                 ambito_padre = ambito_aux_padre;
-            } else if (raiz instanceof NodoFor) {
+            }
+            else
+            if (raiz instanceof NodoFor) {
                 String ambito_aux = "FOR_" + String.valueOf(nivel) + "_" + String.valueOf(for_ambito_cont);
                 String ambito_aux_padre = conts_ambito_global_padre;
                 raiz.setAmbito(ambito);
@@ -169,9 +198,13 @@ public class TablaSimbolos {
                 nivel++;
                 for_ambito_cont++;
 
-		    	//cargarTabla(((NodoFor)raiz).getInicializacion());
+                //Estos 2 nodos se cargan solo para vefificar sus asignaciones
+		    	cargarTabla(((NodoFor)raiz).getInicializacion());
+                cargarTabla(((NodoFor)raiz).getIncremento());
+
+                //Este nodo no se evalua ya que en el no ocurre ninguna creacion de variables
                 //cargarTabla(((NodoFor)raiz).getCondicion());
-                //cargarTabla(((NodoFor)raiz).getIncremento());
+                
                 cargarTabla(((NodoFor) raiz).getSentencia());
                 nivel--;
                 ambito = ambito_padre;
@@ -179,6 +212,41 @@ public class TablaSimbolos {
             }
             raiz = raiz.getHermanoDerecha();
         }
+    }
+
+    public boolean SearhIdentificadorExist(NodoBase raiz){
+        boolean exist = false;
+        if( raiz != null ){
+            if (raiz instanceof NodoLogico){
+                exist = SearhIdentificadorExist( ((NodoLogico)raiz).getOpIzquierdo() );
+                if( exist == false )
+                {
+                    exist = SearhIdentificadorExist( ((NodoLogico)raiz).getOpDerecho() );   
+                }
+            }
+            else
+            if (raiz instanceof NodoOperacion){
+
+            }
+            else
+            if (raiz instanceof NodoArray){
+                
+            }
+            else
+            if (raiz instanceof NodoIdentificador){
+                
+            }
+            else
+            if (raiz instanceof NodoCallFunction){
+                
+            }
+            else
+            if(raiz instanceof NodoParamFunction){
+
+            } 
+            
+        }
+        return exist;
     }
 
     //true es nuevo no existe se insertara, false ya existe NO se vuelve a insertar
@@ -292,7 +360,7 @@ public class TablaSimbolos {
         if( tabla.containsKey(identificador) ){
         	
 	        RegistroSimbolo simbolo = (RegistroSimbolo) tabla.get(identificador);
-	        //System.out.println(":)Linea: "+simbolo.getNumLinea()+"-> column: "+simbolo.getNumColumn()+"-> symbol: " + simbolo.getTipeSymbol() + " -> key: " + simbolo.getIdentificador() + " tipo retorno: " + simbolo.getTipo() + " ambito: " + simbolo.getAmbito() + " ambito padre: " + simbolo.getAmbitoPadre() + " nivel: " + String.valueOf(simbolo.getNivel()));
+	        //System.out.println(":)Linea: "+simbolo.getNumLineaDeclare()+"-> column: "+simbolo.getNumColumnDeclare()+"-> symbol: " + simbolo.getTipeSymbol() + " -> key: " + simbolo.getIdentificador() + " tipo retorno: " + simbolo.getTipo() + " ambito: " + simbolo.getAmbito() + " ambito padre: " + simbolo.getAmbitoPadre() + " nivel: " + String.valueOf(simbolo.getNivel()));
             
 	        while(simbolo != null){
 	        	if( simbolo.getAmbito().equals(ambito)){
@@ -327,7 +395,7 @@ public class TablaSimbolos {
         //System.out.println("Linea: --------------------------("+identificador+"-"+ambito+")---------------------------");  
         if( tabla.containsKey(identificador) ){
             RegistroSimbolo simbolo = (RegistroSimbolo) tabla.get(identificador);
-            //System.out.println("Linea: "+simbolo.getNumLinea()+"-> column: "+simbolo.getNumColumn()+"-> symbol: " + simbolo.getTipeSymbol() + " -> key: " + simbolo.getIdentificador() + " tipo retorno: " + simbolo.getTipo() + " ambito: " + simbolo.getAmbito() + " ambito padre: " + simbolo.getAmbitoPadre() + " nivel: " + String.valueOf(simbolo.getNivel()));
+            //System.out.println("Linea: "+simbolo.getNumLineaDeclare()+"-> column: "+simbolo.getNumColumnDeclare()+"-> symbol: " + simbolo.getTipeSymbol() + " -> key: " + simbolo.getIdentificador() + " tipo retorno: " + simbolo.getTipo() + " ambito: " + simbolo.getAmbito() + " ambito padre: " + simbolo.getAmbitoPadre() + " nivel: " + String.valueOf(simbolo.getNivel()));
             while(simbolo != null){
                 if( simbolo.getAmbito().equals(conts_ambito_functions)){
                     //se consiguio en el mismo ambito
@@ -350,7 +418,7 @@ public class TablaSimbolos {
             String s = (String) it.next();
             RegistroSimbolo simbolo = BuscarSimbolo(s);
             while (simbolo != null) {
-                System.out.print("Key: " + s + " -> Linea: "+simbolo.getNumLinea()+" -> column: "+simbolo.getNumColumn()+" -> symbol: " + simbolo.getTipeSymbol() +  " -> tipo retorno: " + simbolo.getTipo() + " ambito: " + simbolo.getAmbito() + " ambito padre: " + simbolo.getAmbitoPadre() + " nivel: " + String.valueOf(simbolo.getNivel()));
+                System.out.print("Key: " + s + " -> Linea: "+simbolo.getNumLineaDeclare()+" -> column: "+simbolo.getNumColumnDeclare()+" -> symbol: " + simbolo.getTipeSymbol() +  " -> tipo retorno: " + simbolo.getTipo() + " ambito: " + simbolo.getAmbito() + " ambito padre: " + simbolo.getAmbitoPadre() + " nivel: " + String.valueOf(simbolo.getNivel()));
                 System.out.println("");
 
                 simbolo = simbolo.getHermano();
