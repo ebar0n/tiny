@@ -15,6 +15,10 @@ public class Semantica {
 	int error_count = 1, warning_count = 1;
 	boolean declare_var = false;
 
+	//Verificacion de tipo
+	tipoDato tipo = null;
+	boolean tipoBandera = true;
+	
 	//Variables de Ciclo FOR
 	String Parte_for = null, variable_for = null;
 	int num_uso = 0,num_uso_inc = 0, ciclo_for = 0 , linea_for = 0;
@@ -52,6 +56,7 @@ public class Semantica {
 		    	ambito = nodo.getAmbito();      
 		    	RecorrerArbol(nodo.getDeclaracion());
 		    	UpAmbito();
+
 		    	ambito = nodo.getAmbito();
                         
                 Existe_return = 0;
@@ -116,10 +121,14 @@ public class Semantica {
 		    	UpAmbito();
 		    }
 		    else if (raiz instanceof  NodoAsignacion){
+		    	tipoDato tipoI;
+				tipoDato tipoD;
 		    	//ASIGNACION PARTE IZQUIERDA
 		    	RecorrerArbol(((NodoAsignacion)raiz).getIdentificadorOrArray());
 		    	//ASIGNACION PARTE DERECHA
 		    	RecorrerArbol(((NodoAsignacion)raiz).getExpresion());
+		    	//VALIDACION QUE LA ASIGNACION CORRESPONDA CON EL TIPO DE DATO
+		    	SemanticaValidarAsignacion(((NodoAsignacion)raiz).getIdentificadorOrArray(),((NodoAsignacion)raiz).getExpresion());
 		    }
 		    else if (raiz instanceof  NodoLeer){
 		    	//LECTURA
@@ -157,17 +166,52 @@ public class Semantica {
 		    }
 		    else if (raiz instanceof NodoLogico){
 		    	//OPERACIONES
+		    	tipoDato tipoI;
+				tipoDato tipoD;
 		    	NodoLogico logico = (NodoLogico)raiz;
-		    	NodoBase nodo = logico.getExp();
-		    	if (nodo != null){
-			    	//OPERACION QUE RETORNA UN FACTOR
-		    		RecorrerArbol(nodo);
-		    	}
-		    	else{
-		    		//EXP IZQUIERDA OPERACION
-			    	RecorrerArbol(logico.getOpIzquierdo());
-			    	//EXP DERECHA OPERACION
-			    	RecorrerArbol(logico.getOpDerecho());
+		    	//EXP IZQUIERDA OPERACION
+			    RecorrerArbol(logico.getOpIzquierdo());
+			    SemanticaValidarTipo(logico.getOpIzquierdo());
+			    if (logico.getOpIzquierdo() != null){
+				    if (logico.getOpIzquierdo() instanceof NodoOperacion){
+						tipoI =  ((NodoOperacion)logico.getOpIzquierdo()).getTipoDato();
+					}else{
+						tipoI = tipo;
+					}
+				}else{
+					tipoI = null;
+				}
+
+			    //EXP DERECHA OPERACION
+			    RecorrerArbol(logico.getOpDerecho());
+			    SemanticaValidarTipo(logico.getOpDerecho());
+			    if (logico.getOpDerecho() != null){
+				    if (logico.getOpDerecho() instanceof NodoOperacion){
+						tipoD =  ((NodoOperacion)logico.getOpDerecho()).getTipoDato();
+					}else{
+						tipoD = tipo;
+					}
+				}else {
+					tipoD = null;
+				}
+			    
+			    if (tipoD != null && tipoI != null){
+			    	if (tipoI == tipoD) {
+			    		if (tipoI == tipoDato.INT){
+			    			System.out.println("ERROR DE TIPOS, Verifique la operacion de la linea tal");
+			    		}else{
+			    			logico.setTipoDato(tipoI);
+			    			//System.out.println(tipoI);
+			    		}
+			    	}else{
+			    		System.out.println("ERROR DE TIPOS, Verifique la operacion de la linea tal");
+			    	}
+			    }else if (tipoD == null){
+			    	logico.setTipoDato(tipoI);
+			    	//System.out.println(tipoI);
+			    }else if (tipoI == null){
+			    	logico.setTipoDato(tipoD);
+			    	//System.out.println(tipoD);
 			    }
 		    }
 		    else if (raiz instanceof NodoCallFunction){
@@ -205,22 +249,22 @@ public class Semantica {
 		    }
 		    else if (raiz instanceof NodoFor ){
 		    	//INICIALIZACION CICLO FOR
-                ciclo_for = 1;
+                //ciclo_for = 1;
 		    	ambito = ((NodoFor)raiz).getAmbito();
-		    	Parte_for = "INICIALIZACION";
+		    	//Parte_for = "INICIALIZACION";
 		    	RecorrerArbol(((NodoFor)raiz).getInicializacion());
                 //CONDICION LOGICA EXPRESION
-                Parte_for = "CONDICION";
+                //Parte_for = "CONDICION";
 		    	RecorrerArbol(((NodoFor)raiz).getCondicion());
 		    	//INCREMENTO ASIGNACION
 		    	
-		    	Parte_for = "INCREMENTO";
+		    	//Parte_for = "INCREMENTO";
 		    	RecorrerArbol(((NodoFor)raiz).getIncremento());
 		    	//CUERPO FOR
-		    	ciclo_for = 0;
-		    	Parte_for = null;
+		    	//ciclo_for = 0;
+		    	//Parte_for = null;
 		    	RecorrerArbol(((NodoFor)raiz).getSentencia());
-		    	SemanticaCicloForValidar();
+		    	//SemanticaCicloForValidar();
 		    	UpAmbito();
             }
 		    else{ 
@@ -318,71 +362,7 @@ public class Semantica {
 			}
 		}
 	}
-   
-   	/*
-    public void SemanticaValidarUntil(NodoBase nodo){
-        //generado por cristopher  
-        
-        do{
-            
-            if(nodo instanceof NodoLogico){
-                NodoLogico nodo_logico =(NodoLogico) nodo;
-                //System.out.println("NODOLOGICO");
-                
-                if(nodo_logico.getExp()!=null){
-                nodo = (NodoBase) nodo_logico.getExp();
-                }
-                else if(nodo_logico.getOpIzquierdo()!=null){
-                    //System.out.println("NODOIZQUIERDO");
-                    nodo = (NodoBase) nodo_logico.getOpIzquierdo();
-                }
-                else if(nodo_logico.getOpDerecho()!=null){
-                    //System.out.println("NODODERECHO");
-                    nodo = (NodoBase) nodo_logico.getOpDerecho();
-                }           
-            }
-            
-            if(nodo instanceof NodoOperacion){
-                    //System.out.println("NODOOPERACION");
-                    NodoOperacion nodo_operacion = (NodoOperacion) nodo;
-                   
-            }
-            
-            if(nodo instanceof NodoIdentificador){
-                //System.out.println("NODOIDENTIFICADOR");
-                NodoIdentificador nodo_identificador = (NodoIdentificador) nodo;
-                RegistroSimbolo simbolo = ts.BuscarSimbolo(nodo_identificador.getNombre());
-                if(simbolo.getTipo().compareTo(tipoDato.BOOLEAN)!=0){
-                 System.out.println("# -> linea: "+nodo_identificador.getNumLineaDeclare()+  " -> Variable {"+nodo_identificador.getNombre()+"} no es parte de un expression valida para el ciclo repeat");   
-                 error_count++;
-                } 
-                nodo=null;
-            }
-            
-            if(nodo instanceof NodoValor){
-                //System.out.println("NODOVALOR");
-                NodoValor nodo_valor = (NodoValor) nodo;
-                if(nodo_valor.getValorBoolean()==null){
-                 System.out.println("# -> linea: "+nodo_valor.getNumLineaDeclare()+  " -> constante no es parte de un expression valida para el ciclo repeat");   
-                 error_count++;
-                }
-                nodo=null;
-            }
-            
-            if(nodo instanceof NodoCallFunction){
-                //System.out.println("NODOFUNCION");
-                NodoCallFunction nodo_funcion = (NodoCallFunction) nodo;
-                RegistroSimbolo simbolo = ts.BuscarSimbolo(nodo_funcion.getIdentificador().getNombre());
-                if(simbolo.getTipo().compareTo(tipoDato.BOOLEAN)!=0){
-                 System.out.println("# -> linea: "+nodo_funcion.getNumLineaDeclare()+  " -> Variable {"+nodo_funcion.getIdentificador().getNombre()+"} no es parte de un expression valida para el ciclo repeat");   
-                 error_count++;
-                }
-                nodo=null;
-            }
-            
-        }while(nodo!=null);
-    }*/
-    
+ 
     //Regla 5.1, validacion de return 
     public void SemanticaReturnFuncionNoExist(NodoFunction funcion){
             
@@ -426,11 +406,85 @@ public class Semantica {
 	//Regla 4, Validacion del Ciclo FOR
 	public void SemanticaCicloForValidar(){ 
     	if(num_uso_inc < 2 || num_uso < 1){
-    		System.out.println("N°"+warning_count+" (Regla#4)-> linea: "+linea_for+" -> Variable {"+variable_for+"} Warning revisar parametros del for");
+    		System.out.println("# (Regla#4)-> linea: "+linea_for+" -> Variable {"+variable_for+"} Warning revisar parametros del for");
     		warning_count++;	
     	}
     	num_uso_inc = 0;
     	num_uso = 0;
     	variable_for = null;
     }
+
+    //Regla 3, Verificacion de tipos de datos
+	public void SemanticaValidarTipo(NodoBase nodo){
+		//System.out.println(nodo);
+		if (nodo instanceof NodoOperacion){
+			tipoDato tipoI;
+			tipoDato tipoD;
+			//System.out.println(((NodoOperacion)nodo).getOperacion());
+			SemanticaValidarTipo(((NodoOperacion)nodo).getOpIzquierdo());
+			if (((NodoOperacion)nodo).getOpIzquierdo() instanceof NodoOperacion){
+				tipoI =  ((NodoOperacion)((NodoOperacion)nodo).getOpIzquierdo()).getTipoDato();
+			}else{
+				tipoI = tipo;
+			}
+			SemanticaValidarTipo(((NodoOperacion)nodo).getOpDerecho());
+			if (((NodoOperacion)nodo).getOpDerecho() instanceof NodoOperacion){
+				tipoD =  ((NodoOperacion)((NodoOperacion)nodo).getOpDerecho()).getTipoDato();
+			}else{
+				tipoD = tipo;
+			}
+			
+			if (tipoI == tipoD){
+				tipoOp operacion = ((NodoOperacion)nodo).getOperacion();
+				if (tipoI ==  tipoDato.BOOLEAN){
+					if (operacion != tipoOp.igual && operacion != tipoOp.diferente){
+						System.out.println("ERROR DE TIPOS, Verifique la operacion de la linea tal");
+					}
+
+				}else if  (tipoI == tipoDato.INT){
+					if (operacion == tipoOp.menor
+					 || operacion == tipoOp.mayor
+					 || operacion == tipoOp.mayori
+					 || operacion == tipoOp.menori
+					 || operacion == tipoOp.diferente
+					 || operacion == tipoOp.igual){
+						tipoI = tipoDato.BOOLEAN;
+					}
+				}
+				((NodoOperacion)nodo).setTipoDato(tipoI);
+				//System.out.println(tipoI);
+			}else{
+				System.out.println("ERROR DE TIPOS, Verifique la operacion de la linea tal");
+			}
+		}else if (nodo instanceof NodoValor){
+			tipo = ((NodoValor)nodo).getTipoDato();
+		}else if (nodo instanceof NodoIdentificador){
+			RegistroSimbolo simbolo = ts.BuscarSimbolo(((NodoIdentificador)nodo).getNombre(), ambito);
+		    tipo = simbolo.getTipo();
+		}else if (nodo instanceof NodoArray){
+			RegistroSimbolo simbolo = ts.BuscarSimbolo(((NodoArray)nodo).getIdentificador().getNombre(), ambito);
+		    tipo = simbolo.getTipo();
+		}else if (nodo instanceof NodoCallFunction){
+			RegistroSimbolo simbolo = ts.BuscarSimbolo(((NodoCallFunction)nodo).getIdentificador().getNombre(), ambito);
+		    tipo = simbolo.getTipo();
+		}
+	}
+
+    public void SemanticaValidarAsignacion(NodoBase identificador,NodoBase expresion){
+		tipoDato tipoI = null;
+		tipoDato tipoD;
+		if (identificador instanceof NodoIdentificador){
+			RegistroSimbolo simbolo = ts.BuscarSimbolo(((NodoIdentificador)identificador).getNombre(), ambito);
+			tipoI =  simbolo.getTipo();
+		}else if (identificador instanceof NodoArray){
+			RegistroSimbolo simbolo = ts.BuscarSimbolo(((NodoArray)identificador).getIdentificador().getNombre(), ambito);
+			tipoI =  simbolo.getTipo();
+		}	
+		tipoD = ((NodoLogico)expresion).getTipoDato();
+
+		if (tipoI != tipoD){
+			System.out.println("ERROR DE ASIGNACION, LA EXPRESION NO CORRESPONDE CON LA ASIGNACION");
+		}
+	}
+
 }

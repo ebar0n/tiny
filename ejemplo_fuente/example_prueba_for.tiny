@@ -11,4 +11,12 @@ begin
 	for(a:=0; a<j+1; a:=1)  
 		j:=10; 
 	end;
+
+	int a;
+	int j;
+	for(j:=0; a<2; a:=a+1)  
+		j:=1;
+		j:=j+1;
+	end;  
+
 end;

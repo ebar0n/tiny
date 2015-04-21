@@ -1,0 +1,19 @@
+int Entero(int a,boolean b)
+begin
+	int vector[10];
+end;
+
+boolean Boleano(int a,boolean b)
+begin
+	int vector[10];
+end;
+
+
+begin 
+	int a;
+	boolean j[3];
+	boolean b;
+	a:= 1+2;
+	b:= true and true;
+	j[2]:= true and true;
+end;
