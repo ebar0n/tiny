@@ -510,18 +510,21 @@ logical_expression ::=
 		expression:exI AND logical_expression:exD
 			{: 
 				printModoDepuracion("logical_expression -> AND logical_expression");
-				RESULT = new NodoLogico(exI,tipoOp.and,exD);			
+				RESULT = new NodoLogico(exI,tipoOp.and,exD);	
+				RESULT.setSymbol(exI.getSymbol());	
 			:}
 
 		| expression:exI OR logical_expression:exD
 			{:
 				printModoDepuracion("logical_expression -> OR logical_expression");
 				RESULT = new NodoLogico(exI,tipoOp.or,exD);	
+				RESULT.setSymbol(exI.getSymbol());
 			:}
 		| expression:exl
 			{: 
 				printModoDepuracion("logical_expression -> expression");
-				RESULT = new NodoLogico(exl);						
+				RESULT = new NodoLogico(exl);	
+				RESULT.setSymbol(exl.getSymbol());			
 			:}
 		;
 
@@ -530,37 +533,44 @@ expression  ::=
 			{: 
 				printModoDepuracion("expression -> GE");
 				RESULT = new NodoOperacion(exI,tipoOp.mayori,exD);
+				RESULT.setSymbol(exI.getSymbol());
 			:} 
 		| additive_expression:exI GT additive_expression:exD
 			{: 
 				printModoDepuracion("expression -> GT");
 				RESULT = new NodoOperacion(exI,tipoOp.mayor,exD);
+				RESULT.setSymbol(exI.getSymbol());
 			:}
 		 
 		| additive_expression:exI LE additive_expression:exD
 			{: 
 				printModoDepuracion("expression -> LE");
 				RESULT = new NodoOperacion(exI,tipoOp.menori,exD);
+				RESULT.setSymbol(exI.getSymbol());
 			:}
 		| additive_expression:exI LT additive_expression:exD	
 			{: 
 				printModoDepuracion("expression -> LT");
 				RESULT = new NodoOperacion(exI,tipoOp.menor,exD);
+				RESULT.setSymbol(exI.getSymbol());
 			:}
 		| additive_expression:exI EQ additive_expression:exD
 			{: 
 				printModoDepuracion("expression -> EQ");
 				RESULT = new NodoOperacion(exI,tipoOp.igual,exD);
+				RESULT.setSymbol(exI.getSymbol());
 			:} 
 		| additive_expression:exI NE additive_expression:exD
 			{: 
 				printModoDepuracion("expression -> NE");
 				RESULT = new NodoOperacion(exI,tipoOp.diferente,exD);
+				RESULT.setSymbol(exI.getSymbol());
 			:}
 		| additive_expression:ex
 			{: 
 				printModoDepuracion("expression -> additive_expression");
 				RESULT = ex;
+				RESULT.setSymbol(ex.getSymbol());
 			:}
 		;
 
@@ -569,16 +579,19 @@ additive_expression  ::=
 			{: 
 				printModoDepuracion("additive_expression -> PLUS");
 				RESULT = new NodoOperacion(exI,tipoOp.mas,exD);
+				RESULT.setSymbol(exD.getSymbol());
 			:}
 		| additive_expression:exI MINUS multiplicative_expression:exD
 			{: 
 				printModoDepuracion("additive_expression -> MINUS");
 				RESULT = new NodoOperacion(exI,tipoOp.menos,exD);
+				RESULT.setSymbol(exD.getSymbol());
 			:}
 		| multiplicative_expression:ex
 			{:
 				printModoDepuracion("additive_expression -> multiplicative_expression");
 				RESULT=ex;
+				RESULT.setSymbol(ex.getSymbol());
 			:}
 		;
 
@@ -587,16 +600,19 @@ multiplicative_expression        ::=
 			{: 
 				printModoDepuracion("multiplicative_expression -> TIMES");
 				RESULT = new NodoOperacion(exI,tipoOp.por,exD);
+				RESULT.setSymbol(exD.getSymbol());
 			:}
 		| multiplicative_expression:exI OVER factor:exD
 			{: 
 				printModoDepuracion("multiplicative_expression -> OVER");
 				RESULT = new NodoOperacion(exI,tipoOp.entre,exD);
+				RESULT.setSymbol(exD.getSymbol());
 			:}
 		| factor:ex
 			{: 
 				printModoDepuracion("multiplicative_expression -> factor");
 				RESULT=ex;
+				RESULT.setSymbol(ex.getSymbol());
 			:}
 		;
 
@@ -605,12 +621,14 @@ factor      ::=
 			{: 
 				printModoDepuracion("factor -> LPAREN logical_expression RPAREN");
 				RESULT = ex;
+				RESULT.setSymbol(ex.getSymbol());
 			:}
 		| NUM:valor
 			{: 
 				printModoDepuracion("factor -> NUM");
 				if(valor!=null){
-					RESULT= new NodoValor(valor);					
+					RESULT= new NodoValor(valor);	
+					RESULT.setSymbol((ComplexSymbol)CUP$parser$stack.peek());			
 				}else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla factor -> NUM");
@@ -620,7 +638,8 @@ factor      ::=
         	{: 
 				printModoDepuracion("factor -> MINUS NUM");
 				if(valor!=null){
-					RESULT= new NodoValor(valor*-1);					
+					RESULT= new NodoValor(valor*-1);	
+					RESULT.setSymbol((ComplexSymbol)CUP$parser$stack.peek());						
 				}else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla factor -> NUM NEGATIVO");
@@ -631,7 +650,8 @@ factor      ::=
 				printModoDepuracion("factor -> ID");
 				if(variable!=null){
 					//System.out.println("Construyendo Nodo ID para Lexema: "+ variable.toString());
-					RESULT= variable;		
+					RESULT= variable;	
+					RESULT.setSymbol(variable.getSymbol());	
 				}else{
 					RESULT = null;
 					System.out.println("Ocurrio error en cup regla factor -> ID");
@@ -640,22 +660,26 @@ factor      ::=
 		| TRUE   
 			{: 
 				printModoDepuracion("factor -> TRUE");
-				RESULT= new NodoValor(true);					
+				RESULT= new NodoValor(true);		
+				RESULT.setSymbol((ComplexSymbol)CUP$parser$stack.peek());				
 			:}
 		| FALSE
 			{: 
 				printModoDepuracion("factor -> FALSE");
-				RESULT= new NodoValor(false);					
+				RESULT= new NodoValor(false);	
+				RESULT.setSymbol((ComplexSymbol)CUP$parser$stack.peek());					
 			:}
 		| array_var_access:vesc	
 			{: 
 				printModoDepuracion("expression -> array_var_access");
 				RESULT=vesc;
+				RESULT.setSymbol(vesc.getSymbol());	
 			:}
 		| function_sentence:vesc	
 			{: 
 				printModoDepuracion("expression -> function_sentence");
 				RESULT=vesc;
+				RESULT.setSymbol(vesc.getSymbol());	
 			:}
 		| error
 			{: 

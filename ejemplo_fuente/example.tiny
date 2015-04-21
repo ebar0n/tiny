@@ -3,19 +3,20 @@ int myfunc(int a,boolean b)
 begin
 	return true;
 	int vector[10],myfunc;
-	int x,aa,vectora[1],cc;
+	int aa,vectora[1],cc;
 	boolean vectorb[3],vectorc[3],vectord;
 	boolean c,d,e;
 	int varc;
 
 	int ds;
 
-	x:=1;
+	d:=myfunckll();
 	if d!=false then
 		if d!=false then
 			for(x:=1;x<10;x:=x+1)
 				int vara;
-				if x>=7 and x<10 then
+				int xx;xx:=1;
+				if xx>=7 and xx<10 then
 					boolean ifk;
 				end;
 			end;
@@ -23,7 +24,7 @@ begin
 	end;
 end;
 
-int myfunckll()
+boolean myfunckll()
 begin
 	int vector[10];
 	return 1;
@@ -40,11 +41,13 @@ begin
 	int vector[10];
 	int vectora[1],cc,x;
 	int ccccccccccccccccccc;
-	x:=1+x;
+	x:=-1;
+	boolean d;
+	d:=1;
 	if d!=false then
 		int j;
 		x:=1;
-		for(x:=1;x<10;x:=x+1)
+		for(d:=1;x<10;x:=x+1)
 			int ejempl;
 			return 1;
 		end;
@@ -55,10 +58,12 @@ end;
 begin 
 
 	int a,d,vector,c[2],edwar;
-	int z,x,t; z:=1<t;
+	boolean zz;
+	int z,x,t;t:=1; z:=1<t;
 	vector:=1;
 	c[1]:=2;
-	if myfunckll(myfunckll(), myfunckll() + 1) then
+	d:=1;
+	if myfunckll1(myfunckll1(), myfuncl() + 1) then
 		if d!=false then
 			for(x:=1;x<10;x:=x+1)
 				int var;
