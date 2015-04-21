@@ -1,5 +1,8 @@
 begin
-	int a, x;
+    int a, x, g;
+    a := 1;
+    x := 2;
+
     if a < x
     then 
         g := 1; 

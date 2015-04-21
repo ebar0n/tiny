@@ -162,7 +162,7 @@ public class Generador {
 		generar(n.getExpresion());
 		/* Ahora almaceno el valor resultante */
 		direccion = tablaSimbolos.getDireccion(n.getIdentificador().getNombre());
-		UtGen.emitirRM("ST", UtGen.AC, direccion, UtGen.GP, "asignacion: almaceno el valor para el id "+n.getIdentificador());
+		UtGen.emitirRM("ST", UtGen.AC, direccion, UtGen.GP, "asignacion: almaceno el valor para el id "+n.getIdentificador().getNombre());
 		if(UtGen.debug)	UtGen.emitirComentario("<- asignacion");
 	}
 	
@@ -242,11 +242,6 @@ public class Generador {
 		if(UtGen.debug)	UtGen.emitirComentario("<- Operacion: " + n.getOperacion());
 	}
         
-        private static void generarBloque(NodoBase nodo){
-                    UtGen.emitirRM("LD", UtGen.L1, UtGen.getInstruccionActual(), 0, "Halle y cargo el bloque principal");
-        
-        }
-	
 	//TODO: enviar preludio a archivo de salida, obtener antes su nombre
 	private static void generarPreludioEstandar(){
 		UtGen.emitirComentario("Compilacion TINY para el codigo objeto TM");
