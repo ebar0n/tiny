@@ -130,6 +130,17 @@ public class Generador {
 
 	private static void generarFor(NodoBase nodo) {
 		NodoFor nodof = (NodoFor) nodo;
+		int localidadSaltoInicio;
+		if(UtGen.debug) UtGen.emitirComentario("-> for");
+		generar(nodof.getInicializacion());
+		localidadSaltoInicio = UtGen.emitirSalto(0);
+		generar(nodof.getCondicion());
+		generar(nodof.getIncremento());
+		generar(nodof.getSentencia());
+		UtGen.emitirRM_Abs("JNE", UtGen.AC, localidadSaltoInicio, "for: jmp hacia el inicio del cuerpo");
+
+		if (UtGen.debug)
+			UtGen.emitirComentario("<- for");		
 	}	
 
 	private static void generarCallFunction(NodoBase nodo) {
