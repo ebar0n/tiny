@@ -38,9 +38,9 @@ public class Util {
 		    			System.out.println("Uso variable");	
 		    	else
 		    		if(nodoa.getTipo()!=null)
-		    			System.out.println("Declarar variable de tipo "+nodoa.getTipo());
+		    			System.out.println("Declarar array de tipo "+nodoa.getTipo());
 		    		else
-		    			System.out.println("Uso variable");	
+		    			System.out.println("Uso array");	
 		    	
 		    	NodoBase nodo = null;
 

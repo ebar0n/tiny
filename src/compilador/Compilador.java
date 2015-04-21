@@ -6,7 +6,7 @@ import java.io.*;
 
 
 public class Compilador {
-	
+        int a;
 	/***********
 	SymbolFactory es una nueva caracteristica que ha sido añadida a las version 11a de cup, la cual facilita la implementacion de clases Symbol personalizadas
 	, esto debido a que dicha clase no provee mucha información de contexto que podria ser util para el analisis semantico o ayudar en la construccion del AST
@@ -34,18 +34,20 @@ public class Compilador {
 		//System.out.println("IMPRESION DEL AST GENERADO");
 		//System.out.println();
 		//ast.Util.imprimirAST(root);
+		
 		TablaSimbolos ts = new TablaSimbolos();
 		ts.cargarTabla(root);
-
 		ts.ImprimirClaves();
 	    //REALIZAR ACA ANALISIS SEMANTICO
 		Semantica semantica = new Semantica(ts);
 		System.out.println("\nBuscando errores semanticos");
 		semantica.RecorrerArbol(root);
+
 		System.out.println("#"+(semantica.error_count-1)+" error(es) detectados semanticamente");
+		System.out.println("#"+(semantica.warning_count-1)+" Warning(s) detectados");
 					
 		//Generador.setTablaSimbolos(ts);
-//		Generador.generarCodigoObjeto(root);
+		//Generador.generarCodigoObjeto(root);
 	}
 
 }

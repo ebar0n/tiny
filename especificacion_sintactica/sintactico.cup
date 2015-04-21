@@ -400,7 +400,7 @@ if_sentence ::=
 	;
 
 repeat_sentence ::= 
-		REPEAT sentence_list:sl UNTIL expression:ex
+		REPEAT sentence_list:sl UNTIL logical_expression:ex
 			{: 
 				printModoDepuracion("repeat_sentence -> REPEAT sentence_list UNTIL expression");
 				RESULT = new NodoRepeat(sl,ex);
@@ -482,11 +482,13 @@ return_sentence ::=
 			{: 
 				printModoDepuracion("return_sentence -> logical_expression");
 				RESULT = new NodoReturn(fact);
+				RESULT.setSymbol((ComplexSymbol)CUP$parser$stack.peek());
 			:}
 		| RETURN 
 			{: 
 				printModoDepuracion("return_sentence -> empty");
 				RESULT = new NodoReturn();
+				RESULT.setSymbol((ComplexSymbol)CUP$parser$stack.peek());
 			:};
 
 function_sentence ::= 

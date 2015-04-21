@@ -25,6 +25,7 @@ public class NodoArray extends NodoBase {
 		super();
 		this.identificador = id;
 		this.pos = pos;
+		this.tam = null;
 	}
 
 	public NodoArray(NodoIdentificador id, Integer tam) {
@@ -49,6 +50,10 @@ public class NodoArray extends NodoBase {
 
 	public Integer getTam() {
 		return tam;
+	}
+
+	public boolean getIsDeclare() {
+		return this.getTam() == null;
 	}
 	
 	public tipoDato getTipo() {

@@ -62,7 +62,14 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 digito		= [0-9]
 numero		= {digito}+
 letra			= [a-zA-Z]
-identificador	= {letra}+{digito}*{letra}*{digito}*
+
+/**Identificadores tipo python, pero se usa el de tiny**/
+
+combinacion = [-_]*{digito}*[-_]*{digito}*
+identificador	= {letra}+{combinacion}*{letra}*{combinacion}*
+
+/*identificador	= {letra}+*/
+
 nuevalinea		= \n | \n\r | \r\n
 espacio		= [ \t]+
 
@@ -268,5 +275,9 @@ espacio		= [ \t]+
 			}
 
 .           {
-				System.err.println("Error lexico , linea " + (yyline+1) + ", columna " + (yycolumn+1) + " -> " + yytext() + "\n");
+				System.err.println("########################");		
+				System.err.println("Error lexico");
+				System.err.println("linea " + (yyline+1) + ", columna " + (yycolumn+1) + " -> " + yytext() + "\n");
+				System.err.println("########################");
+				System.exit(0);	
 			}
