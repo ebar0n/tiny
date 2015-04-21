@@ -119,8 +119,8 @@ public class TablaSimbolos {
                 RegistroSimbolo simbolo = this.BuscarSimbolo(nodo.getIdentificador().getNombre(), nodo.getAmbito());
                 if( simbolo != null && simbolo.getExistInitialize() == false){
                     //si no es usado al otro lado, es una asignacion valida
-                    if( SearhIdentificadorExist( ((NodoAsignacion)raiz).getExpresion() ) == false ){
-                        //simbolo.setSymbolInitialize(nodo.getSymbol());   
+                    if( SearhIdentificadorExist(nodo.getIdentificador().getNombre(), ((NodoAsignacion)raiz).getExpresion() ) == false ){
+                        simbolo.setSymbolInitialize(nodo.getSymbol());   
                     }
                 }
             }
@@ -138,7 +138,7 @@ public class TablaSimbolos {
                     nodo.setAmbito(ambito);
                     RegistroSimbolo simbolo = this.BuscarSimbolo(nodo.getNombre(), nodo.getAmbito());
                     if( simbolo.getExistInitialize() == false){
-                        //simbolo.setSymbolInitialize(nodo.getSymbol());
+                        simbolo.setSymbolInitialize(nodo.getSymbol());
                     }
                 }
             }
@@ -214,37 +214,44 @@ public class TablaSimbolos {
         }
     }
 
-    public boolean SearhIdentificadorExist(NodoBase raiz){
+    public boolean SearhIdentificadorExist(String nombre, NodoBase raiz){
         boolean exist = false;
         if( raiz != null ){
             if (raiz instanceof NodoLogico){
-                exist = SearhIdentificadorExist( ((NodoLogico)raiz).getOpIzquierdo() );
+                exist = SearhIdentificadorExist(nombre, ((NodoLogico)raiz).getOpIzquierdo() );
                 if( exist == false )
                 {
-                    exist = SearhIdentificadorExist( ((NodoLogico)raiz).getOpDerecho() );   
+                    exist = SearhIdentificadorExist(nombre, ((NodoLogico)raiz).getOpDerecho() );   
                 }
             }
             else
             if (raiz instanceof NodoOperacion){
-
+                exist = SearhIdentificadorExist(nombre, ((NodoOperacion)raiz).getOpIzquierdo() );
+                if( exist == false )
+                {
+                    exist = SearhIdentificadorExist(nombre, ((NodoOperacion)raiz).getOpDerecho() );   
+                }
             }
             else
             if (raiz instanceof NodoArray){
-                
+                exist = SearhIdentificadorExist(nombre, ((NodoArray)raiz).getIdentificador() );   
             }
             else
             if (raiz instanceof NodoIdentificador){
-                
+                return nombre.equals( ((NodoIdentificador)raiz).getNombre() );
             }
             else
             if (raiz instanceof NodoCallFunction){
-                
+                exist = SearhIdentificadorExist(nombre, ((NodoCallFunction)raiz).getVariables() );
             }
             else
             if(raiz instanceof NodoParamFunction){
-
+                exist = SearhIdentificadorExist(nombre, ((NodoParamFunction)raiz).getExpresion() );
+                if( exist == false )
+                {
+                    exist = SearhIdentificadorExist(nombre, ((NodoParamFunction)raiz).getSiguiente() );   
+                }
             } 
-            
         }
         return exist;
     }
