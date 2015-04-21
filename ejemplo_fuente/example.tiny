@@ -58,7 +58,7 @@ begin
 	int z,x,t; z:=1<t;
 	vector:=1;
 	c[1]:=2;
-	if myfuncl(myfuncl(), myfuncl() + 1) then
+	if myfunckll(myfunckll(), myfunckll() + 1) then
 		if d!=false then
 			for(x:=1;x<10;x:=x+1)
 				int var;
