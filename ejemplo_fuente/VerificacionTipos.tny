@@ -11,8 +11,9 @@ end;
 
 begin 
 	int a;
-	int j[3];
+	boolean j[3];
 	boolean b;
-	a:= 1-2<a+j[1]+1;
-	b:= true and true and 1;
+	a:= 1+2;
+	b:= true and true;
+	j[2]:= true and true;
 end;
