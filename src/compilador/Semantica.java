@@ -466,7 +466,7 @@ public class Semantica {
 					}
 				}
 				((NodoOperacion)nodo).setTipoDato(tipoI);
-				//System.out.println(tipoI);
+				tipo = tipoI;
 			}else{
 				System.out.println("#Error (Regla#6.2)-> linea: "+nodo.getNumLinea()+" -> inconsistencia en los tipos de la operacion");
 				error_count++;
