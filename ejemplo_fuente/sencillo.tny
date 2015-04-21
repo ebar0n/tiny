@@ -1,0 +1,7 @@
+begin
+	int a, x;
+    if a < x
+    then 
+        g := 1; 
+    end;    
+end;

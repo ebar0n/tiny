@@ -59,14 +59,20 @@ public class Generador {
 	//prerequisito: Fijar la tabla de simbolos antes de generar el codigo objeto 
 	private static void generar(NodoBase nodo){
 	if(tablaSimbolos!=null){
-		if (nodo instanceof  NodoIf){
+		if (nodo instanceof NodoBloque) {
+			generarBloque(nodo);
+		}else if (nodo instanceof NodoFunction) {
+			generarFuncion(nodo);
+		}else if (nodo instanceof  NodoIf){
 			generarIf(nodo);
 		}else if (nodo instanceof  NodoRepeat){
 			generarRepeat(nodo);
 		}else if (nodo instanceof  NodoAsignacion){
 			generarAsignacion(nodo);
-		}else if (nodo instanceof  NodoLeer){
-			generarLeer(nodo);
+		}else if (nodo instanceof  NodoVariable){
+			generarVariable(nodo);
+		}else if (nodo instanceof  NodoLogico){
+			generarLogico(nodo);
 		}else if (nodo instanceof  NodoEscribir){
 			generarEscribir(nodo);
 		}else if (nodo instanceof NodoValor){
@@ -76,7 +82,7 @@ public class Generador {
 		}else if (nodo instanceof NodoOperacion){
 			generarOperacion(nodo);
 		}else{
-			System.out.println("BUG: Tipo de nodo a generar desconocido");
+			System.out.println("BUG: Tipo de nodo a generar desconocido" + nodo);
 		}
 		/*Si el hijo de extrema izquierda tiene hermano a la derecha lo genero tambien*/
 		if(nodo.TieneHermano())
@@ -84,6 +90,24 @@ public class Generador {
 	}else
 		System.out.println("¡¡¡ERROR: por favor fije la tabla de simbolos a usar antes de generar codigo objeto!!!");
 }
+
+	private static void generarBloque(NodoBase nodo) {
+		NodoBloque nodob = (NodoBloque) nodo;
+		generar(nodob.getExpression());
+	}
+
+	private static void generarFuncion(NodoBase nodo) {
+		NodoFunction nodof = (NodoFunction) nodo;
+		generar(nodof.getExpression());
+	}
+
+	private static void generarVariable(NodoBase nodo) {
+		NodoVariable nodov = (NodoVariable) nodo;
+	}	
+
+	private static void generarLogico(NodoBase nodo) {
+		NodoLogico nodol = (NodoLogico) nodo;
+	}
 
 	private static void generarIf(NodoBase nodo){
     	NodoIf n = (NodoIf)nodo;
