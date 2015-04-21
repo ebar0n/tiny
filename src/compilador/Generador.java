@@ -75,6 +75,8 @@ public class Generador {
 			generarIdentificador(nodo);
 		}else if (nodo instanceof NodoOperacion){
 			generarOperacion(nodo);
+                }else if (nodo instanceof NodoBloque){
+                        generarBloque(nodo);
 		}else{
 			System.out.println("BUG: Tipo de nodo a generar desconocido");
 		}
@@ -215,6 +217,11 @@ public class Generador {
 		}
 		if(UtGen.debug)	UtGen.emitirComentario("<- Operacion: " + n.getOperacion());
 	}
+        
+        private static void generarBloque(NodoBase nodo){
+                    UtGen.emitirRM("LD", UtGen.L1, UtGen.getInstruccionActual(), 0, "Halle y cargo el bloque principal");
+        
+        }
 	
 	//TODO: enviar preludio a archivo de salida, obtener antes su nombre
 	private static void generarPreludioEstandar(){
@@ -225,6 +232,6 @@ public class Generador {
 		UtGen.emitirComentario("Preludio estandar:");
 		UtGen.emitirRM("LD", UtGen.MP, 0, UtGen.AC, "cargar la maxima direccion desde la localidad 0");
 		UtGen.emitirRM("ST", UtGen.AC, 0, UtGen.AC, "limpio el registro de la localidad 0");
-	}
+	} 
 
 }
