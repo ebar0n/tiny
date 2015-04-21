@@ -550,7 +550,7 @@ public class Semantica {
 			}
 			
 			if (num_par != simbolo.getNumParametros()){
-	    		System.out.println("#Error (Regla#7)-> linea: "+identificador.getNumLinea()+" -> Funcion {"+identificador.getNombre()+"} Numero de parametros de la llamada diferente al de la definicion");
+	    		System.out.println("#Error (Regla#7.1)-> linea: "+identificador.getNumLinea()+" -> Funcion {"+identificador.getNombre()+"} Numero de parametros de la llamada diferente al de la definicion");
 			}else{
 				boolean bandera =false;
 				for(int x=0;x<tipoParametros.size();x++) {
@@ -560,9 +560,12 @@ public class Semantica {
 					}
 				}
 				if (bandera){
-					System.out.println("#Error (Regla#7)-> linea: "+identificador.getNumLinea()+" -> Funcion {"+identificador.getNombre()+"} Tipos de datos no corresponden con la llamada de la funcion");
+					System.out.println("#Error (Regla#7.2)-> linea: "+identificador.getNumLinea()+" -> Funcion {"+identificador.getNombre()+"} Tipos de datos no corresponden con la llamada de la funcion");
 				}
 			}
+		}
+		else{
+			System.out.println("#Error (Regla#7.3)-> linea: "+identificador.getNumLinea()+" -> Funcion {"+identificador.getNombre()+"} no esta declarada");	
 		}
 	}
 	//Regla 8, validar condicionales

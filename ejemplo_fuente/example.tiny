@@ -13,7 +13,7 @@ begin
 	d:=myfunckll();
 	if d!=false then
 		if d!=false then
-			for(x:=1;x<10;x:=x+1)
+			for(x:=1;myfunckll();x:=x+1)
 				int vara;
 				int xx;xx:=1;
 				if xx>=7 and xx<10 then
@@ -43,11 +43,11 @@ begin
 	int ccccccccccccccccccc;
 	x:=-1;
 	boolean d;
-	d:=1;
+	d:=true;
 	if d!=false then
 		int j;
 		x:=1;
-		for(d:=1;x<10;x:=x+1)
+		for(x:=1;x<10;x:=x+1)
 			int ejempl;
 			return 1;
 		end;
@@ -58,11 +58,11 @@ end;
 begin 
 
 	int a,d,vector,c[2],edwar;
-	boolean zz;
-	int z,x,t;t:=1; z:=1<t;
+	boolean z;
+	int x,t;t:=1; z:=1<t;
 	vector:=1;
 	c[1]:=2;
-	d:=1;
+	d:=sdfsdfd();
 	if myfunckll1(myfunckll1(), myfuncl() + 1) then
 		if d!=false then
 			for(x:=1;x<10;x:=x+1)
