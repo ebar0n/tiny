@@ -217,10 +217,9 @@ public class Semantica {
 		    	Parte_for = "INCREMENTO";
 		    	RecorrerArbol(((NodoFor)raiz).getIncremento());
 		    	//CUERPO FOR
-		    	ciclo_for = 0;
-		    	Parte_for = null;
-		    	RecorrerArbol(((NodoFor)raiz).getSentencia());
 		    	SemanticaCicloForValidar();
+		    	Parte_for = "SENTENCIA";
+		    	RecorrerArbol(((NodoFor)raiz).getSentencia());
 		    	UpAmbito();
             }
 		    else{ 
@@ -408,16 +407,21 @@ public class Semantica {
             RegistroSimbolo simbolo = ts.BuscarSimbolo(identificador.getNombre(), ambito);
             if( simbolo != null ){
                 if(num_uso == 0 && parte_for == "INICIALIZACION"){
-
-            		//System.out.println("La variable del for es: " + identificador.getNombre() + " ambito: " +ambito + "-" + identificador.getAmbito() +  " linea: " +identificador.getNumLinea());
+					System.out.println("La variable del for es: " + identificador.getNombre() + " ambito: " +ambito + "-" + identificador.getAmbito() +  " linea: " +identificador.getNumLinea());
             		//System.out.println(simbolo);
             		variable_for = simbolo.getIdentificador();
             		linea_for = identificador.getNumLinea();
             	}
+
             	if(parte_for == "CONDICION" && variable_for == simbolo.getIdentificador())
             		num_uso++;
+            	//System.out.println("CONDICION for es: " + identificador.getNombre() + "num usu" + num_uso);
             	if(parte_for == "INCREMENTO" && variable_for == simbolo.getIdentificador())
             		num_uso_inc++;
+            	//System.out.println("INCREMENTO for es: " + identificador.getNombre() + " num incre "+num_uso_inc);
+            	if(parte_for == "SENTENCIA"){
+            		ciclo_for = 0;
+            	}
         	}
         }
 	}
@@ -425,6 +429,7 @@ public class Semantica {
 	//Regla 4, Validacion del Ciclo FOR
 	public void SemanticaCicloForValidar(){ 
     	if(num_uso_inc < 2 || num_uso < 1){
+    		//System.out.println("validacion " + "nun uso  "+num_uso + " incre " + num_uso_inc);
     		System.out.println("N°"+warning_count+" (Regla#4)-> linea: "+linea_for+" -> Variable {"+variable_for+"} Warning revisar parametros del for");
     		warning_count++;	
     	}

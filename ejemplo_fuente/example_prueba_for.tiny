@@ -1,14 +1,15 @@
 begin 
 	int i; 
 	int j; 
-	for(j:=0; i<j+1; i:=i+1)  
-		j:=10; 
-	end;  
-	int a; 
-	for(a:=0; a<j+1; a:=a+1)  
-		j:=10; 
-	end;
-	for(a:=0; a<j+1; a:=1)  
-		j:=10; 
+	for(j:=0; j<i+1; j:=j+1)  
+		for(i:=0; i<2; i:=i+1)
+			int v;
+			for(v:=0; v<j+1; v:=v+1)  
+				int t;
+				for(t:=0; t<j+1; t:=t+1)  
+					int h;
+				 end;	 
+			end;
+		end;
 	end;
 end;
