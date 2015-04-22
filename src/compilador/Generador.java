@@ -226,12 +226,12 @@ public class Generador {
             //UtGen.emitirRM("LDA", UtGen.L1, desplazamientoTmp--, UtGen.MP, "Saco el salto de la linea");
             UtGen.emitirRO("SUB", UtGen.MP, UtGen.MP, UtGen.L2, "op: subir pila");	
             UtGen.emitirRM("ST", UtGen.AC, 0, UtGen.MP, "Cargo variable que genero el return en temporales");
-            UtGen.emitirRM("ST", UtGen.PC, 0, UtGen.L1, "Regreso a donde fui llamado");
+            UtGen.emitirRM("LDA", UtGen.PC, 0, UtGen.L1, "Regreso a donde fui llamado");
         }
         else{
         	pilaPop();
             //UtGen.emitirRM("LDA", UtGen.L1, desplazamientoTmp--, UtGen.MP, "Saco el salto de la linea");
-            UtGen.emitirRM("ST", UtGen.PC, 0, UtGen.L1, "Regreso a donde fui llamado");
+            UtGen.emitirRM("LDA", UtGen.PC, 0, UtGen.L1, "Regreso a donde fui llamado");
         }
     }
 
@@ -353,7 +353,7 @@ public class Generador {
 		generar(n.getOpDerecho());
 		/* Ahora cargo/saco de la pila el valor izquierdo */
 		pilaPop();
-		UtGen.emitirRM("LDA", UtGen.AC1, UtGen.L1, 0, "Pasando operador izquierdo de la pila a AC1");
+		UtGen.emitirRM("LDA", UtGen.AC1, 0,UtGen.L1,  "Pasando operador izquierdo de la pila a AC1");
 		
 		//UtGen.emitirRM("LD", UtGen.AC1, ++desplazamientoTmp, UtGen.MP, "op: pop o cargo de la pila el valor izquierdo en AC1");
 		switch(n.getOperacion()){
@@ -443,8 +443,9 @@ public class Generador {
 
 	//El registro L1 se usa para obtener los elementos ingresados en la pila
 	private static void pilaPush(){
+		UtGen.emitirRO("SUB", UtGen.MP, UtGen.MP, UtGen.L2, "op: subir pila");
 		UtGen.emitirRM("ST", UtGen.L1, 0, UtGen.MP, "op: push en la pila tmp");
-		UtGen.emitirRO("SUB", UtGen.MP, UtGen.MP, UtGen.L2, "op: subir pila");	
+			
 	}
 
 	//El registro L1 se usa para obtener los elementos sacar en la pila
