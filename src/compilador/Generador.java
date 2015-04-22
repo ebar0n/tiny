@@ -208,7 +208,7 @@ public class Generador {
 		generar(nodocf.getVariables());
 		
 		//Actualizando linea de salto de retorno en la pila, necesito la tercera
-		localidadSaltoInicio = UtGen.emitirSalto(4);
+		int localidadSaltoInicio = UtGen.emitirSalto(4);
 		UtGen.emitirRM("LDC", UtGen.L1, localidadSaltoInicio, 0, "Cargando verdareda linea de retorno");
 		UtGen.emitirRM("ST", UtGen.L1, 0 , UtGen.L3, "Paso ubicacion a la pila");
 
