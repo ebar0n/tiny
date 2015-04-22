@@ -34,25 +34,31 @@ public class Generador {
 	 */
 	private static int desplazamientoTmp = 0;
 	private static TablaSimbolos tablaSimbolos = null;
-	
+	private static boolean debug=false;
 	public static void setTablaSimbolos(TablaSimbolos tabla){
 		tablaSimbolos = tabla;
 	}
 	
-	public static void generarCodigoObjeto(NodoBase raiz){
-		System.out.println();
-		System.out.println();
-		System.out.println("------ CODIGO OBJETO DEL LENGUAJE TINY GENERADO PARA LA TM ------");
-		System.out.println();
-		System.out.println();
+	public static void generarCodigoObjeto(NodoBase raiz, boolean debug){
+		Generador.debug = debug;
+		if(debug) {
+			System.out.println();
+			System.out.println();
+			System.out.println("------ CODIGO OBJETO DEL LENGUAJE TINY GENERADO PARA LA TM ------");
+			System.out.println();
+			System.out.println();
+		}
 		generarPreludioEstandar();
 		generar(raiz);
 		/*Genero el codigo de finalizacion de ejecucion del codigo*/   
 		UtGen.emitirComentario("Fin de la ejecucion.");
 		UtGen.emitirRO("HALT", 0, 0, 0, "");
-		System.out.println();
-		System.out.println();
-		System.out.println("------ FIN DEL CODIGO OBJETO DEL LENGUAJE TINY GENERADO PARA LA TM ------");
+		if(debug) {
+			System.out.println();
+			System.out.println();
+			System.out.println("------ FIN DEL CODIGO OBJETO DEL LENGUAJE TINY GENERADO PARA LA TM ------");
+		}
+
 	}
 	
 	//Funcion principal de generacion de codigo
@@ -130,15 +136,25 @@ public class Generador {
 
 	private static void generarFor(NodoBase nodo) {
 		NodoFor nodof = (NodoFor) nodo;
-		int localidadSaltoInicio;
+		int localidadSaltoInicio, localidadActual, localidadBeginCondicion;
 		if(UtGen.debug) UtGen.emitirComentario("-> for");
 		generar(nodof.getInicializacion());
-		localidadSaltoInicio = UtGen.emitirSalto(0);
-		generar(nodof.getCondicion());
+
+		localidadSaltoInicio = UtGen.emitirSalto(1);
+		UtGen.emitirComentario("for condicion: el salto hacia la condicion del for debe estar aqui");
+
 		generar(nodof.getIncremento());
 		generar(nodof.getSentencia());
-		UtGen.emitirRM_Abs("JNE", UtGen.AC, localidadSaltoInicio, "for: jmp hacia el inicio del cuerpo");
 
+		localidadActual = UtGen.emitirSalto(0);
+		UtGen.cargarRespaldo(localidadSaltoInicio);
+		UtGen.emitirRM("LDA", UtGen.PC, localidadActual, 0, "jmp a inicio del for");
+		UtGen.restaurarRespaldo();
+
+		generar(nodof.getCondicion());
+
+		UtGen.emitirRM("JNE", UtGen.AC, -localidadSaltoInicio, UtGen.PC, "Ouch2");
+		
 		if (UtGen.debug)
 			UtGen.emitirComentario("<- for");		
 	}	
@@ -188,7 +204,7 @@ public class Generador {
 			generar(n.getPrueba());
 			UtGen.emitirRM_Abs("JEQ", UtGen.AC, localidadSaltoInicio, "repeat: jmp hacia el inicio del cuerpo");
 		if(UtGen.debug)	UtGen.emitirComentario("<- repeat");
-	}		
+	}
 	
 	private static void generarAsignacion(NodoBase nodo){
 		NodoAsignacion n = (NodoAsignacion)nodo;

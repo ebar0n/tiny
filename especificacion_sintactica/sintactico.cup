@@ -5,7 +5,7 @@ import java_cup.runtime.ComplexSymbolFactory.ComplexSymbol;
 import ast.*;	
 
 action code {:
-	private boolean modoDepuracion=false;
+
 	private NodoBase ast=null;
 	private int lineanum=0;
 	//Debe ser llamada solo despues de un parse(), en caso contrario retornara null siempre;
@@ -29,7 +29,12 @@ action code {:
 :}
 
 parser code {: 
-	
+	private boolean modoDepuracion;	
+	public parser(java_cup.runtime.Scanner s, java_cup.runtime.SymbolFactory sf, boolean debug) {
+		super(s,sf);
+		this.modoDepuracion = debug;
+	}	
+
 	public int error_count = 1;
 	public void syntax_error(Symbol s) {
 		ComplexSymbol cs = (ComplexSymbol) s;
