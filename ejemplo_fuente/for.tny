@@ -1,4 +1,11 @@
-read x;
-for(x=0;x<10;x=x+1)
-	x:=x+1
-end
+begin
+	int a;
+	a:=3;
+	if ((1<2 and 4*3>10) or (3>5 and 1 > 2)) and (3+1 > 2+1) then
+		a:=4;
+		write a;
+	else
+		a:=5;
+		write a;
+	end;
+end;

@@ -400,6 +400,7 @@ public class Semantica {
             if( simbolo != null ){
                 if(num_uso == 0 && parte_for == "INICIALIZACION"){
             		//System.out.println("La variable del for es: " + identificador.getNombre() + " ambito: " +ambito + "-" + identificador.getAmbito() +  " linea: " +identificador.getNumLineaDeclare());
+
             		//System.out.println(simbolo);
             		variable_for = simbolo.getIdentificador();
             		linea_for = identificador.getNumLinea();
