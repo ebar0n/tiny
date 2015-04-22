@@ -1,3 +1,8 @@
+void function(int a, int x) 
+begin
+    a := 3;
+end;
+
 begin
     int a, x, g;
     a := 1;
@@ -7,4 +12,12 @@ begin
     then 
         g := 1; 
     end;    
+
+    for(a := 0; a < 10; a := a + 1)
+        x := x * 2;
+    end;
+
+    function(a, x);
 end;
+
+
