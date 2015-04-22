@@ -122,8 +122,12 @@ public class Generador {
 
 	private static void generarFuncion(NodoBase nodo) {
 		NodoFunction nodof = (NodoFunction) nodo;
-		generar(nodof.getDeclaracion());
-		generar(nodof.getExpression());                
+		RegistroSimbolo simbolo = tablaSimbolos.BuscarSimboloIsFunction(nodof.getIdentificador().getNombre());
+		if( simbolo != null ){
+			simbolo.setDireccionCodigo( UtGen.getInstruccionActual() + 1 );
+			generar(nodof.getDeclaracion());
+			generar(nodof.getExpression());   
+		}             
 	}
 
 	private static void generarVariable(NodoBase nodo) {
@@ -132,15 +136,15 @@ public class Generador {
 
 	private static void generarArgList(NodoBase nodo) {
 		NodoArgList nodov = (NodoArgList) nodo;
-                int direccion;
-                
-                if(nodov.getArgumento()!=null)
-                    generarArgList(nodov.getArgumento());
-                
-                direccion = tablaSimbolos.getDireccion(nodov.getIdentificador().getNombre(),nodov.getAmbito());
-                
-                UtGen.emitirRM("LD", UtGen.AC,desplazamientoTmp--, UtGen.MP, "cargo el registro AC con el valor de la pila");
-                UtGen.emitirRM("ST", UtGen.AC, direccion, UtGen.GP, "Guardo en la direccion");
+        int direccion;
+
+        if(nodov.getArgumento()!=null)
+            generarArgList(nodov.getArgumento());
+        
+        direccion = tablaSimbolos.getDireccion(nodov.getIdentificador().getNombre(),nodov.getAmbito());
+        pilaPop();
+        //UtGen.emitirRM("LD", UtGen.AC,desplazamientoTmp--, UtGen.MP, "cargo el registro AC con el valor de la pila");
+        UtGen.emitirRM("ST", UtGen.L1, direccion, 0, "Guardo en la direccion");
                 
 	}	
 
@@ -181,23 +185,27 @@ public class Generador {
 
 	private static void generarCallFunction(NodoBase nodo) {
 		NodoCallFunction nodocf = (NodoCallFunction) nodo;
+
 	}
         
-        private static void generarReturn(NodoBase nodo){
-                NodoReturn nodo_return = (NodoReturn) nodo;
-                
-                if(nodo_return.getExpresion()!=null){
-                    generar(nodo_return.getExpresion());
-         
-                UtGen.emitirRM("LDA", UtGen.L1, desplazamientoTmp--, UtGen.MP, "Saco el salto de la linea");
-                UtGen.emitirRM("ST", UtGen.AC, ++desplazamientoTmp, UtGen.MP, "Cargo variable que genero el return en temporales");
-                UtGen.emitirRM("ST", UtGen.PC, 0, UtGen.L1, "Regreso a donde fui llamado");
-                }
-                else{
-                UtGen.emitirRM("LDA", UtGen.L1, desplazamientoTmp--, UtGen.MP, "Saco el salto de la linea");
-                UtGen.emitirRM("ST", UtGen.PC, 0, UtGen.L1, "Regreso a donde fui llamado");
-                }
+    private static void generarReturn(NodoBase nodo){
+        NodoReturn nodo_return = (NodoReturn) nodo;
+        
+        if(nodo_return.getExpresion()!=null){
+            generar(nodo_return.getExpresion());
+ 
+ 			pilaPop();
+            //UtGen.emitirRM("LDA", UtGen.L1, desplazamientoTmp--, UtGen.MP, "Saco el salto de la linea");
+            UtGen.emitirRO("SUB", UtGen.MP, UtGen.MP, UtGen.L2, "op: subir pila");	
+            UtGen.emitirRM("ST", UtGen.AC, 0, UtGen.MP, "Cargo variable que genero el return en temporales");
+            UtGen.emitirRM("ST", UtGen.PC, 0, UtGen.L1, "Regreso a donde fui llamado");
         }
+        else{
+        	pilaPop();
+            //UtGen.emitirRM("LDA", UtGen.L1, desplazamientoTmp--, UtGen.MP, "Saco el salto de la linea");
+            UtGen.emitirRM("ST", UtGen.PC, 0, UtGen.L1, "Regreso a donde fui llamado");
+        }
+    }
 
 	private static void generarIf(NodoBase nodo){
     	NodoIf n = (NodoIf)nodo;
@@ -402,13 +410,13 @@ public class Generador {
 	//El registro L1 se usa para obtener los elementos ingresados en la pila
 	private static void pilaPush(){
 		UtGen.emitirRM("ST", UtGen.L1, 0, UtGen.MP, "op: push en la pila tmp");
-		UtGen.emitirRO("SUB", UtGen.MP, UtGen.MP, UtGen.L2, "op: -");	
+		UtGen.emitirRO("SUB", UtGen.MP, UtGen.MP, UtGen.L2, "op: subir pila");	
 	}
 
 	//El registro L1 se usa para obtener los elementos sacar en la pila
 	private static void pilaPop(){
 		UtGen.emitirRM("LD", UtGen.L1, 0, UtGen.MP, "op: pop o cargo de la pila el valor");
-		UtGen.emitirRO("ADD", UtGen.MP, UtGen.MP, UtGen.L2, "op: +");
+		UtGen.emitirRO("ADD", UtGen.MP, UtGen.MP, UtGen.L2, "op: bajar pila");
 	}
 
 }
