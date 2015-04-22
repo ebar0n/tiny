@@ -1,19 +1,5 @@
-int myfunckl(int a,boolean b)
-begin
-	return 1;
-end;
-
 begin 
 
-	int d;
-
-	{
-	d:=myfunckl(myfunckl(1,false), (3+1) > 1);
-	}
-
-	if d!=((((((((-1*2)*myfunckl(myfunckl(1,false), (3+1) > 1) ))))))) then
-		int ebaron;
-	end;
-
-	return;
+	int d[1];
+	d[3]:=d[2];
 end;
