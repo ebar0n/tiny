@@ -1,21 +1,8 @@
+int fun123(int a, int b, boolean ban)
+begin
+	return a+b;
+end;
+
 begin 
-
-	int d[1];
-	d[3]:=d[2];
-	int d;
-
-	{
-
-	d:=myfunckl(myfunckl(1,false), (3+1) > 1);
-	
-	if d!=((((((((-1*2)*myfunckl(myfunckl(1,false), (3+1) > 1) ))))))) then
-		int ebaron;
-	end;
-
-	}
-
-
-    int dd[1];
-    dd[3]:=dd[2];	
-	return;
+	write fun123(1,2,false);
 end;

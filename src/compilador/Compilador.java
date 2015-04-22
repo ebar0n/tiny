@@ -72,11 +72,6 @@ public class Compilador {
 		//System.out.println();
 		//ast.Util.imprimirAST(root);
 		
-		TablaSimbolos ts = new TablaSimbolos();
-		ts.cargarTabla(root);
-		//ts.ImprimirClaves();
-		//REALIZAR ACA ANALISIS SEMANTICO
-		
 		/*******************/
 		Semantica semantica = new Semantica(ts);
 		if(debugsemantico) 
