@@ -21,4 +21,11 @@ begin
 	j:=2;
 	write j;
 	fun1234(j);
+
+	{ Cedulas de los integrantes }
+	write 20061814;	
+	write 20120542;	
+	write 20232871;
+	write 20825824;
+	write 21218739;			
 end;

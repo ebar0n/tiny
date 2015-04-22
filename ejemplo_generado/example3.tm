@@ -185,8 +185,38 @@
 116:       SUB       6,6,3      op: subir pila
 117:       ST       2,0(6)      op: push en la pila tmp
 122:       LDC       7,23(0)      carga salto  23
+*      -> escribir
+*      -> constante 20061814
+123:       LDC       0,20061814(0)      cargar constante: 20061814
+*      <- constante
+124:       OUT       0,0,0      escribir: genero la salida de la expresion
+*      <- escribir
+*      -> escribir
+*      -> constante 20120542
+125:       LDC       0,20120542(0)      cargar constante: 20120542
+*      <- constante
+126:       OUT       0,0,0      escribir: genero la salida de la expresion
+*      <- escribir
+*      -> escribir
+*      -> constante 20232871
+127:       LDC       0,20232871(0)      cargar constante: 20232871
+*      <- constante
+128:       OUT       0,0,0      escribir: genero la salida de la expresion
+*      <- escribir
+*      -> escribir
+*      -> constante 20825824
+129:       LDC       0,20825824(0)      cargar constante: 20825824
+*      <- constante
+130:       OUT       0,0,0      escribir: genero la salida de la expresion
+*      <- escribir
+*      -> escribir
+*      -> constante 21218739
+131:       LDC       0,21218739(0)      cargar constante: 21218739
+*      <- constante
+132:       OUT       0,0,0      escribir: genero la salida de la expresion
+*      <- escribir
 *      Fin de la ejecucion.
-123:       HALT       0,0,0      
+133:       HALT       0,0,0      
 *
 *
 * ------ FIN DEL CODIGO OBJETO DEL LENGUAJE TINY GENERADO PARA LA TM ------
