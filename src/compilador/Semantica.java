@@ -13,7 +13,7 @@ public class Semantica {
 	public Semantica(TablaSimbolos ts){
 		this.ts = ts;
 	}
-	int error_count = 1, warning_count = 1;
+	public int error_count = 1, warning_count = 1;
 	boolean declare_var = false;
 
 	//Verificacion de tipo
@@ -55,10 +55,11 @@ public class Semantica {
 		    	declare_var = true;
 		    	ambito = nodo.getAmbito();      
 		    	RecorrerArbol(nodo.getDeclaracion());
+		    	declare_var = false;
+		    	
 		    	UpAmbito();
-
 		    	ambito = nodo.getAmbito();
-                        
+          
                 Existe_return = 0;
                 RecorrerArbol(nodo.getExpression());
 		    	//Verifico si despues del recorrido encontro almenos un return
@@ -66,7 +67,6 @@ public class Semantica {
                 	SemanticaReturnFuncionNoExist(nodo);//hay error, no consiguio almenos un return
                 }
                         
-		    	declare_var = false;
 		    	funcion_actual = tipoDato.VOID;
 		    	UpAmbito();
 		    }
@@ -203,20 +203,7 @@ public class Semantica {
 		    else if (raiz instanceof NodoCallFunction){
 		    	//LLAMAR A FUNCION
 		    	SemanticaValidarCallFunction(((NodoCallFunction)raiz).getIdentificador(),((NodoCallFunction)raiz).getVariables());
-		    	/*if (((NodoCallFunction)raiz).getVariables()!=null){
-		    		SemanticaValidarCallFunction(((NodoCallFunction)raiz).getVariables());
-		    		//System.out.println(" Con parametos ->");
-		    		/*
-		    		NodoParamFunction var = (NodoParamFunction)((NodoCallFunction)raiz).getVariables(); 
-		    		while(var!=null){
-		    			RecorrerArbol(var.getExpresion());
-		    			var = (NodoParamFunction)var.getSiguiente();
-		    		}
-		    		
-		    	}
-		    	else{
-		    		SemanticaValidarCallFunction(null);//System.out.println(" Sin parametos");
-		    	}*/
+		    	
 		    }
 		    else if (raiz instanceof NodoReturn ){
 		    	//System.out.println("Return");	
@@ -269,7 +256,7 @@ public class Semantica {
 	//Regla 1, validar decaraciones repetidas de variables
 	public void SemanticaValidarDeclaracionTipoVariable(NodoIdentificador identificador){
 		if( identificador != null ){
-			//System.out.println("Var: " + identificador.getNombre() + " amb: " + ambito + " line: " + identificador.getNumLineaDeclare() + " col: "+identificador.getNumColumnDeclare());
+			//System.out.println("Var: " + identificador.getNombre() + " amb: " + identificador.getAmbito() + " line: " + identificador.getNumLinea() + " col: "+identificador.getNumColumn());
 			RegistroSimbolo simbolo = ts.BuscarSimbolo(identificador.getNombre(), identificador.getAmbito());
 			if (simbolo.getTipeSymbol() != tipoSymbol.FUNCTION){
 				if( simbolo.getNumLineaDeclare() + simbolo.getNumColumnDeclare() != identificador.getNumLinea() + identificador.getNumColumn()){
@@ -308,7 +295,7 @@ public class Semantica {
 			//System.out.println("Validando => Var: " + identificador.getNombre() + " amb: " + identificador.getAmbito() + " line: " + identificador.getNumLinea() + " col: "+identificador.getNumColumn());
 			RegistroSimbolo simbolo = ts.BuscarSimbolo(identificador.getNombre(), identificador.getAmbito());
 			if(simbolo == null){
-				System.out.println("#Error (Regla#2)-> lllinea: "+identificador.getNumLinea()+  " -> Variable {"+identificador.getNombre()+"} no ha sido declarada");
+				System.out.println("#Error (Regla#2)-> linea: "+identificador.getNumLinea()+  " -> Variable {"+identificador.getNombre()+"} no ha sido declarada");
 				error_count++;
 			}
 			else
@@ -474,6 +461,8 @@ public class Semantica {
 				((NodoOperacion)nodo).setTipoDato(tipoI);
 				tipo = tipoI;
 			}else{
+				//System.out.println(tipoI);
+				//System.out.println(tipoD);
 				System.out.println("#Error (Regla#6.2)-> linea: "+nodo.getNumLinea()+" -> inconsistencia en los tipos de la operacion");
 				error_count++;
 			}
