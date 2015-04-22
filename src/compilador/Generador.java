@@ -341,6 +341,7 @@ public class Generador {
 		NodoArray n = (NodoArray)nodo;
 		int direccion;
 		if(UtGen.debug)	UtGen.emitirComentario("-> vector");
+		//Falta NO FUNCIONA BN
 		direccion = tablaSimbolos.getDireccion(((NodoIdentificador)n.getIdentificador()).getNombre());
 		UtGen.emitirRO("ADD",UtGen.L3,UtGen.GP,UtGen.AC,"sumar desplazamiendo al registro L3");
 		UtGen.emitirRM("LD", UtGen.AC, direccion,UtGen.GP, "cargar valor de identificador: "+((NodoIdentificador)n.getIdentificador()).getNombre());
