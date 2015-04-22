@@ -9,6 +9,7 @@ public class RegistroSimbolo {
 	private ComplexSymbol symbolDeclare;
     private ComplexSymbol symbolInitialize;
 	private int DireccionMemoria = -1;
+	private int DireccionCodigo = -1;
 	private String ambito;
 	private String ambito_padre;
 	private int nivel;
@@ -69,6 +70,14 @@ public class RegistroSimbolo {
 
 	public int getDireccionMemoria() {
 		return DireccionMemoria;
+	}
+
+	public void setDireccionCodigo(int dir) {
+		this.DireccionCodigo = dir;
+	}
+
+	public int getDireccionCodigo() {
+		return this.DireccionCodigo;
 	}
 
 	public RegistroSimbolo getHermano() {

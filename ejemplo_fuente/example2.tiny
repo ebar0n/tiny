@@ -1,5 +1,8 @@
-begin 
+int fun123(int a, int b, boolean ban)
+begin
+	return a+b;
+end;
 
-	int d[1];
-	d[3]:=d[2];
+begin 
+	write fun123(1,2,false);
 end;

@@ -43,7 +43,8 @@ public class Compilador {
 		//Para ver depuracion de analisis sintactico se debe ir al parser.java y colocar modoDepuracion en true
 		
 		/***************************/
-		if(debuglexico || debugsintactico) System.out.println("Analizando lexico y sintactico");
+		if(debuglexico || debugsintactico)
+			System.out.println("Analizando lexico y sintactico");
 		parser_obj.parse();
 		NodoBase root=parser_obj.action_obj.getASTroot();
                 
@@ -63,13 +64,19 @@ public class Compilador {
 		
 		TablaSimbolos ts = new TablaSimbolos();
 		ts.cargarTabla(root);
-		if(debugtablasimbolos) ts.ImprimirClaves();
-		//REALIZAR ACA ANALISIS SEMANTICO
+		if(debugtablasimbolos)
+			ts.ImprimirClaves();
+
+		//System.out.println();
+		//System.out.println("IMPRESION DEL AST GENERADO");
+		//System.out.println();
+		//ast.Util.imprimirAST(root);
 		
 		/*******************/
 		Semantica semantica = new Semantica(ts);
 		if(debugsemantico) 
-			System.out.println("\nAnalizando semantica");
+			System.out.println("\nBuscando errores semanticos");
+		
 		semantica.RecorrerArbol(root);
 		if(debugsemantico) {
 			System.out.println("#"+(semantica.error_count-1)+" error(es) semanticos detectado(s)");
@@ -81,6 +88,7 @@ public class Compilador {
 		if( semantica.error_count*parser_obj.error_count*jflex.error_count == 1 ){
 			Generador.setTablaSimbolos(ts);
 			Generador.generarCodigoObjeto(root, debuggeneracion);
+			//Generador.generarEjemplo();
 		}
 
 	}
