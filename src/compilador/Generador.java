@@ -347,6 +347,33 @@ public class Generador {
 		UtGen.emitirComentario("Preludio estandar:");
 		UtGen.emitirRM("LD", UtGen.MP, 0, UtGen.AC, "cargar la maxima direccion desde la localidad 0");
 		UtGen.emitirRM("ST", UtGen.AC, 0, UtGen.AC, "limpio el registro de la localidad 0");
+		UtGen.emitirRM("LDC", UtGen.L2, 1, 0, "carga constante, para usos de movimientos recursivos");
 	} 
+
+	
+	public static void generarEjemplo(){
+		generarPreludioEstandar();
+		
+		UtGen.emitirRM("LDA", UtGen.L1, UtGen.PC, 0, "carga la linea donde me encuentro, llamada a funcion");
+		pilaPush();
+		UtGen.emitirRO("IN", UtGen.L1, 0, 0, "leer: lee un valor entero ");
+		pilaPush();
+		UtGen.emitirRM("LDC", UtGen.PC, 6, 0, "carga salto");
+		UtGen.emitirComentario("Fin de la ejecucion.");
+		UtGen.emitirRO("HALT", 0, 0, 0, "");
+
+	} 
+
+	//El registro L1 se usa para obtener los elementos ingresados en la pila
+	private static void pilaPush(){
+		UtGen.emitirRM("ST", UtGen.L1, 0, UtGen.MP, "op: push en la pila tmp");
+		UtGen.emitirRO("SUB", UtGen.MP, UtGen.MP, UtGen.L2, "op: -");	
+	}
+
+	//El registro L1 se usa para obtener los elementos sacar en la pila
+	private static void pilaPop(){
+		UtGen.emitirRM("LD", UtGen.L1, 0, UtGen.MP, "op: pop o cargo de la pila el valor");
+		UtGen.emitirRO("ADD", UtGen.MP, UtGen.MP, UtGen.L2, "op: +");
+	}
 
 }
