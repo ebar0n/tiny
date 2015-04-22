@@ -32,7 +32,7 @@
 17:       LDA       1,0(2)      Pasando operador izquierdo de la pila a AC1
 18:       ADD       0,1,0      op: +
 *      <- Operacion: mas
-19:       ST       2,0(0)      Cargo variable que genero el return en temporales
+19:       LDA       2,0(0)      Cargo variable que genero el return en temporales
 20:       SUB       6,6,3      op: subir pila
 21:       ST       2,0(6)      op: push en la pila tmp
 22:       LDA       7,0(4)      Regreso a donde fui llamado
