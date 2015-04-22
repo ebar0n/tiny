@@ -1,6 +1,8 @@
 int fun123(int a, int b, boolean ban)
 begin
-	return a+b;
+	int c;
+	c:=fun123(a,b,true);
+	return a+b+c;
 end;
 
 begin 
