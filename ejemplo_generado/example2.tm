@@ -52,7 +52,7 @@
 29:       SUB       6,6,3      op: subir pila
 30:       ST       2,0(6)      op: push en la pila tmp
 31:       LDC       2,34(0)      Cargando verdareda linea de retorno
-32:       ST       2,0(4)      Paso ubicacion a la pila
+32:       LDA       2,0(4)      Paso ubicacion a la pila
 33:       LDC       7,4(0)      carga salto  4
 34:       OUT       0,0,0      escribir: genero la salida de la expresion
 *      <- escribir
