@@ -14,59 +14,63 @@
 *      Fin Preludio estandar:
 4:       LD       2,0(6)      op: pop o cargo de la pila el valor
 5:       ADD       6,6,3      op: bajar pila
-6:       ST       2,2(0)      Guardo en la direccion
+6:       ST       2,2(5)      Guardo en la direccion 2 ban
 7:       LD       2,0(6)      op: pop o cargo de la pila el valor
 8:       ADD       6,6,3      op: bajar pila
-9:       ST       2,1(0)      Guardo en la direccion
+9:       ST       2,1(5)      Guardo en la direccion 1 b
 10:       LD       2,0(6)      op: pop o cargo de la pila el valor
 11:       ADD       6,6,3      op: bajar pila
-12:       ST       2,0(0)      Guardo en la direccion
+12:       ST       2,0(5)      Guardo en la direccion 0 a
 *      bloque normal
 *      -> Operacion: mas
 *      -> identificador
 13:       LD       0,0(5)      cargar valor de identificador: a
 *      <- identificador
-14:       ST       0,0(6)      op: push en la pila tmp el resultado expresion izquierda
+14:       LDA       2,0(0)      Pasando operador izquierdo a la pila
+15:       ST       2,0(6)      op: push en la pila tmp
+16:       SUB       6,6,3      op: subir pila
 *      -> identificador
-15:       LD       0,1(5)      cargar valor de identificador: b
+17:       LD       0,1(5)      cargar valor de identificador: b
 *      <- identificador
-16:       LD       1,0(6)      op: pop o cargo de la pila el valor izquierdo en AC1
-17:       ADD       0,1,0      op: +
-*      <- Operacion: mas
 18:       LD       2,0(6)      op: pop o cargo de la pila el valor
 19:       ADD       6,6,3      op: bajar pila
-20:       SUB       6,6,3      op: subir pila
-21:       ST       0,0(6)      Cargo variable que genero el return en temporales
-22:       ST       7,0(2)      Regreso a donde fui llamado
+20:       LDA       1,2(0)      Pasando operador izquierdo de la pila a AC1
+21:       ADD       0,1,0      op: +
+*      <- Operacion: mas
+22:       LD       2,0(6)      op: pop o cargo de la pila el valor
+23:       ADD       6,6,3      op: bajar pila
+24:       SUB       6,6,3      op: subir pila
+25:       ST       0,0(6)      Cargo variable que genero el return en temporales
+26:       ST       7,0(2)      Regreso a donde fui llamado
 *      Bloque principal
-3:       LDA       7,19(7)      bloque unico: jmp a bloque principal
+3:       LDA       7,23(7)      bloque unico: jmp a bloque principal
 *      -> escribir
-23:       LDA       2,7(0)      carga la linea donde me encuentro, llamada a funcion
-24:       ST       2,0(6)      op: push en la pila tmp
-25:       SUB       6,6,3      op: subir pila
-*      -> constante 1
-26:       LDC       0,1(0)      cargar constante: 1
-*      <- constante
-27:       LDA       2,0(0)       carga parametro en llamada a funcion
+27:       LDA       2,0(7)      carga la linea donde me encuentro, llamada a funcion
 28:       ST       2,0(6)      op: push en la pila tmp
 29:       SUB       6,6,3      op: subir pila
-*      -> constante 2
-30:       LDC       0,2(0)      cargar constante: 2
+*      -> constante 1
+30:       LDC       0,1(0)      cargar constante: 1
 *      <- constante
 31:       LDA       2,0(0)       carga parametro en llamada a funcion
 32:       ST       2,0(6)      op: push en la pila tmp
 33:       SUB       6,6,3      op: subir pila
-*      -> constante 0
-34:       LDC       0,0(0)      cargar constante: false
+*      -> constante 2
+34:       LDC       0,2(0)      cargar constante: 2
 *      <- constante
 35:       LDA       2,0(0)       carga parametro en llamada a funcion
 36:       ST       2,0(6)      op: push en la pila tmp
 37:       SUB       6,6,3      op: subir pila
-38:       LDC       7,6(0)      carga salto
-39:       OUT       0,0,0      escribir: genero la salida de la expresion
+*      -> constante 0
+38:       LDC       0,0(0)      cargar constante: false
+*      <- constante
+39:       LDA       2,0(0)       carga parametro en llamada a funcion
+40:       ST       2,0(6)      op: push en la pila tmp
+41:       SUB       6,6,3      op: subir pila
+42:       LDC       7,4(0)      carga salto  4
+43:       OUT       0,0,0      escribir: genero la salida de la expresion
 *      <- escribir
 *      Fin de la ejecucion.
-40:       HALT       0,0,0      
+44:       HALT       0,0,0      
 *
 *
 * ------ FIN DEL CODIGO OBJETO DEL LENGUAJE TINY GENERADO PARA LA TM ------

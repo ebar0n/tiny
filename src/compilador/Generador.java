@@ -346,11 +346,16 @@ public class Generador {
 		
 		generar(n.getOpIzquierdo());
 		/* Almaceno en la pseudo pila de valor temporales el valor de la operacion izquierda */
-		UtGen.emitirRM("ST", UtGen.AC, desplazamientoTmp--, UtGen.MP, "op: push en la pila tmp el resultado expresion izquierda");
+		UtGen.emitirRM("LDA", UtGen.L1, UtGen.AC, 0, "Pasando operador izquierdo a la pila");
+		pilaPush();
+
 		/* Genero la expresion derecha de la operacion */
 		generar(n.getOpDerecho());
 		/* Ahora cargo/saco de la pila el valor izquierdo */
-		UtGen.emitirRM("LD", UtGen.AC1, ++desplazamientoTmp, UtGen.MP, "op: pop o cargo de la pila el valor izquierdo en AC1");
+		pilaPop();
+		UtGen.emitirRM("LDA", UtGen.AC1, UtGen.L1, 0, "Pasando operador izquierdo de la pila a AC1");
+		
+		//UtGen.emitirRM("LD", UtGen.AC1, ++desplazamientoTmp, UtGen.MP, "op: pop o cargo de la pila el valor izquierdo en AC1");
 		switch(n.getOperacion()){
 			case	mas:	UtGen.emitirRO("ADD", UtGen.AC, UtGen.AC1, UtGen.AC, "op: +");		
 							break;
