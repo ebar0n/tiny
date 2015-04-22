@@ -113,11 +113,19 @@ public class Generador {
 
 	private static void generarBloque(NodoBase nodo) {
 		NodoBloque nodob = (NodoBloque) nodo;
-                //UtGen.cargarRespaldo(registroBloque);
-                int dire = UtGen.getInstruccionMasAlta();
-                //UtGen.emitirRM_Abs("LD", UtGen.PC, dire, null);
-                //UtGen.restaurarRespaldo();
+		if( nodob.getAmbito().equals(TablaSimbolos.conts_ambito_global) ){
+			//restauramos
+			UtGen.emitirComentario("Bloque principal");
+			int localidadActual = UtGen.emitirSalto(0);
+			UtGen.cargarRespaldo(registroBloque);
+			UtGen.emitirRM_Abs("LDA", UtGen.PC, localidadActual + 1, "bloque unico: jmp a bloque principal");
+			UtGen.restaurarRespaldo();	
+		} else {
+			UtGen.emitirComentario("bloque normal");			
+		}
 		generar(nodob.getExpression());
+		
+        
 	}
 
 	private static void generarFuncion(NodoBase nodo) {
@@ -390,6 +398,7 @@ public class Generador {
 		UtGen.emitirRM("LD", UtGen.MP, 0, UtGen.AC, "cargar la maxima direccion desde la localidad 0");
 		UtGen.emitirRM("ST", UtGen.AC, 0, UtGen.AC, "limpio el registro de la localidad 0");
 		UtGen.emitirRM("LDC", UtGen.L2, 1, 0, "carga constante, para usos de movimientos recursivos");
+		registroBloque = UtGen.emitirSalto(1);
 		UtGen.emitirComentario("Fin Preludio estandar:");
 	} 
 
