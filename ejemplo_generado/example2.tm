@@ -51,13 +51,25 @@
 28:       LDA       2,0(0)       carga parametro en llamada a funcion
 29:       SUB       6,6,3      op: subir pila
 30:       ST       2,0(6)      op: push en la pila tmp
-31:       LDC       2,34(0)      Cargando verdareda linea de retorno
-32:       LDA       4,0(2)      Paso ubicacion a la pila
-33:       LDC       7,4(0)      carga salto  4
-34:       OUT       0,0,0      escribir: genero la salida de la expresion
+*      -> constante 3
+31:       LDC       0,3(0)      cargar constante: 3
+*      <- constante
+32:       LDA       2,0(0)       carga parametro en llamada a funcion
+33:       SUB       6,6,3      op: subir pila
+34:       ST       2,0(6)      op: push en la pila tmp
+35:       LDC       2,38(0)      Cargando verdareda linea de retorno
+36:       LDA       4,0(2)      Paso ubicacion a la pila
+37:       LDC       7,4(0)      carga salto  4
+38:       LDA       2,0(0)       carga parametro en llamada a funcion
+39:       SUB       6,6,3      op: subir pila
+40:       ST       2,0(6)      op: push en la pila tmp
+41:       LDC       2,44(0)      Cargando verdareda linea de retorno
+42:       LDA       4,0(2)      Paso ubicacion a la pila
+43:       LDC       7,4(0)      carga salto  4
+44:       OUT       0,0,0      escribir: genero la salida de la expresion
 *      <- escribir
 *      Fin de la ejecucion.
-35:       HALT       0,0,0      
+45:       HALT       0,0,0      
 *
 *
 * ------ FIN DEL CODIGO OBJETO DEL LENGUAJE TINY GENERADO PARA LA TM ------
