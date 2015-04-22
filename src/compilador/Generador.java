@@ -66,7 +66,7 @@ public class Generador {
 	//Funcion principal de generacion de codigo
 	//prerequisito: Fijar la tabla de simbolos antes de generar el codigo objeto 
 	private static void generar(NodoBase nodo){
-	if(tablaSimbolos!=null){
+	if(tablaSimbolos!=null && nodo!= null){
 		if (nodo instanceof NodoBloque) {
 			generarBloque(nodo);
 		}else if (nodo instanceof NodoFunction) {
@@ -95,20 +95,21 @@ public class Generador {
 			generarArray(nodo);
 		}else if (nodo instanceof NodoCallFunction){
 			generarCallFunction(nodo);			
+		}else if (nodo instanceof NodoParamFunction){
+			generarParamFunctionelse(nodo);			
 		}else if (nodo instanceof NodoOperacion){
 			generarOperacion(nodo);
-                }else if (nodo instanceof NodoBloque){
-                        generarBloque(nodo);
-                }else if (nodo instanceof NodoReturn){
-                        generarReturn(nodo);
+        }else if (nodo instanceof NodoBloque){
+            generarBloque(nodo);
+        }else if (nodo instanceof NodoReturn){
+            generarReturn(nodo);
 		}else{
 			System.out.println("BUG: Tipo de nodo a generar desconocido" + nodo);
 		}
 		/*Si el hijo de extrema izquierda tiene hermano a la derecha lo genero tambien*/
 		if(nodo.TieneHermano())
 			generar(nodo.getHermanoDerecha());
-	}else
-		System.out.println("¡¡¡ERROR: por favor fije la tabla de simbolos a usar antes de generar codigo objeto!!!");
+	}
 }
 
 	private static void generarBloque(NodoBase nodo) {
@@ -118,7 +119,7 @@ public class Generador {
 			UtGen.emitirComentario("Bloque principal");
 			int localidadActual = UtGen.emitirSalto(0);
 			UtGen.cargarRespaldo(registroBloque);
-			UtGen.emitirRM_Abs("LDA", UtGen.PC, localidadActual + 1, "bloque unico: jmp a bloque principal");
+			UtGen.emitirRM_Abs("LDA", UtGen.PC, localidadActual, "bloque unico: jmp a bloque principal");
 			UtGen.restaurarRespaldo();	
 		} else {
 			UtGen.emitirComentario("bloque normal");			
@@ -132,7 +133,8 @@ public class Generador {
 		NodoFunction nodof = (NodoFunction) nodo;
 		RegistroSimbolo simbolo = tablaSimbolos.BuscarSimboloIsFunction(nodof.getIdentificador().getNombre());
 		if( simbolo != null ){
-			simbolo.setDireccionCodigo( UtGen.getInstruccionActual() + 1 );
+			int localidadActual = UtGen.emitirSalto(0);
+			simbolo.setDireccionCodigo( localidadActual );
 			generar(nodof.getDeclaracion());
 			generar(nodof.getExpression());   
 		}             
@@ -192,6 +194,21 @@ public class Generador {
 
 	private static void generarCallFunction(NodoBase nodo) {
 		NodoCallFunction nodocf = (NodoCallFunction) nodo;
+		
+		UtGen.emitirRM("LDA", UtGen.L1, UtGen.PC, 0, "carga la linea donde me encuentro, llamada a funcion");
+		pilaPush();
+		
+		generar(nodocf.getVariables());
+		
+		RegistroSimbolo simbolo =  tablaSimbolos.BuscarSimboloIsFunction(nodocf.getIdentificador().getNombre());
+		UtGen.emitirRM("LDC", UtGen.PC, 6, 0, "carga salto");
+	}
+
+	private static void generarParamFunctionelse(NodoBase nodo){
+		generar( ((NodoParamFunction)nodo).getExpresion() );
+		UtGen.emitirRM("LDA", UtGen.L1, UtGen.AC, 0, " carga parametro en llamada a funcion");
+		pilaPush();
+		generar( ((NodoParamFunction)nodo).getSiguiente() );
 
 	}
         
@@ -293,8 +310,8 @@ public class Generador {
 	
 	private static void generarValor(NodoBase nodo){
     	NodoValor n = (NodoValor)nodo;
-    	if(UtGen.debug)	UtGen.emitirComentario("-> constante");
-    	UtGen.emitirRM("LDC", UtGen.AC, n.getValor(), 0, "cargar constante: "+n.getValor().toString());
+    	if(UtGen.debug)	UtGen.emitirComentario("-> constante "+n.getValorReal());
+    	UtGen.emitirRM("LDC", UtGen.AC, n.getValorReal(), 0, "cargar constante: "+n.getValorRealStr() );
     	if(UtGen.debug)	UtGen.emitirComentario("<- constante");
 	}
 	

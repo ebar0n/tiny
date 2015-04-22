@@ -80,7 +80,7 @@ public class Compilador {
 		semantica.RecorrerArbol(root);
 		if(debugsemantico) {
 			System.out.println("#"+(semantica.error_count-1)+" error(es) semanticos detectado(s)");
-			System.out.println("#"+(semantica.warning_count-1)+" Warning(s) semanticos detectado(s)");
+			System.out.println("*"+(semantica.warning_count-1)+" Warning(s) semanticos detectado(s)");
 		}
 	
 		/*******************/

@@ -362,12 +362,12 @@ public class Semantica {
 			if(simbolo.getExistInitialize()){
 				if( simbolo.getNumLineaInitialize() > identificador.getNumLinea() || (simbolo.getNumLineaInitialize() == identificador.getNumLinea() && simbolo.getNumColumnInitialize() > identificador.getNumColumn() ))
 				{	
-					System.out.println("#Warning (Regla#3.2)-> linea: "+identificador.getNumLinea()+  " -> Variable {"+simbolo.getIdentificador()+"} debe ser inicializada antes de su uso");
+					System.out.println("* Warning (Regla#3.2)-> linea: "+identificador.getNumLinea()+  " -> Variable {"+simbolo.getIdentificador()+"} debe ser inicializada antes de su uso");
 					warning_count++;
 				}
 			}
 			else{
-				System.out.println("#Warning (Regla#3.2)-> linea: "+identificador.getNumLinea()+  " -> Variable {"+simbolo.getIdentificador()+"} debe ser inicializada antes de su uso");
+				System.out.println("* Warning (Regla#3.2)-> linea: "+identificador.getNumLinea()+  " -> Variable {"+simbolo.getIdentificador()+"} debe ser inicializada antes de su uso");
 				warning_count++;
 			}
 		}
@@ -422,7 +422,7 @@ public class Semantica {
 	//Regla 4, Validacion del Ciclo FOR
 	public void SemanticaCicloForValidar(){ 
     	if(num_uso_inc < 2 || num_uso < 1){
-    		System.out.println("#Warning (Regla#4)-> linea: "+linea_for+" -> Variable {"+variable_for+"} revisar parametros del for");
+    		System.out.println("* Warning (Regla#4)-> linea: "+linea_for+" -> Variable {"+variable_for+"} revisar parametros del for");
     		warning_count++;	
     	}
     	num_uso_inc = 0;

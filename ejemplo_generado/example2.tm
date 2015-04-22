@@ -1,10 +1,10 @@
-#Warning (Regla#3.2)-> linea: 3 -> Variable {a} debe ser inicializada antes de su uso
-#Warning (Regla#3.2)-> linea: 3 -> Variable {b} debe ser inicializada antes de su uso
-
-
------- CODIGO OBJETO DEL LENGUAJE TINY GENERADO PARA LA TM ------
-
-
+* Warning (Regla#3.2)-> linea: 3 -> Variable {a} debe ser inicializada antes de su uso
+* Warning (Regla#3.2)-> linea: 3 -> Variable {b} debe ser inicializada antes de su uso
+*
+*
+* ------ CODIGO OBJETO DEL LENGUAJE TINY GENERADO PARA LA TM ------
+*
+*
 *      Compilacion TINY para el codigo objeto TM
 *      Archivo: NOMBRE_ARREGLAR
 *      Inicio Preludio estandar:
@@ -39,12 +39,34 @@
 21:       ST       0,0(6)      Cargo variable que genero el return en temporales
 22:       ST       7,0(2)      Regreso a donde fui llamado
 *      Bloque principal
-3:       LDA       7,20(7)      bloque unico: jmp a bloque principal
+3:       LDA       7,19(7)      bloque unico: jmp a bloque principal
 *      -> escribir
-23:       OUT       0,0,0      escribir: genero la salida de la expresion
+23:       LDA       2,7(0)      carga la linea donde me encuentro, llamada a funcion
+24:       ST       2,0(6)      op: push en la pila tmp
+25:       SUB       6,6,3      op: subir pila
+*      -> constante 1
+26:       LDC       0,1(0)      cargar constante: 1
+*      <- constante
+27:       LDA       2,0(0)       carga parametro en llamada a funcion
+28:       ST       2,0(6)      op: push en la pila tmp
+29:       SUB       6,6,3      op: subir pila
+*      -> constante 2
+30:       LDC       0,2(0)      cargar constante: 2
+*      <- constante
+31:       LDA       2,0(0)       carga parametro en llamada a funcion
+32:       ST       2,0(6)      op: push en la pila tmp
+33:       SUB       6,6,3      op: subir pila
+*      -> constante 0
+34:       LDC       0,0(0)      cargar constante: false
+*      <- constante
+35:       LDA       2,0(0)       carga parametro en llamada a funcion
+36:       ST       2,0(6)      op: push en la pila tmp
+37:       SUB       6,6,3      op: subir pila
+38:       LDC       7,6(0)      carga salto
+39:       OUT       0,0,0      escribir: genero la salida de la expresion
 *      <- escribir
 *      Fin de la ejecucion.
-24:       HALT       0,0,0      
-
-
------- FIN DEL CODIGO OBJETO DEL LENGUAJE TINY GENERADO PARA LA TM ------
+40:       HALT       0,0,0      
+*
+*
+* ------ FIN DEL CODIGO OBJETO DEL LENGUAJE TINY GENERADO PARA LA TM ------
