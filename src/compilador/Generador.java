@@ -376,10 +376,11 @@ public class Generador {
 		}
 
 		UtGen.emitirRO("ADD",UtGen.AC1,UtGen.GP,UtGen.AC,"sumar desplazamiendo al registro L3");
-		UtGen.emitirRM("LD", UtGen.AC, direccion,UtGen.AC1, "cargar valor de identificador: "+((NodoIdentificador)n.getIdentificador()).getNombre());
+		UtGen.emitirRM("LD", UtGen.AC, 0,UtGen.AC1, "cargar valor de identificador: "+((NodoIdentificador)n.getIdentificador()).getNombre());
 		if(obtenerValor) { 
 			UtGen.emitirRM("LDA", UtGen.AC, UtGen.AC,0, "cargar valor de identificador: "+((NodoIdentificador)n.getIdentificador()).getNombre());
 		}
+
 //		UtGen.emitirRM("LDC",UtGen.GP,0,0,"cargar constante 0 en el resgitro GP");
 		if(UtGen.debug)	UtGen.emitirComentario("<- vector");
 	}

@@ -3,14 +3,6 @@ begin
 	return a+b;
 end;
 
-void fun1234(int a)
-begin
-	write a;
-	a:=a*fun123(1,fun123(2,fun123(3,fun123(4,5))));
-	write a*2;
-	return;
-end;
-
 begin 
 	int j;
 	j:=1*3;
@@ -24,5 +16,6 @@ begin
     a[4] := a[3];
 
     write a[3];
-	fun1234(a[3]);
+	j:=fun123(j,2);
+	write j;
 end;
