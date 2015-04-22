@@ -201,11 +201,20 @@ public class Generador {
 		
 		UtGen.emitirRM("LDA", UtGen.L1, 0 , UtGen.PC, "carga la linea donde me encuentro, llamada a funcion");
 		pilaPush();
+		//haciendo respaldo de direccion
+		UtGen.emitirRM("LDA", UtGen.L3, 0 , UtGen.MP, "carga la linea donde me encuentro, llamada a funcion");
 		
+		//Cargar variables en la pila
 		generar(nodocf.getVariables());
 		
+		//Actualizando linea de salto de retorno en la pila, necesito la tercera
+		localidadSaltoInicio = UtGen.emitirSalto(4);
+		UtGen.emitirRM("LDC", UtGen.L1, localidadSaltoInicio, 0, "Cargando verdareda linea de retorno");
+		UtGen.emitirRM("ST", UtGen.L1, 0 , UtGen.L3, "Paso ubicacion a la pila");
+
 		RegistroSimbolo simbolo =  tablaSimbolos.BuscarSimboloIsFunction(nodocf.getIdentificador().getNombre());
 		UtGen.emitirRM("LDC", UtGen.PC, simbolo.getDireccionCodigo(), 0, "carga salto  "+simbolo.getDireccionCodigo());
+		
 	}
 
 	private static void generarParamFunctionelse(NodoBase nodo){
