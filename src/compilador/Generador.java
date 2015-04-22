@@ -44,11 +44,11 @@ public class Generador {
 	public static void generarCodigoObjeto(NodoBase raiz, boolean debug){
 		Generador.debug = debug;
 		if(debug) {
-			System.out.println();
-			System.out.println();
-			System.out.println("------ CODIGO OBJETO DEL LENGUAJE TINY GENERADO PARA LA TM ------");
-			System.out.println();
-			System.out.println();
+			System.out.println("*");
+			System.out.println("*");
+			System.out.println("* ------ CODIGO OBJETO DEL LENGUAJE TINY GENERADO PARA LA TM ------");
+			System.out.println("*");
+			System.out.println("*");
 		}
 		generarPreludioEstandar();
 		generar(raiz);
@@ -56,9 +56,9 @@ public class Generador {
 		UtGen.emitirComentario("Fin de la ejecucion.");
 		UtGen.emitirRO("HALT", 0, 0, 0, "");
 		if(debug) {
-			System.out.println();
-			System.out.println();
-			System.out.println("------ FIN DEL CODIGO OBJETO DEL LENGUAJE TINY GENERADO PARA LA TM ------");
+			System.out.println("*");
+			System.out.println("*");
+			System.out.println("* ------ FIN DEL CODIGO OBJETO DEL LENGUAJE TINY GENERADO PARA LA TM ------");
 		}
 
 	}
@@ -172,20 +172,19 @@ public class Generador {
 		if(UtGen.debug) UtGen.emitirComentario("-> for");
 		generar(nodof.getInicializacion());
 
-		localidadSaltoInicio = UtGen.emitirSalto(1);
+		localidadSaltoInicio = UtGen.emitirSalto(0);
 		UtGen.emitirComentario("for condicion: el salto hacia la condicion del for debe estar aqui");
 
 		generar(nodof.getIncremento());
 		generar(nodof.getSentencia());
 
-		localidadActual = UtGen.emitirSalto(0);
-		UtGen.cargarRespaldo(localidadSaltoInicio);
-		UtGen.emitirRM("LDA", UtGen.PC, localidadActual, 0, "jmp a inicio del for");
-		UtGen.restaurarRespaldo();
+		// localidadActual = UtGen.emitirSalto(0);
+		// UtGen.cargarRespaldo(localidadSaltoInicio);
+		// UtGen.emitirRM("LDA", UtGen.PC, localidadActual, 0, "jmp a inicio del for");
+		// UtGen.restaurarRespaldo();
 
 		generar(nodof.getCondicion());
-
-		UtGen.emitirRM("JNE", UtGen.AC, -localidadSaltoInicio, UtGen.PC, "Ouch2");
+		UtGen.emitirRM_Abs("JNE", UtGen.AC, localidadSaltoInicio, "for: jmp hacia el inicio del cuerpo");
 		
 		if (UtGen.debug)
 			UtGen.emitirComentario("<- for");		
