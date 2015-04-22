@@ -3,7 +3,16 @@ begin
 	return a+b;
 end;
 
+void fun1234(int a)
+begin
+	write a;
+	a:=a*fun123(1,fun123(2,fun123(3,fun123(4,5))));
+	write a*2;
+	return;
+end;
+
 begin 
-	write fun123(1,fun123(2,fun123(3,fun123(4,5))));
-	write fun123(1,2);
+	int j;
+	j:=fun123(1,fun123(2,fun123(3,fun123(4,5))));
+	fun1234(j);
 end;

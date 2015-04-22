@@ -88,6 +88,11 @@ public class Generador {
 		}else if (nodo instanceof NodoFor){
 			generarFor(nodo);	
 		}else if (nodo instanceof NodoArgList){
+			
+			//Restaurando salto
+			pilaPop();
+        	UtGen.emitirRM("LDA", UtGen.L3, 0 , UtGen.L1, "Paso ubicacion de retorno");
+		
 			generarArgList(nodo);	
 		}else if (nodo instanceof NodoIdentificador){
 			generarIdentificador(nodo);
@@ -206,13 +211,15 @@ public class Generador {
 		generar(nodocf.getVariables());
 		
 		//Actualizando linea de salto de retorno en la pila, necesito la tercera
-		int localidadSaltoInicio = UtGen.emitirSalto(0)+3;
+		int localidadSaltoInicio = UtGen.emitirSalto(0)+4;
 		//haciendo respaldo de direccion
 		//UtGen.emitirRM("LDA", UtGen.L3, 0 , UtGen.MP, "cargando ubicacion de la pila, para la llamada del retunn");
 		
 		UtGen.emitirRM("LDC", UtGen.L1, localidadSaltoInicio, 0, "Cargando verdareda linea de retorno");
-		UtGen.emitirRM("LDA", UtGen.L3, 0 , UtGen.L1, "Paso ubicacion a la pila");
-
+		
+		//UtGen.emitirRM("LDA", UtGen.L3, 0 , UtGen.L1, "Paso ubicacion de retorno");
+		pilaPush();
+		
 		//Aqui falta validar para cuando aun no se ha declarado la funcion
 		RegistroSimbolo simbolo =  tablaSimbolos.BuscarSimboloIsFunction(nodocf.getIdentificador().getNombre());
 		UtGen.emitirRM("LDC", UtGen.PC, simbolo.getDireccionCodigo(), 0, "carga salto  "+simbolo.getDireccionCodigo());
@@ -245,7 +252,7 @@ public class Generador {
         else{
         	//pilaPop();
             //UtGen.emitirRM("LDA", UtGen.L1, desplazamientoTmp--, UtGen.MP, "Saco el salto de la linea");
-            UtGen.emitirRM("LDA", UtGen.PC, 0, UtGen.L3, "Regreso a donde fui llamado");
+            UtGen.emitirRM("LDA", UtGen.PC, 0, UtGen.L3, "Regreso a donde fui llamado sin devolver nada");
         }
     }
 
