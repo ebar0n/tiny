@@ -1,7 +1,7 @@
 int fun123(int a, int b, boolean ban)
 begin
 	int c;
-	c:=fun123(a,b,true);
+	c:=4+c;
 	return a+b+c;
 end;
 

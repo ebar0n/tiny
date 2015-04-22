@@ -368,8 +368,11 @@ public class Semantica {
 				}
 			}
 			else{
-				System.out.println("* Warning (Regla#3.2)-> linea: "+identificador.getNumLinea()+  " -> Variable {"+simbolo.getIdentificador()+"} debe ser inicializada antes de su uso");
-				warning_count++;
+				if( simbolo.getNumLineaDeclare() != ts.BuscarSimboloIsFunction(simbolo.getAmbito()).getNumLineaDeclare() )
+				{
+					System.out.println("* Warning (Regla#3.2)-> linea: "+identificador.getNumLinea()+  " -> Variable {"+simbolo.getIdentificador()+"} debe ser inicializada antes de su uso ");
+					warning_count++;
+				}
 			}
 		}
 	}
