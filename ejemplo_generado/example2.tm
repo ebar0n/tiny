@@ -186,7 +186,7 @@
 122:       LDC       0,0(0)      cargar constante: 0
 *      <- constante
 123:       ADD       1,5,0      sumar desplazamiendo al registro L3
-124:       LDA       0,1(0)      cargar valor de identificador: a
+124:       LD       0,4(1)      cargar valor de identificador: a
 *      <- vector
 125:       LD       2,0(6)      op: pop o cargo de la pila el valor
 126:       ADD       6,6,3      op: bajar pila
@@ -204,7 +204,7 @@
 132:       LDC       0,3(0)      cargar constante: 3
 *      <- constante
 133:       ADD       1,5,0      sumar desplazamiendo al registro L3
-134:       LDA       0,1(0)      cargar valor de identificador: a
+134:       LD       0,4(1)      cargar valor de identificador: a
 *      <- vector
 135:       LD       2,0(6)      op: pop o cargo de la pila el valor
 136:       ADD       6,6,3      op: bajar pila
@@ -222,7 +222,7 @@
 142:       LDC       0,1(0)      cargar constante: 1
 *      <- constante
 143:       ADD       1,5,0      sumar desplazamiendo al registro L3
-144:       LDA       0,1(0)      cargar valor de identificador: a
+144:       LD       0,4(1)      cargar valor de identificador: a
 *      <- vector
 145:       LD       2,0(6)      op: pop o cargo de la pila el valor
 146:       ADD       6,6,3      op: bajar pila
@@ -240,7 +240,7 @@
 152:       LDC       0,2(0)      cargar constante: 2
 *      <- constante
 153:       ADD       1,5,0      sumar desplazamiendo al registro L3
-154:       LDA       0,1(0)      cargar valor de identificador: a
+154:       LD       0,4(1)      cargar valor de identificador: a
 *      <- vector
 155:       LD       2,0(6)      op: pop o cargo de la pila el valor
 156:       ADD       6,6,3      op: bajar pila
@@ -253,47 +253,48 @@
 *      <- constante
 159:       ADD       1,5,0      sumar desplazamiendo al registro L3
 160:       LD       0,4(1)      cargar valor de identificador: a
+161:       LDA       0,0(0)      cargar valor de identificador: a
 *      <- vector
-161:       LDA       2,0(0)      asignacion: almaceno el valor para el id a
-162:       SUB       6,6,3      op: subir pila
-163:       ST       2,0(6)      op: push en la pila tmp
+162:       LDA       2,0(0)      asignacion: almaceno el valor para el id a
+163:       SUB       6,6,3      op: subir pila
+164:       ST       2,0(6)      op: push en la pila tmp
 *      -> vector
 *      -> constante 4
-164:       LDC       0,4(0)      cargar constante: 4
+165:       LDC       0,4(0)      cargar constante: 4
 *      <- constante
-165:       ADD       1,5,0      sumar desplazamiendo al registro L3
-166:       LDA       0,1(0)      cargar valor de identificador: a
+166:       ADD       1,5,0      sumar desplazamiendo al registro L3
+167:       LD       0,4(1)      cargar valor de identificador: a
 *      <- vector
-167:       LD       2,0(6)      op: pop o cargo de la pila el valor
-168:       ADD       6,6,3      op: bajar pila
-169:       ST       2,0(1)      asignacion: almaceno el valor para el id a
+168:       LD       2,0(6)      op: pop o cargo de la pila el valor
+169:       ADD       6,6,3      op: bajar pila
+170:       ST       2,0(1)      asignacion: almaceno el valor para el id a
 *      <- asignacion
 *      -> escribir
 *      -> vector
 *      -> constante 3
-170:       LDC       0,3(0)      cargar constante: 3
+171:       LDC       0,3(0)      cargar constante: 3
 *      <- constante
-171:       ADD       1,5,0      sumar desplazamiendo al registro L3
-172:       LDA       0,1(0)      cargar valor de identificador: a
+172:       ADD       1,5,0      sumar desplazamiendo al registro L3
+173:       LD       0,4(1)      cargar valor de identificador: a
 *      <- vector
-173:       OUT       0,0,0      escribir: genero la salida de la expresion
+174:       OUT       0,0,0      escribir: genero la salida de la expresion
 *      <- escribir
 *      -> vector
 *      -> constante 3
-177:       LDC       0,3(0)      cargar constante: 3
+178:       LDC       0,3(0)      cargar constante: 3
 *      <- constante
-178:       ADD       1,5,0      sumar desplazamiendo al registro L3
-179:       LDA       0,1(0)      cargar valor de identificador: a
+179:       ADD       1,5,0      sumar desplazamiendo al registro L3
+180:       LD       0,4(1)      cargar valor de identificador: a
 *      <- vector
-180:       LDA       2,0(0)       carga parametro en llamada a funcion
-181:       SUB       6,6,3      op: subir pila
-182:       ST       2,0(6)      op: push en la pila tmp
-174:       LDC       2,184(0)      Cargando verdareda linea de retorno :)
-175:       SUB       6,6,3      op: subir pila
-176:       ST       2,0(6)      op: push en la pila tmp
-183:       LDC       7,23(0)      carga salto  23
+181:       LDA       2,0(0)       carga parametro en llamada a funcion
+182:       SUB       6,6,3      op: subir pila
+183:       ST       2,0(6)      op: push en la pila tmp
+175:       LDC       2,185(0)      Cargando verdareda linea de retorno :)
+176:       SUB       6,6,3      op: subir pila
+177:       ST       2,0(6)      op: push en la pila tmp
+184:       LDC       7,23(0)      carga salto  23
 *      Fin de la ejecucion.
-184:       HALT       0,0,0      
+185:       HALT       0,0,0      
 *
 *
 * ------ FIN DEL CODIGO OBJETO DEL LENGUAJE TINY GENERADO PARA LA TM ------
