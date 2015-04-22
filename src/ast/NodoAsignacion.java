@@ -40,5 +40,9 @@ public class NodoAsignacion extends NodoBase {
 	public void setExpresion(NodoBase expresion) {
 		this.expresion = expresion;
 	}
+
+	public NodoBase getVector() { 
+		return this.vector;
+	}
 	
 }

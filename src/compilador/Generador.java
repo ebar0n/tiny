@@ -36,6 +36,7 @@ public class Generador {
 	private static TablaSimbolos tablaSimbolos = null;
 	private static boolean debug=false;
     private static int registroBloque;
+    private static boolean obtenerValor=false;
 
 	public static void setTablaSimbolos(TablaSimbolos tabla){
 		tablaSimbolos = tabla;
@@ -293,12 +294,20 @@ public class Generador {
 		int direccion;
 		if(UtGen.debug)	UtGen.emitirComentario("-> asignacion");		
 		/* Genero el codigo para la expresion a la derecha de la asignacion */
+		obtenerValor=true;
 		generar(n.getExpresion());
+		obtenerValor=false;
 		/* Ahora almaceno el valor resultante */
 		
 		//Aqui agregar soporte para vectores
 		direccion = tablaSimbolos.getDireccion(n.getIdentificador().getNombre(),n.getAmbito());
-		UtGen.emitirRM("ST", UtGen.AC, direccion, UtGen.GP, "asignacion: almaceno el valor para el id "+n.getIdentificador().getNombre());
+		UtGen.emitirRM("LDA", UtGen.L1, UtGen.AC, 0, "asignacion: almaceno el valor para el id "+n.getIdentificador().getNombre());
+		pilaPush();
+		generar(n.getIdentificadorOrArray());		
+		pilaPop();
+		UtGen.emitirRM("ST", UtGen.L1, 0, UtGen.AC1, "asignacion: almaceno el valor para el id "+n.getIdentificador().getNombre());
+//		UtGen.emitirRO("ADD",UtGen.GP,UtGen.AC,0,"sumar desplazamiendo al registro L3");
+
 		if(UtGen.debug)	UtGen.emitirComentario("<- asignacion");
 	}
 	
@@ -344,10 +353,20 @@ public class Generador {
 		NodoArray n = (NodoArray)nodo;
 		int direccion;
 		if(UtGen.debug)	UtGen.emitirComentario("-> vector");
-		direccion = tablaSimbolos.getDireccion(((NodoIdentificador)n.getIdentificador()).getNombre());
-		UtGen.emitirRO("ADD",UtGen.L3,UtGen.GP,UtGen.AC,"sumar desplazamiendo al registro L3");
-		UtGen.emitirRM("LD", UtGen.AC, direccion,UtGen.GP, "cargar valor de identificador: "+((NodoIdentificador)n.getIdentificador()).getNombre());
-		UtGen.emitirRM("LDC",UtGen.GP,0,0,"cargar constante 0 en el resgitro GP");
+		direccion = tablaSimbolos.getDireccion(((NodoIdentificador)n.getIdentificador()).getNombre(), n.getIdentificador().getAmbito());
+
+		if(n.getPos() == null) { 
+			UtGen.emitirRM("LDC",UtGen.AC,n.getTam(),0,"cargar constante 0 en el resgitro AC");
+		} else { 
+			generar(n.getPos());
+		}
+
+		UtGen.emitirRO("ADD",UtGen.AC1,UtGen.GP,UtGen.AC,"sumar desplazamiendo al registro L3");
+		UtGen.emitirRM("LD", UtGen.AC, direccion,UtGen.AC1, "cargar valor de identificador: "+((NodoIdentificador)n.getIdentificador()).getNombre());
+		if(obtenerValor) { 
+			UtGen.emitirRM("LDA", UtGen.AC, UtGen.AC,0, "cargar valor de identificador: "+((NodoIdentificador)n.getIdentificador()).getNombre());
+		}
+//		UtGen.emitirRM("LDC",UtGen.GP,0,0,"cargar constante 0 en el resgitro GP");
 		if(UtGen.debug)	UtGen.emitirComentario("<- vector");
 	}
 	
