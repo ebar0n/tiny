@@ -1,9 +1,1 @@
-int fun123(int a, int b)
-begin
-	return a+b;
-end;
-
-begin 
-	write fun123(1,fun123(2,fun123(3,fun123(4,5))));
-	write fun123(1,2);
-end;
+#Error (Sintactico)-> Linea 1, Columna 1 -> EOF
