@@ -89,10 +89,6 @@ public class Generador {
 			generarFor(nodo);	
 		}else if (nodo instanceof NodoArgList){
 			
-			//Restaurando salto
-			pilaPop();
-        	UtGen.emitirRM("LDA", UtGen.L3, 0 , UtGen.L1, "Paso ubicacion de retorno");
-		
 			generarArgList(nodo);	
 		}else if (nodo instanceof NodoIdentificador){
 			generarIdentificador(nodo);
@@ -208,17 +204,20 @@ public class Generador {
 		//pilaPush();
 		
 		//Cargar variables en la pila
+		int localidadSaltoInicio_salto = UtGen.emitirSalto(3);
 		generar(nodocf.getVariables());
 		
 		//Actualizando linea de salto de retorno en la pila, necesito la tercera
-		int localidadSaltoInicio = UtGen.emitirSalto(0)+4;
+		int localidadSaltoInicio = UtGen.emitirSalto(0)+3;
 		//haciendo respaldo de direccion
 		//UtGen.emitirRM("LDA", UtGen.L3, 0 , UtGen.MP, "cargando ubicacion de la pila, para la llamada del retunn");
 		
-		UtGen.emitirRM("LDC", UtGen.L1, localidadSaltoInicio, 0, "Cargando verdareda linea de retorno");
+		UtGen.cargarRespaldo(localidadSaltoInicio_salto);
 		
+		UtGen.emitirRM("LDC", UtGen.L1, localidadSaltoInicio, 0, "Cargando verdareda linea de retorno");
 		//UtGen.emitirRM("LDA", UtGen.L3, 0 , UtGen.L1, "Paso ubicacion de retorno");
 		pilaPush();
+		UtGen.restaurarRespaldo();
 		
 		//Aqui falta validar para cuando aun no se ha declarado la funcion
 		RegistroSimbolo simbolo =  tablaSimbolos.BuscarSimboloIsFunction(nodocf.getIdentificador().getNombre());
@@ -237,6 +236,10 @@ public class Generador {
     private static void generarReturn(NodoBase nodo){
         NodoReturn nodo_return = (NodoReturn) nodo;
         
+        //Restaurando salto
+		pilaPop();
+        UtGen.emitirRM("LDA", UtGen.L3, 0 , UtGen.L1, "Paso ubicacion de retorno");
+
         if(nodo_return.getExpresion()!=null){
             generar(nodo_return.getExpresion());
  	

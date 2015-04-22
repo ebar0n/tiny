@@ -6,14 +6,14 @@ end;
 void fun1234(int a)
 begin
 	write a;
-	a:=a*fun123(1,fun123(2,fun123(3,fun123(4,5))));
-	write a*2;
+	a:=a*fun123(1,1);
+	write a;
 	return;
 end;
 
 begin 
 	int j;
-	j:=1*3;
+	j:=2;
 	write j;
 	fun1234(j);
 end;
