@@ -1,12 +1,5 @@
-int myfunckl()
-begin
-	return 1;
-end;
-
 begin 
 
-	int d;
-	if d!=3*myfunckl() then
-		int ebaron;
-	end;
+	int d[1];
+	d[3]:=d[2];
 end;

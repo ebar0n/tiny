@@ -83,6 +83,8 @@ public class Generador {
 			generarArgList(nodo);	
 		}else if (nodo instanceof NodoIdentificador){
 			generarIdentificador(nodo);
+		}else if (nodo instanceof NodoArray){
+			generarArray(nodo);
 		}else if (nodo instanceof NodoCallFunction){
 			generarCallFunction(nodo);			
 		}else if (nodo instanceof NodoOperacion){
@@ -226,8 +228,20 @@ public class Generador {
 		if(UtGen.debug)	UtGen.emitirComentario("-> identificador");
 		direccion = tablaSimbolos.getDireccion(n.getNombre());
 		UtGen.emitirRM("LD", UtGen.AC, direccion, UtGen.GP, "cargar valor de identificador: "+n.getNombre());
-		if(UtGen.debug)	UtGen.emitirComentario("-> identificador");
+		if(UtGen.debug)	UtGen.emitirComentario("<- identificador");
 	}
+
+	private static void generarArray(NodoBase nodo){
+		NodoArray n = (NodoArray)nodo;
+		int direccion;
+		if(UtGen.debug)	UtGen.emitirComentario("-> vector");
+		direccion = tablaSimbolos.getDireccion(((NodoIdentificador)n.getIdentificador()).getNombre());
+		UtGen.emitirRO("ADD",UtGen.GP,UtGen.GP,UtGen.AC,"sumar desplazamiendo al registro GP");
+		UtGen.emitirRM("LD", UtGen.AC, direccion,UtGen.GP, "cargar valor de identificador: "+((NodoIdentificador)n.getIdentificador()).getNombre());
+		UtGen.emitirRM("LDC",UtGen.GP,0,0,"cargar constante 0 en el resgitro GP");
+		if(UtGen.debug)	UtGen.emitirComentario("<- vector");
+	}
+	
 
 	private static void generarOperacion(NodoBase nodo){
 		NodoOperacion n = (NodoOperacion) nodo;
