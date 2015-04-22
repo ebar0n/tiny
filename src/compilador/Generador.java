@@ -132,9 +132,13 @@ public class Generador {
 	private static void generarFuncion(NodoBase nodo) {
 		NodoFunction nodof = (NodoFunction) nodo;
 		RegistroSimbolo simbolo = tablaSimbolos.BuscarSimboloIsFunction(nodof.getIdentificador().getNombre());
-		if( simbolo != null ){
+		         
+                if( simbolo != null ){
+                    
 			int localidadActual = UtGen.emitirSalto(0);
+                        //System.out.println("direccion actual: "+localidadActual);
 			simbolo.setDireccionCodigo( localidadActual );
+                        //System.out.println("------>> direccion de la funcion: "+simbolo.getDireccionCodigo());
 			generar(nodof.getDeclaracion());
 			generar(nodof.getExpression());   
 		}             
@@ -154,7 +158,7 @@ public class Generador {
         direccion = tablaSimbolos.getDireccion(nodov.getIdentificador().getNombre(),nodov.getAmbito());
         pilaPop();
         //UtGen.emitirRM("LD", UtGen.AC,desplazamientoTmp--, UtGen.MP, "cargo el registro AC con el valor de la pila");
-        UtGen.emitirRM("ST", UtGen.L1, direccion, 0, "Guardo en la direccion");
+        UtGen.emitirRM("ST", UtGen.L1, direccion, UtGen.GP, "Guardo en la direccion "+direccion+" "+nodov.getIdentificador().getNombre());
                 
 	}	
 
@@ -195,13 +199,13 @@ public class Generador {
 	private static void generarCallFunction(NodoBase nodo) {
 		NodoCallFunction nodocf = (NodoCallFunction) nodo;
 		
-		UtGen.emitirRM("LDA", UtGen.L1, UtGen.PC, 0, "carga la linea donde me encuentro, llamada a funcion");
+		UtGen.emitirRM("LDA", UtGen.L1, 0 , UtGen.PC, "carga la linea donde me encuentro, llamada a funcion");
 		pilaPush();
 		
 		generar(nodocf.getVariables());
 		
 		RegistroSimbolo simbolo =  tablaSimbolos.BuscarSimboloIsFunction(nodocf.getIdentificador().getNombre());
-		UtGen.emitirRM("LDC", UtGen.PC, 6, 0, "carga salto");
+		UtGen.emitirRM("LDC", UtGen.PC, simbolo.getDireccionCodigo(), 0, "carga salto  "+simbolo.getDireccionCodigo());
 	}
 
 	private static void generarParamFunctionelse(NodoBase nodo){
