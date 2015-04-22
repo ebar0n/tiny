@@ -4,5 +4,6 @@ begin
 end;
 
 begin 
-	write fun123(1,fun123(2,3));
+	write fun123(1,fun123(2,fun123(3,fun123(4,5))));
+	write fun123(1,2);
 end;

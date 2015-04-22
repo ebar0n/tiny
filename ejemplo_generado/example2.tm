@@ -32,44 +32,83 @@
 17:       LDA       1,0(2)      Pasando operador izquierdo de la pila a AC1
 18:       ADD       0,1,0      op: +
 *      <- Operacion: mas
-19:       LDA       2,0(0)      Cargo variable que genero el return en temporales
-20:       SUB       6,6,3      op: subir pila
-21:       ST       2,0(6)      op: push en la pila tmp
-22:       LDA       7,0(4)      Regreso a donde fui llamado
+19:       LDA       7,0(4)      Regreso a donde fui llamado
 *      Bloque principal
-3:       LDA       7,19(7)      bloque unico: jmp a bloque principal
+3:       LDA       7,16(7)      bloque unico: jmp a bloque principal
 *      -> escribir
 *      -> constante 1
-23:       LDC       0,1(0)      cargar constante: 1
+20:       LDC       0,1(0)      cargar constante: 1
 *      <- constante
-24:       LDA       2,0(0)       carga parametro en llamada a funcion
-25:       SUB       6,6,3      op: subir pila
-26:       ST       2,0(6)      op: push en la pila tmp
+21:       LDA       2,0(0)       carga parametro en llamada a funcion
+22:       SUB       6,6,3      op: subir pila
+23:       ST       2,0(6)      op: push en la pila tmp
 *      -> constante 2
-27:       LDC       0,2(0)      cargar constante: 2
+24:       LDC       0,2(0)      cargar constante: 2
 *      <- constante
-28:       LDA       2,0(0)       carga parametro en llamada a funcion
-29:       SUB       6,6,3      op: subir pila
-30:       ST       2,0(6)      op: push en la pila tmp
+25:       LDA       2,0(0)       carga parametro en llamada a funcion
+26:       SUB       6,6,3      op: subir pila
+27:       ST       2,0(6)      op: push en la pila tmp
 *      -> constante 3
-31:       LDC       0,3(0)      cargar constante: 3
+28:       LDC       0,3(0)      cargar constante: 3
 *      <- constante
-32:       LDA       2,0(0)       carga parametro en llamada a funcion
-33:       SUB       6,6,3      op: subir pila
-34:       ST       2,0(6)      op: push en la pila tmp
-35:       LDC       2,38(0)      Cargando verdareda linea de retorno
-36:       LDA       4,0(2)      Paso ubicacion a la pila
-37:       LDC       7,4(0)      carga salto  4
-38:       LDA       2,0(0)       carga parametro en llamada a funcion
-39:       SUB       6,6,3      op: subir pila
-40:       ST       2,0(6)      op: push en la pila tmp
-41:       LDC       2,44(0)      Cargando verdareda linea de retorno
-42:       LDA       4,0(2)      Paso ubicacion a la pila
-43:       LDC       7,4(0)      carga salto  4
-44:       OUT       0,0,0      escribir: genero la salida de la expresion
+29:       LDA       2,0(0)       carga parametro en llamada a funcion
+30:       SUB       6,6,3      op: subir pila
+31:       ST       2,0(6)      op: push en la pila tmp
+*      -> constante 4
+32:       LDC       0,4(0)      cargar constante: 4
+*      <- constante
+33:       LDA       2,0(0)       carga parametro en llamada a funcion
+34:       SUB       6,6,3      op: subir pila
+35:       ST       2,0(6)      op: push en la pila tmp
+*      -> constante 5
+36:       LDC       0,5(0)      cargar constante: 5
+*      <- constante
+37:       LDA       2,0(0)       carga parametro en llamada a funcion
+38:       SUB       6,6,3      op: subir pila
+39:       ST       2,0(6)      op: push en la pila tmp
+40:       LDC       2,43(0)      Cargando verdareda linea de retorno
+41:       LDA       4,0(2)      Paso ubicacion a la pila
+42:       LDC       7,4(0)      carga salto  4
+43:       LDA       2,0(0)       carga parametro en llamada a funcion
+44:       SUB       6,6,3      op: subir pila
+45:       ST       2,0(6)      op: push en la pila tmp
+46:       LDC       2,49(0)      Cargando verdareda linea de retorno
+47:       LDA       4,0(2)      Paso ubicacion a la pila
+48:       LDC       7,4(0)      carga salto  4
+49:       LDA       2,0(0)       carga parametro en llamada a funcion
+50:       SUB       6,6,3      op: subir pila
+51:       ST       2,0(6)      op: push en la pila tmp
+52:       LDC       2,55(0)      Cargando verdareda linea de retorno
+53:       LDA       4,0(2)      Paso ubicacion a la pila
+54:       LDC       7,4(0)      carga salto  4
+55:       LDA       2,0(0)       carga parametro en llamada a funcion
+56:       SUB       6,6,3      op: subir pila
+57:       ST       2,0(6)      op: push en la pila tmp
+58:       LDC       2,61(0)      Cargando verdareda linea de retorno
+59:       LDA       4,0(2)      Paso ubicacion a la pila
+60:       LDC       7,4(0)      carga salto  4
+61:       OUT       0,0,0      escribir: genero la salida de la expresion
+*      <- escribir
+*      -> escribir
+*      -> constante 1
+62:       LDC       0,1(0)      cargar constante: 1
+*      <- constante
+63:       LDA       2,0(0)       carga parametro en llamada a funcion
+64:       SUB       6,6,3      op: subir pila
+65:       ST       2,0(6)      op: push en la pila tmp
+*      -> constante 2
+66:       LDC       0,2(0)      cargar constante: 2
+*      <- constante
+67:       LDA       2,0(0)       carga parametro en llamada a funcion
+68:       SUB       6,6,3      op: subir pila
+69:       ST       2,0(6)      op: push en la pila tmp
+70:       LDC       2,73(0)      Cargando verdareda linea de retorno
+71:       LDA       4,0(2)      Paso ubicacion a la pila
+72:       LDC       7,4(0)      carga salto  4
+73:       OUT       0,0,0      escribir: genero la salida de la expresion
 *      <- escribir
 *      Fin de la ejecucion.
-45:       HALT       0,0,0      
+74:       HALT       0,0,0      
 *
 *
 * ------ FIN DEL CODIGO OBJETO DEL LENGUAJE TINY GENERADO PARA LA TM ------

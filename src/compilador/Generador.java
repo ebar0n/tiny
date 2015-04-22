@@ -232,12 +232,13 @@ public class Generador {
         
         if(nodo_return.getExpresion()!=null){
             generar(nodo_return.getExpresion());
- 
+ 	
+ 			//No tengo que llenar nada, el paranmetro de la funcion se saca lo de AC y lo publica en la pila
  			//pilaPop();
             //UtGen.emitirRM("LDA", UtGen.L1, desplazamientoTmp--, UtGen.MP, "Saco el salto de la linea");
             //UtGen.emitirRO("SUB", UtGen.MP, UtGen.MP, UtGen.L2, "op: subir pila");	
-            UtGen.emitirRM("LDA", UtGen.L1, 0, UtGen.AC, "Cargo variable que genero el return en temporales");
-            pilaPush();
+            //UtGen.emitirRM("LDA", UtGen.L1, 0, UtGen.AC, "Cargo variable que genero el return en temporales");
+            //pilaPush();
             //UtGen.emitirRM("ST", UtGen.AC, 0, UtGen.MP, "op: push en la pila tmp");
             UtGen.emitirRM("LDA", UtGen.PC, 0, UtGen.L3, "Regreso a donde fui llamado");
         }
