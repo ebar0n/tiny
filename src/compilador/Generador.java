@@ -208,13 +208,13 @@ public class Generador {
 		generar(nodocf.getVariables());
 		
 		//Actualizando linea de salto de retorno en la pila, necesito la tercera
-		int localidadSaltoInicio = UtGen.emitirSalto(0)+3;
+		int localidadSaltoInicio = UtGen.emitirSalto(0)+1;
 		//haciendo respaldo de direccion
 		//UtGen.emitirRM("LDA", UtGen.L3, 0 , UtGen.MP, "cargando ubicacion de la pila, para la llamada del retunn");
 		
 		UtGen.cargarRespaldo(localidadSaltoInicio_salto);
 		
-		UtGen.emitirRM("LDC", UtGen.L1, localidadSaltoInicio, 0, "Cargando verdareda linea de retorno");
+		UtGen.emitirRM("LDC", UtGen.L1, localidadSaltoInicio, 0, "Cargando verdareda linea de retorno :)");
 		//UtGen.emitirRM("LDA", UtGen.L3, 0 , UtGen.L1, "Paso ubicacion de retorno");
 		pilaPush();
 		UtGen.restaurarRespaldo();
