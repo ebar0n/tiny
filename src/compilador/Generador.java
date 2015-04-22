@@ -35,6 +35,8 @@ public class Generador {
 	private static int desplazamientoTmp = 0;
 	private static TablaSimbolos tablaSimbolos = null;
 	private static boolean debug=false;
+    private static int registroBloque;
+
 	public static void setTablaSimbolos(TablaSimbolos tabla){
 		tablaSimbolos = tabla;
 	}
@@ -97,6 +99,8 @@ public class Generador {
 			generarOperacion(nodo);
                 }else if (nodo instanceof NodoBloque){
                         generarBloque(nodo);
+                }else if (nodo instanceof NodoReturn){
+                        generarReturn(nodo);
 		}else{
 			System.out.println("BUG: Tipo de nodo a generar desconocido" + nodo);
 		}
@@ -109,13 +113,17 @@ public class Generador {
 
 	private static void generarBloque(NodoBase nodo) {
 		NodoBloque nodob = (NodoBloque) nodo;
+                UtGen.cargarRespaldo(registroBloque);
+                int dire = UtGen.getInstruccionMasAlta();
+                UtGen.emitirRM_Abs("LD", UtGen.PC, dire, null);
+                UtGen.restaurarRespaldo();
 		generar(nodob.getExpression());
 	}
 
 	private static void generarFuncion(NodoBase nodo) {
 		NodoFunction nodof = (NodoFunction) nodo;
-		generar(nodof.getExpression());
 		generar(nodof.getDeclaracion());
+		generar(nodof.getExpression());                
 	}
 
 	private static void generarVariable(NodoBase nodo) {
@@ -124,6 +132,16 @@ public class Generador {
 
 	private static void generarArgList(NodoBase nodo) {
 		NodoArgList nodov = (NodoArgList) nodo;
+                int direccion;
+                
+                if(nodov.getArgumento()!=null)
+                    generarArgList(nodov.getArgumento());
+                
+                direccion = tablaSimbolos.getDireccion(nodov.getIdentificador().getNombre(),nodov.getAmbito());
+                
+                UtGen.emitirRM("LD", UtGen.AC,desplazamientoTmp--, UtGen.MP, "cargo el registro AC con el valor de la pila");
+                UtGen.emitirRM("ST", UtGen.AC, direccion, UtGen.GP, "Guardo en la direccion");
+                
 	}	
 
 	private static void generarLogico(NodoBase nodo) {
@@ -163,7 +181,23 @@ public class Generador {
 
 	private static void generarCallFunction(NodoBase nodo) {
 		NodoCallFunction nodocf = (NodoCallFunction) nodo;
-	}	
+	}
+        
+        private static void generarReturn(NodoBase nodo){
+                NodoReturn nodo_return = (NodoReturn) nodo;
+                
+                if(nodo_return.getExpresion()!=null){
+                    generar(nodo_return.getExpresion());
+         
+                UtGen.emitirRM("LDA", UtGen.L1, desplazamientoTmp--, UtGen.MP, "Saco el salto de la linea");
+                UtGen.emitirRM("ST", UtGen.AC, ++desplazamientoTmp, UtGen.MP, "Cargo variable que genero el return en temporales");
+                UtGen.emitirRM("ST", UtGen.PC, 0, UtGen.L1, "Regreso a donde fui llamado");
+                }
+                else{
+                UtGen.emitirRM("LDA", UtGen.L1, desplazamientoTmp--, UtGen.MP, "Saco el salto de la linea");
+                UtGen.emitirRM("ST", UtGen.PC, 0, UtGen.L1, "Regreso a donde fui llamado");
+                }
+        }
 
 	private static void generarIf(NodoBase nodo){
     	NodoIf n = (NodoIf)nodo;
@@ -215,7 +249,7 @@ public class Generador {
 		/* Genero el codigo para la expresion a la derecha de la asignacion */
 		generar(n.getExpresion());
 		/* Ahora almaceno el valor resultante */
-		direccion = tablaSimbolos.getDireccion(n.getIdentificador().getNombre());
+		direccion = tablaSimbolos.getDireccion(n.getIdentificador().getNombre(),n.getAmbito());
 		UtGen.emitirRM("ST", UtGen.AC, direccion, UtGen.GP, "asignacion: almaceno el valor para el id "+n.getIdentificador().getNombre());
 		if(UtGen.debug)	UtGen.emitirComentario("<- asignacion");
 	}
@@ -253,7 +287,7 @@ public class Generador {
 		NodoIdentificador n = (NodoIdentificador)nodo;
 		int direccion;
 		if(UtGen.debug)	UtGen.emitirComentario("-> identificador");
-		direccion = tablaSimbolos.getDireccion(n.getNombre());
+		direccion = tablaSimbolos.getDireccion(n.getNombre(),n.getAmbito());
 		UtGen.emitirRM("LD", UtGen.AC, direccion, UtGen.GP, "cargar valor de identificador: "+n.getNombre());
 		if(UtGen.debug)	UtGen.emitirComentario("<- identificador");
 	}
@@ -344,10 +378,11 @@ public class Generador {
 		UtGen.emitirComentario("Archivo: "+ "NOMBRE_ARREGLAR");
 		/*Genero inicializaciones del preludio estandar*/
 		/*Todos los registros en tiny comienzan en cero*/
-		UtGen.emitirComentario("Preludio estandar:");
+		UtGen.emitirComentario("Inicio Preludio estandar:");
 		UtGen.emitirRM("LD", UtGen.MP, 0, UtGen.AC, "cargar la maxima direccion desde la localidad 0");
 		UtGen.emitirRM("ST", UtGen.AC, 0, UtGen.AC, "limpio el registro de la localidad 0");
 		UtGen.emitirRM("LDC", UtGen.L2, 1, 0, "carga constante, para usos de movimientos recursivos");
+		UtGen.emitirComentario("Fin Preludio estandar:");
 	} 
 
 	

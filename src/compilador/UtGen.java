@@ -133,4 +133,10 @@ public class UtGen {
     public static int getInstruccionActual() {
         return instruccionActual;
     }
+
+    public static int getInstruccionMasAlta() {
+        return instruccionMasAlta;
+    }
+    
+    
 }
