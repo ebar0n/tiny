@@ -1,8 +1,9 @@
-int fun123(int a, int b, boolean ban)
-begin
-	return a+b;
-end;
-
 begin 
-	write fun123(1,2,false);
+    int a[5];
+
+    a[0] := 1;
+    a[3] := 4;
+    a[1] := 2;    
+    a[2] := 3;
+    a[4] := a[3];
 end;
