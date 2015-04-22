@@ -13,10 +13,12 @@ end;
 
 begin 
 	int a;
-	boolean j[3];
+	int j[4];
 	boolean b;
 	Entero();
 	int xx;xx:=1;
+	j[a<Entero()*5]:=5;
+
 	if xx>=7 and xx<10 then
 		boolean ifk;
 	end;	
