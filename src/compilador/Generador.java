@@ -236,7 +236,7 @@ public class Generador {
 		int direccion;
 		if(UtGen.debug)	UtGen.emitirComentario("-> vector");
 		direccion = tablaSimbolos.getDireccion(((NodoIdentificador)n.getIdentificador()).getNombre());
-		UtGen.emitirRO("ADD",UtGen.GP,UtGen.GP,UtGen.AC,"sumar desplazamiendo al registro GP");
+		UtGen.emitirRO("ADD",UtGen.L3,UtGen.GP,UtGen.AC,"sumar desplazamiendo al registro L3");
 		UtGen.emitirRM("LD", UtGen.AC, direccion,UtGen.GP, "cargar valor de identificador: "+((NodoIdentificador)n.getIdentificador()).getNombre());
 		UtGen.emitirRM("LDC",UtGen.GP,0,0,"cargar constante 0 en el resgitro GP");
 		if(UtGen.debug)	UtGen.emitirComentario("<- vector");
