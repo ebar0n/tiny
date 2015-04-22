@@ -1,26 +1,17 @@
-void function(int a, int x) 
 begin
-    a := 3;
-end;
-
-begin
-    int a, x, g;
-    a := 1;
-    x := 2;
-
-    if a < x
-    then 
-        g := 1; 
-    end;    
-
-    for(a := 0; a < 10; a := a + 1)
+    int a, b, x, c;
+    
+    x := 1;
+    for(a := 0; a < 7; a := a + 1)
         x := x * 2;
-        for(x := 0; x < 10; x := x + 1)
-            g := g + 1;
+        write x;
+        for(b := 0; b < 2; b := b + 1)
+            write b;
+            for(c := 0; c < 2; c := c + 1)
+                write c;
+            end;
         end;
-    end;
-
-    function(a, x);
+    end; 
 end;
 
 
