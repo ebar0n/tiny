@@ -84,7 +84,12 @@ public class Semantica {
 		    	RecorrerArbol(variable.getIdentificador());
 		    	this.is_array = false;
 		    	
+		    	//CUANDO SE CREA
 		    	RecorrerArbol(variable.getNodo());
+
+
+		    	RecorrerArbol(variable.getPos());
+		    	SemanticaValidarTamaNoVector(variable.getPos());
 
 		    }else if(raiz instanceof NodoArgList){
 		    	//ARGUMENTOS FUNCIONES
@@ -162,10 +167,13 @@ public class Semantica {
 
 		    }
 		    else if (raiz instanceof NodoOperacion){
+		    	SemanticaValidarTipo(raiz);
+
 		    	//EXPRESION PARTE IZQUIERDA
 		    	RecorrerArbol(((NodoOperacion)raiz).getOpIzquierdo());
 		    	//EXPRESION PARTE DERECHA	    	
 		    	RecorrerArbol(((NodoOperacion)raiz).getOpDerecho());
+		    	
 		    }
 		    else if (raiz instanceof NodoLogico){
 		    	//OPERACIONES
@@ -201,6 +209,7 @@ public class Semantica {
 				SemanticaValidarTipoLogico(tipoI,tipoD,logico);
 		    }
 		    else if (raiz instanceof NodoCallFunction){
+		    	//SemanticaValidarTipo(raiz);
 		    	//LLAMAR A FUNCION
 		    	SemanticaValidarCallFunction(((NodoCallFunction)raiz).getIdentificador(),((NodoCallFunction)raiz).getVariables());
 		    	
@@ -461,8 +470,6 @@ public class Semantica {
 				((NodoOperacion)nodo).setTipoDato(tipoI);
 				tipo = tipoI;
 			}else{
-				//System.out.println(tipoI);
-				//System.out.println(tipoD);
 				System.out.println("#Error (Regla#6.2)-> linea: "+nodo.getNumLinea()+" -> inconsistencia en los tipos de la operacion");
 				error_count++;
 			}
@@ -574,6 +581,46 @@ public class Semantica {
 			error_count++;
 		}
 	}
+
+	//Regla 9, validar tamaNo vector
+	public void SemanticaValidarTamaNoVector(NodoBase nodo){
+		tipoDato tipoI=tipoDato.INT;
+		int num_linea=0;
+		if (nodo instanceof NodoOperacion){
+			tipoI = ((NodoOperacion)nodo).getTipoDato();
+			num_linea = ((NodoOperacion)nodo).getNumLinea();
+		}else if (nodo instanceof NodoValor){
+			tipoI = ((NodoValor)nodo).getTipoDato();
+			num_linea = ((NodoValor)nodo).getNumLinea();
+		}else if (nodo instanceof NodoIdentificador){
+			RegistroSimbolo simbolo = ts.BuscarSimbolo(((NodoIdentificador)nodo).getNombre(), ambito);
+		    if( simbolo != null ){
+		    	tipoI = simbolo.getTipo();
+		    	num_linea = ((NodoIdentificador)nodo).getNumLinea();
+		    }
+		}else if (nodo instanceof NodoArray){
+			RegistroSimbolo simbolo = ts.BuscarSimbolo(((NodoArray)nodo).getIdentificador().getNombre(), ambito);
+		    if( simbolo != null ){
+		    	tipoI = simbolo.getTipo();
+		    	num_linea = ((NodoArray)nodo).getNumLinea();
+		    }
+		}else if (nodo instanceof NodoCallFunction){
+			RegistroSimbolo simbolo = ts.BuscarSimboloIsFunction(((NodoCallFunction)nodo).getIdentificador().getNombre());		    
+		    if( simbolo != null ){
+		    	tipoI = simbolo.getTipo();
+		    	num_linea = ((NodoCallFunction)nodo).getNumLinea();
+		    }
+		}
+		if (nodo != null){
+			if (tipoI != tipoDato.INT){
+				System.out.println("#Error (Regla#9)-> linea: "+num_linea+" -> El tamano del vector tiene que ser un entero");
+				error_count++;
+				}
+			}
+		}
+	
+
+
 
 
 }
