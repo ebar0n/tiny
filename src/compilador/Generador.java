@@ -211,7 +211,7 @@ public class Generador {
 		//UtGen.emitirRM("LDA", UtGen.L3, 0 , UtGen.MP, "cargando ubicacion de la pila, para la llamada del retunn");
 		
 		UtGen.emitirRM("LDC", UtGen.L1, localidadSaltoInicio, 0, "Cargando verdareda linea de retorno");
-		UtGen.emitirRM("ST", UtGen.L1, 0 , UtGen.L3, "Paso ubicacion a la pila");
+		UtGen.emitirRM("LDA", UtGen.L1, 0 , UtGen.L3, "Paso ubicacion a la pila");
 
 		//Aqui falta validar para cuando aun no se ha declarado la funcion
 		RegistroSimbolo simbolo =  tablaSimbolos.BuscarSimboloIsFunction(nodocf.getIdentificador().getNombre());
