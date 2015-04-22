@@ -18,6 +18,7 @@ public class Semantica {
 
 	//Verificacion de tipo
 	tipoDato tipo = null;
+	int nodol = 0;
 
 	//Variables de Ciclo FOR
 	String Parte_for = null, variable_for = null;
@@ -439,9 +440,13 @@ public class Semantica {
 			SemanticaValidarTipo(((NodoOperacion)nodo).getOpIzquierdo());
 			if (((NodoOperacion)nodo).getOpIzquierdo() instanceof NodoOperacion){
 				tipoI =  ((NodoOperacion)((NodoOperacion)nodo).getOpIzquierdo()).getTipoDato();
+			}else if (((NodoOperacion)nodo).getOpIzquierdo() instanceof NodoLogico){
+				RecorrerArbol(((NodoOperacion)nodo).getOpIzquierdo());
+				tipoI = ((NodoLogico)((NodoOperacion)nodo).getOpIzquierdo()).getTipoDato();
 			}else{
 				tipoI = tipo;
 			}
+
 			SemanticaValidarTipo(((NodoOperacion)nodo).getOpDerecho());
 			if (((NodoOperacion)nodo).getOpDerecho() instanceof NodoOperacion){
 				tipoD =  ((NodoOperacion)((NodoOperacion)nodo).getOpDerecho()).getTipoDato();
@@ -470,8 +475,11 @@ public class Semantica {
 				((NodoOperacion)nodo).setTipoDato(tipoI);
 				tipo = tipoI;
 			}else{
-				System.out.println("#Error (Regla#6.2)-> linea: "+nodo.getNumLinea()+" -> inconsistencia en los tipos de la operacion");
-				error_count++;
+				if (nodol !=  nodo.getNumLinea()){
+					nodol = nodo.getNumLinea();
+					System.out.println("#Error (Regla#6.2)-> linea: "+nodo.getNumLinea()+" -> inconsistencia en los tipos de la operacion");
+					error_count++;
+				}
 			}
 		}else if (nodo instanceof NodoValor){
 			tipo = ((NodoValor)nodo).getTipoDato();
