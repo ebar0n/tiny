@@ -114,109 +114,125 @@
 79:       LDA       1,0(2)      Pasando operador izquierdo de la pila a AC1
 80:       MUL       0,1,0      op: *
 *      <- Operacion: por
-81:       ST       0,2(5)      asignacion: almaceno el valor para el id a
+81:       LDA       2,0(0)      asignacion: almaceno el valor para el id a
+82:       SUB       6,6,3      op: subir pila
+83:       ST       2,0(6)      op: push en la pila tmp
+*      -> identificador
+84:       LD       0,2(5)      cargar valor de identificador: a
+*      <- identificador
+85:       LD       2,0(6)      op: pop o cargo de la pila el valor
+86:       ADD       6,6,3      op: bajar pila
+87:       ST       2,0(1)      asignacion: almaceno el valor para el id a
 *      <- asignacion
 *      -> escribir
 *      -> identificador
-82:       LD       0,2(5)      cargar valor de identificador: a
+88:       LD       0,2(5)      cargar valor de identificador: a
 *      <- identificador
-83:       OUT       0,0,0      escribir: genero la salida de la expresion
+89:       OUT       0,0,0      escribir: genero la salida de la expresion
 *      <- escribir
 *      -> if
 *      -> Operacion: menori
 *      -> identificador
-84:       LD       0,2(5)      cargar valor de identificador: a
+90:       LD       0,2(5)      cargar valor de identificador: a
 *      <- identificador
-85:       LDA       2,0(0)      Pasando operador izquierdo a la pila
-86:       SUB       6,6,3      op: subir pila
-87:       ST       2,0(6)      op: push en la pila tmp
+91:       LDA       2,0(0)      Pasando operador izquierdo a la pila
+92:       SUB       6,6,3      op: subir pila
+93:       ST       2,0(6)      op: push en la pila tmp
 *      -> constante 30
-88:       LDC       0,30(0)      cargar constante: 30
+94:       LDC       0,30(0)      cargar constante: 30
 *      <- constante
-89:       LD       2,0(6)      op: pop o cargo de la pila el valor
-90:       ADD       6,6,3      op: bajar pila
-91:       LDA       1,0(2)      Pasando operador izquierdo de la pila a AC1
-92:       SUB       0,1,0      op: <=
-93:       JLE       0,2(7)      voy dos instrucciones mas alla if verdadero (AC<0 || AC==0)
-94:       LDC       0,0(0)      caso de falso (AC=0)
-95:       LDA       7,1(7)      Salto incodicional a direccion: PC+1 (es falso evito colocarlo verdadero)
-96:       LDC       0,1(0)      caso de verdadero (AC=1)
+95:       LD       2,0(6)      op: pop o cargo de la pila el valor
+96:       ADD       6,6,3      op: bajar pila
+97:       LDA       1,0(2)      Pasando operador izquierdo de la pila a AC1
+98:       SUB       0,1,0      op: <=
+99:       JLE       0,2(7)      voy dos instrucciones mas alla if verdadero (AC<0 || AC==0)
+100:       LDC       0,0(0)      caso de falso (AC=0)
+101:       LDA       7,1(7)      Salto incodicional a direccion: PC+1 (es falso evito colocarlo verdadero)
+102:       LDC       0,1(0)      caso de verdadero (AC=1)
 *      <- Operacion: menori
 *      If: el salto hacia el else debe estar aqui
 *      -> identificador
-101:       LD       0,2(5)      cargar valor de identificador: a
+107:       LD       0,2(5)      cargar valor de identificador: a
 *      <- identificador
-102:       LDA       2,0(0)       carga parametro en llamada a funcion
-103:       SUB       6,6,3      op: subir pila
-104:       ST       2,0(6)      op: push en la pila tmp
-98:       LDC       2,106(0)      Cargando verdareda linea de retorno :)
-99:       SUB       6,6,3      op: subir pila
-100:       ST       2,0(6)      op: push en la pila tmp
-105:       LDC       7,23(0)      carga salto  23
+108:       LDA       2,0(0)       carga parametro en llamada a funcion
+109:       SUB       6,6,3      op: subir pila
+110:       ST       2,0(6)      op: push en la pila tmp
+104:       LDC       2,112(0)      Cargando verdareda linea de retorno :)
+105:       SUB       6,6,3      op: subir pila
+106:       ST       2,0(6)      op: push en la pila tmp
+111:       LDC       7,23(0)      carga salto  23
 *      If: el salto hacia el final debe estar aqui
-97:       JEQ       0,9(7)      if: jmp hacia else
-106:       LDA       7,0(7)      if: jmp hacia el final
+103:       JEQ       0,9(7)      if: jmp hacia else
+112:       LDA       7,0(7)      if: jmp hacia el final
 *      <- if
-107:       LD       2,0(6)      op: pop o cargo de la pila el valor
-108:       ADD       6,6,3      op: bajar pila
-109:       LDA       4,0(2)      Paso ubicacion de retorno
-110:       LDA       7,0(4)      Regreso a donde fui llamado sin devolver nada
+113:       LD       2,0(6)      op: pop o cargo de la pila el valor
+114:       ADD       6,6,3      op: bajar pila
+115:       LDA       4,0(2)      Paso ubicacion de retorno
+116:       LDA       7,0(4)      Regreso a donde fui llamado sin devolver nada
 *      Bloque principal
-3:       LDA       7,107(7)      bloque unico: jmp a bloque principal
+3:       LDA       7,113(7)      bloque unico: jmp a bloque principal
 *      -> asignacion
 *      -> constante 2
-111:       LDC       0,2(0)      cargar constante: 2
+117:       LDC       0,2(0)      cargar constante: 2
 *      <- constante
-112:       ST       0,3(5)      asignacion: almaceno el valor para el id j
+118:       LDA       2,0(0)      asignacion: almaceno el valor para el id j
+119:       SUB       6,6,3      op: subir pila
+120:       ST       2,0(6)      op: push en la pila tmp
+*      -> identificador
+121:       LD       0,3(5)      cargar valor de identificador: j
+*      <- identificador
+122:       LD       2,0(6)      op: pop o cargo de la pila el valor
+123:       ADD       6,6,3      op: bajar pila
+124:       ST       2,0(1)      asignacion: almaceno el valor para el id j
 *      <- asignacion
 *      -> escribir
 *      -> identificador
-113:       LD       0,3(5)      cargar valor de identificador: j
+125:       LD       0,3(5)      cargar valor de identificador: j
 *      <- identificador
-114:       OUT       0,0,0      escribir: genero la salida de la expresion
+126:       OUT       0,0,0      escribir: genero la salida de la expresion
 *      <- escribir
 *      -> identificador
-118:       LD       0,3(5)      cargar valor de identificador: j
+130:       LD       0,3(5)      cargar valor de identificador: j
 *      <- identificador
-119:       LDA       2,0(0)       carga parametro en llamada a funcion
-120:       SUB       6,6,3      op: subir pila
-121:       ST       2,0(6)      op: push en la pila tmp
-115:       LDC       2,123(0)      Cargando verdareda linea de retorno :)
-116:       SUB       6,6,3      op: subir pila
-117:       ST       2,0(6)      op: push en la pila tmp
-122:       LDC       7,23(0)      carga salto  23
+131:       LDA       2,0(0)       carga parametro en llamada a funcion
+132:       SUB       6,6,3      op: subir pila
+133:       ST       2,0(6)      op: push en la pila tmp
+127:       LDC       2,135(0)      Cargando verdareda linea de retorno :)
+128:       SUB       6,6,3      op: subir pila
+129:       ST       2,0(6)      op: push en la pila tmp
+134:       LDC       7,23(0)      carga salto  23
 *      -> escribir
 *      -> constante 20061814
-123:       LDC       0,20061814(0)      cargar constante: 20061814
+135:       LDC       0,20061814(0)      cargar constante: 20061814
 *      <- constante
-124:       OUT       0,0,0      escribir: genero la salida de la expresion
+136:       OUT       0,0,0      escribir: genero la salida de la expresion
 *      <- escribir
 *      -> escribir
 *      -> constante 20120542
-125:       LDC       0,20120542(0)      cargar constante: 20120542
+137:       LDC       0,20120542(0)      cargar constante: 20120542
 *      <- constante
-126:       OUT       0,0,0      escribir: genero la salida de la expresion
+138:       OUT       0,0,0      escribir: genero la salida de la expresion
 *      <- escribir
 *      -> escribir
 *      -> constante 20232871
-127:       LDC       0,20232871(0)      cargar constante: 20232871
+139:       LDC       0,20232871(0)      cargar constante: 20232871
 *      <- constante
-128:       OUT       0,0,0      escribir: genero la salida de la expresion
+140:       OUT       0,0,0      escribir: genero la salida de la expresion
 *      <- escribir
 *      -> escribir
 *      -> constante 20825824
-129:       LDC       0,20825824(0)      cargar constante: 20825824
+141:       LDC       0,20825824(0)      cargar constante: 20825824
 *      <- constante
-130:       OUT       0,0,0      escribir: genero la salida de la expresion
+142:       OUT       0,0,0      escribir: genero la salida de la expresion
 *      <- escribir
 *      -> escribir
 *      -> constante 21218739
-131:       LDC       0,21218739(0)      cargar constante: 21218739
+143:       LDC       0,21218739(0)      cargar constante: 21218739
 *      <- constante
-132:       OUT       0,0,0      escribir: genero la salida de la expresion
+144:       OUT       0,0,0      escribir: genero la salida de la expresion
 *      <- escribir
 *      Fin de la ejecucion.
-133:       HALT       0,0,0      
+145:       HALT       0,0,0      
 *
 *
 * ------ FIN DEL CODIGO OBJETO DEL LENGUAJE TINY GENERADO PARA LA TM ------
