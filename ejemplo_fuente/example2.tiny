@@ -1,9 +1,28 @@
-begin 
-    int a[5];
+int fun123(int a, int b)
+begin
+	return a+b;
+end;
 
-    a[0] := 1;
-    a[3] := 4;
-    a[1] := 2;    
-    a[2] := 3;
-    a[4] := a[3];
+void fun1234(int a)
+begin
+	write a;
+	a:=a*fun123(1,fun123(2,fun123(3,fun123(4,5))));
+	write a*2;
+	return;
+end;
+
+begin 
+	int j;
+	j:=1*3;
+
+        int a[5];
+
+        a[0] := 1;
+        a[3] := 4;
+        a[1] := 2;    
+        a[2] := 3;
+        a[4] := a[3];
+
+        write a[2];
+	fun1234(a[2]);
 end;

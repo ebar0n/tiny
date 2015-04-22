@@ -89,6 +89,7 @@ public class Generador {
 		}else if (nodo instanceof NodoFor){
 			generarFor(nodo);	
 		}else if (nodo instanceof NodoArgList){
+			
 			generarArgList(nodo);	
 		}else if (nodo instanceof NodoIdentificador){
 			generarIdentificador(nodo);
@@ -134,7 +135,7 @@ public class Generador {
 		NodoFunction nodof = (NodoFunction) nodo;
 		RegistroSimbolo simbolo = tablaSimbolos.BuscarSimboloIsFunction(nodof.getIdentificador().getNombre());
 		         
-                if( simbolo != null ){
+        if( simbolo != null ){
                     
 			int localidadActual = UtGen.emitirSalto(0);
                         //System.out.println("direccion actual: "+localidadActual);
@@ -200,19 +201,25 @@ public class Generador {
 	private static void generarCallFunction(NodoBase nodo) {
 		NodoCallFunction nodocf = (NodoCallFunction) nodo;
 		
-		UtGen.emitirRM("LDA", UtGen.L1, 0 , UtGen.PC, "carga la linea donde me encuentro, llamada a funcion");
-		pilaPush();
-		//haciendo respaldo de direccion
-		UtGen.emitirRM("LDA", UtGen.L3, 0 , UtGen.MP, "cargando ubicacion de la pila, para la llamada del retunn");
+		//UtGen.emitirRM("LDA", UtGen.L1, 0 , UtGen.PC, "carga la linea donde me encuentro, llamada a funcion");
+		//pilaPush();
 		
 		//Cargar variables en la pila
+		int localidadSaltoInicio_salto = UtGen.emitirSalto(3);
 		generar(nodocf.getVariables());
 		
 		//Actualizando linea de salto de retorno en la pila, necesito la tercera
-		int localidadSaltoInicio = UtGen.emitirSalto(0)+3;
-		UtGen.emitirRM("LDC", UtGen.L1, localidadSaltoInicio, 0, "Cargando verdareda linea de retorno");
-		UtGen.emitirRM("ST", UtGen.L1, 0 , UtGen.L3, "Paso ubicacion a la pila");
-
+		int localidadSaltoInicio = UtGen.emitirSalto(0)+1;
+		//haciendo respaldo de direccion
+		//UtGen.emitirRM("LDA", UtGen.L3, 0 , UtGen.MP, "cargando ubicacion de la pila, para la llamada del retunn");
+		
+		UtGen.cargarRespaldo(localidadSaltoInicio_salto);
+		
+		UtGen.emitirRM("LDC", UtGen.L1, localidadSaltoInicio, 0, "Cargando verdareda linea de retorno :)");
+		//UtGen.emitirRM("LDA", UtGen.L3, 0 , UtGen.L1, "Paso ubicacion de retorno");
+		pilaPush();
+		UtGen.restaurarRespaldo();
+		
 		//Aqui falta validar para cuando aun no se ha declarado la funcion
 		RegistroSimbolo simbolo =  tablaSimbolos.BuscarSimboloIsFunction(nodocf.getIdentificador().getNombre());
 		UtGen.emitirRM("LDC", UtGen.PC, simbolo.getDireccionCodigo(), 0, "carga salto  "+simbolo.getDireccionCodigo());
@@ -230,19 +237,26 @@ public class Generador {
     private static void generarReturn(NodoBase nodo){
         NodoReturn nodo_return = (NodoReturn) nodo;
         
+        //Restaurando salto
+		pilaPop();
+        UtGen.emitirRM("LDA", UtGen.L3, 0 , UtGen.L1, "Paso ubicacion de retorno");
+
         if(nodo_return.getExpresion()!=null){
             generar(nodo_return.getExpresion());
- 
- 			pilaPop();
+ 	
+ 			//No tengo que llenar nada, el paranmetro de la funcion se saca lo de AC y lo publica en la pila
+ 			//pilaPop();
             //UtGen.emitirRM("LDA", UtGen.L1, desplazamientoTmp--, UtGen.MP, "Saco el salto de la linea");
-            UtGen.emitirRO("SUB", UtGen.MP, UtGen.MP, UtGen.L2, "op: subir pila");	
-            UtGen.emitirRM("ST", UtGen.AC, 0, UtGen.MP, "Cargo variable que genero el return en temporales");
-            UtGen.emitirRM("LDA", UtGen.PC, 0, UtGen.L1, "Regreso a donde fui llamado");
+            //UtGen.emitirRO("SUB", UtGen.MP, UtGen.MP, UtGen.L2, "op: subir pila");	
+            //UtGen.emitirRM("LDA", UtGen.L1, 0, UtGen.AC, "Cargo variable que genero el return en temporales");
+            //pilaPush();
+            //UtGen.emitirRM("ST", UtGen.AC, 0, UtGen.MP, "op: push en la pila tmp");
+            UtGen.emitirRM("LDA", UtGen.PC, 0, UtGen.L3, "Regreso a donde fui llamado");
         }
         else{
-        	pilaPop();
+        	//pilaPop();
             //UtGen.emitirRM("LDA", UtGen.L1, desplazamientoTmp--, UtGen.MP, "Saco el salto de la linea");
-            UtGen.emitirRM("LDA", UtGen.PC, 0, UtGen.L1, "Regreso a donde fui llamado");
+            UtGen.emitirRM("LDA", UtGen.PC, 0, UtGen.L3, "Regreso a donde fui llamado sin devolver nada");
         }
     }
 

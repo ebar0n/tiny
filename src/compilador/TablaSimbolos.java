@@ -217,6 +217,9 @@ public class TablaSimbolos {
                 ambito = ambito_padre;
                 ambito_padre = ambito_aux_padre;
             }
+            else if (raiz instanceof NodoReturn ){
+                raiz.setAmbito(ambito);
+            }
             raiz = raiz.getHermanoDerecha();
         }
     }

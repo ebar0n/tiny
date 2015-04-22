@@ -1,0 +1,31 @@
+int fun123(int a, int b)
+begin
+	return a+b;
+end;
+
+void fun1234(int a)
+begin
+	write a;
+	a:=a * fun123(1,fun123(2,fun123(3,fun123(4,5))));
+	write a;
+
+	if a <= 30  then
+	   fun1234(a);
+	end;
+
+	return;
+end;
+
+begin 
+	int j;
+	j:=2;
+	write j;
+	fun1234(j);
+
+	{ Cedulas de los integrantes }
+	write 20061814;	
+	write 20120542;	
+	write 20232871;
+	write 20825824;
+	write 21218739;			
+end;

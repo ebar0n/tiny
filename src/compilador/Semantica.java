@@ -216,8 +216,13 @@ public class Semantica {
 		    	
 		    }
 		    else if (raiz instanceof NodoReturn ){
-		    	//System.out.println("Return");	
+		    	
 		    	NodoReturn nodo = (NodoReturn)raiz;
+		    	
+		    	if( raiz.getAmbito().equals( TablaSimbolos.conts_ambito_global ) ){
+		    		SemanticaReturnBloqueInvalid(nodo);
+		    	}
+		    	
 		    	if( funcion_actual != null ){
 	                if(funcion_actual.compareTo(tipoDato.VOID)!=0){
 	                    Existe_return++;
@@ -393,6 +398,14 @@ public class Semantica {
        	else
        		System.out.println(" **debe ser vacia**");
        		
+        error_count++;
+        
+    }
+
+    //Regla 5.3, validacion de return 
+    public void SemanticaReturnBloqueInvalid(NodoReturn nodo){
+            
+        System.out.print("#Error (Regla#5.3)-> linea: "+nodo.getNumLinea()+  " -> return invalido, el mismo en el bloque principal no es permitido");          		
         error_count++;
         
     }
