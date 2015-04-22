@@ -65,7 +65,8 @@ public class Compilador {
 
 		if( semantica.error_count*parser_obj.error_count*jflex.error_count == 1 ){
 			Generador.setTablaSimbolos(ts);
-			Generador.generarCodigoObjeto(root);
+			//Generador.generarCodigoObjeto(root);
+			Generador.generarEjemplo();
 		}
 
 	}

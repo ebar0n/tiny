@@ -8,12 +8,17 @@ begin
 	int d;
 
 	{
-	d:=myfunckl(myfunckl(1,false), (3+1) > 1);
-	}
 
+	d:=myfunckl(myfunckl(1,false), (3+1) > 1);
+	
 	if d!=((((((((-1*2)*myfunckl(myfunckl(1,false), (3+1) > 1) ))))))) then
 		int ebaron;
 	end;
 
+	}
+
+
+    int dd[1];
+    dd[3]:=dd[2];	
 	return;
 end;
