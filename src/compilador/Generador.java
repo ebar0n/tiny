@@ -89,6 +89,8 @@ public class Generador {
 			generarOperacion(nodo);
                 }else if (nodo instanceof NodoBloque){
                         generarBloque(nodo);
+                }else if (nodo instanceof NodoReturn){
+                        generarReturn(nodo);
 		}else{
 			System.out.println("BUG: Tipo de nodo a generar desconocido" + nodo);
 		}
@@ -106,10 +108,8 @@ public class Generador {
 
 	private static void generarFuncion(NodoBase nodo) {
 		NodoFunction nodof = (NodoFunction) nodo;
-		generar(nodof.getExpression());
-                
 		generar(nodof.getDeclaracion());
-                
+		generar(nodof.getExpression());                
 	}
 
 	private static void generarVariable(NodoBase nodo) {
@@ -125,8 +125,9 @@ public class Generador {
                 
                 direccion = tablaSimbolos.getDireccion(nodov.getIdentificador().getNombre(),nodov.getAmbito());
                 
-                UtGen.emitirRM("LD", UtGen.AC, ++desplazamientoTmp, UtGen.MP, "cargo el registro AC con el valor de la pila");
+                UtGen.emitirRM("LD", UtGen.AC,desplazamientoTmp--, UtGen.MP, "cargo el registro AC con el valor de la pila");
                 UtGen.emitirRM("ST", UtGen.AC, direccion, UtGen.GP, "Guardo en la direccion");
+                
 	}	
 
 	private static void generarLogico(NodoBase nodo) {
@@ -145,7 +146,13 @@ public class Generador {
 
 	private static void generarCallFunction(NodoBase nodo) {
 		NodoCallFunction nodocf = (NodoCallFunction) nodo;
-	}	
+	}
+        
+        private static void generarReturn(NodoBase nodo){
+                NodoReturn nodo_return = (NodoReturn) nodo;
+                
+                
+        }
 
 	private static void generarIf(NodoBase nodo){
     	NodoIf n = (NodoIf)nodo;
@@ -197,7 +204,7 @@ public class Generador {
 		/* Genero el codigo para la expresion a la derecha de la asignacion */
 		generar(n.getExpresion());
 		/* Ahora almaceno el valor resultante */
-		direccion = tablaSimbolos.getDireccion(n.getIdentificador().getNombre());
+		direccion = tablaSimbolos.getDireccion(n.getIdentificador().getNombre(),n.getAmbito());
 		UtGen.emitirRM("ST", UtGen.AC, direccion, UtGen.GP, "asignacion: almaceno el valor para el id "+n.getIdentificador().getNombre());
 		if(UtGen.debug)	UtGen.emitirComentario("<- asignacion");
 	}
@@ -235,7 +242,7 @@ public class Generador {
 		NodoIdentificador n = (NodoIdentificador)nodo;
 		int direccion;
 		if(UtGen.debug)	UtGen.emitirComentario("-> identificador");
-		direccion = tablaSimbolos.getDireccion(n.getNombre());
+		direccion = tablaSimbolos.getDireccion(n.getNombre(),n.getAmbito());
 		UtGen.emitirRM("LD", UtGen.AC, direccion, UtGen.GP, "cargar valor de identificador: "+n.getNombre());
 		if(UtGen.debug)	UtGen.emitirComentario("-> identificador");
 	}
