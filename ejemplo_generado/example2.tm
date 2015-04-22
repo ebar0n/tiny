@@ -137,79 +137,33 @@
 *      <- Operacion: por
 94:       OUT       0,0,0      escribir: genero la salida de la expresion
 *      <- escribir
-95:       LDA       7,0(4)      Regreso a donde fui llamado sin devolver nada
+*      -> identificador
+95:       LD       0,2(5)      cargar valor de identificador: a
+*      <- identificador
+96:       LDA       7,0(4)      Regreso a donde fui llamado
 *      Bloque principal
-3:       LDA       7,92(7)      bloque unico: jmp a bloque principal
+3:       LDA       7,93(7)      bloque unico: jmp a bloque principal
 *      -> asignacion
 *      -> constante 1
-96:       LDC       0,1(0)      cargar constante: 1
+97:       LDC       0,1(0)      cargar constante: 1
 *      <- constante
-97:       LDA       2,0(0)       carga parametro en llamada a funcion
-98:       SUB       6,6,3      op: subir pila
-99:       ST       2,0(6)      op: push en la pila tmp
-*      -> constante 2
-100:       LDC       0,2(0)      cargar constante: 2
-*      <- constante
-101:       LDA       2,0(0)       carga parametro en llamada a funcion
-102:       SUB       6,6,3      op: subir pila
-103:       ST       2,0(6)      op: push en la pila tmp
-*      -> constante 3
-104:       LDC       0,3(0)      cargar constante: 3
-*      <- constante
-105:       LDA       2,0(0)       carga parametro en llamada a funcion
-106:       SUB       6,6,3      op: subir pila
-107:       ST       2,0(6)      op: push en la pila tmp
-*      -> constante 4
-108:       LDC       0,4(0)      cargar constante: 4
-*      <- constante
-109:       LDA       2,0(0)       carga parametro en llamada a funcion
-110:       SUB       6,6,3      op: subir pila
-111:       ST       2,0(6)      op: push en la pila tmp
-*      -> constante 5
-112:       LDC       0,5(0)      cargar constante: 5
-*      <- constante
-113:       LDA       2,0(0)       carga parametro en llamada a funcion
-114:       SUB       6,6,3      op: subir pila
-115:       ST       2,0(6)      op: push en la pila tmp
-116:       LDC       2,120(0)      Cargando verdareda linea de retorno
-117:       SUB       6,6,3      op: subir pila
-118:       ST       2,0(6)      op: push en la pila tmp
-119:       LDC       7,4(0)      carga salto  4
-120:       LDA       2,0(0)       carga parametro en llamada a funcion
-121:       SUB       6,6,3      op: subir pila
-122:       ST       2,0(6)      op: push en la pila tmp
-123:       LDC       2,127(0)      Cargando verdareda linea de retorno
-124:       SUB       6,6,3      op: subir pila
-125:       ST       2,0(6)      op: push en la pila tmp
-126:       LDC       7,4(0)      carga salto  4
-127:       LDA       2,0(0)       carga parametro en llamada a funcion
-128:       SUB       6,6,3      op: subir pila
-129:       ST       2,0(6)      op: push en la pila tmp
-130:       LDC       2,134(0)      Cargando verdareda linea de retorno
-131:       SUB       6,6,3      op: subir pila
-132:       ST       2,0(6)      op: push en la pila tmp
-133:       LDC       7,4(0)      carga salto  4
-134:       LDA       2,0(0)       carga parametro en llamada a funcion
-135:       SUB       6,6,3      op: subir pila
-136:       ST       2,0(6)      op: push en la pila tmp
-137:       LDC       2,141(0)      Cargando verdareda linea de retorno
-138:       SUB       6,6,3      op: subir pila
-139:       ST       2,0(6)      op: push en la pila tmp
-140:       LDC       7,4(0)      carga salto  4
-141:       ST       0,3(5)      asignacion: almaceno el valor para el id j
+98:       ST       0,3(5)      asignacion: almaceno el valor para el id j
 *      <- asignacion
+*      -> asignacion
 *      -> identificador
-142:       LD       0,3(5)      cargar valor de identificador: j
+99:       LD       0,3(5)      cargar valor de identificador: j
 *      <- identificador
-143:       LDA       2,0(0)       carga parametro en llamada a funcion
-144:       SUB       6,6,3      op: subir pila
-145:       ST       2,0(6)      op: push en la pila tmp
-146:       LDC       2,150(0)      Cargando verdareda linea de retorno
-147:       SUB       6,6,3      op: subir pila
-148:       ST       2,0(6)      op: push en la pila tmp
-149:       LDC       7,23(0)      carga salto  23
+100:       LDA       2,0(0)       carga parametro en llamada a funcion
+101:       SUB       6,6,3      op: subir pila
+102:       ST       2,0(6)      op: push en la pila tmp
+103:       LDC       2,107(0)      Cargando verdareda linea de retorno
+104:       SUB       6,6,3      op: subir pila
+105:       ST       2,0(6)      op: push en la pila tmp
+106:       LDC       7,23(0)      carga salto  23
+107:       ST       0,3(5)      asignacion: almaceno el valor para el id j
+*      <- asignacion
 *      Fin de la ejecucion.
-150:       HALT       0,0,0      
+108:       HALT       0,0,0      
 *
 *
 * ------ FIN DEL CODIGO OBJETO DEL LENGUAJE TINY GENERADO PARA LA TM ------

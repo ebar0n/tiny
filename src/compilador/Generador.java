@@ -138,7 +138,7 @@ public class Generador {
 		NodoFunction nodof = (NodoFunction) nodo;
 		RegistroSimbolo simbolo = tablaSimbolos.BuscarSimboloIsFunction(nodof.getIdentificador().getNombre());
 		         
-                if( simbolo != null ){
+        if( simbolo != null ){
                     
 			int localidadActual = UtGen.emitirSalto(0);
                         //System.out.println("direccion actual: "+localidadActual);
