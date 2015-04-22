@@ -34,6 +34,7 @@ public class Generador {
 	 */
 	private static int desplazamientoTmp = 0;
 	private static TablaSimbolos tablaSimbolos = null;
+        private static int registroBloque;
 	
 	public static void setTablaSimbolos(TablaSimbolos tabla){
 		tablaSimbolos = tabla;
@@ -103,6 +104,10 @@ public class Generador {
 
 	private static void generarBloque(NodoBase nodo) {
 		NodoBloque nodob = (NodoBloque) nodo;
+                UtGen.cargarRespaldo(registroBloque);
+                int dire = UtGen.getInstruccionMasAlta();
+                UtGen.emitirRM_Abs("LD", UtGen.PC, dire, null);
+                UtGen.restaurarRespaldo();
 		generar(nodob.getExpression());
 	}
 
@@ -151,7 +156,17 @@ public class Generador {
         private static void generarReturn(NodoBase nodo){
                 NodoReturn nodo_return = (NodoReturn) nodo;
                 
-                
+                if(nodo_return.getExpresion()!=null){
+                    generar(nodo_return.getExpresion());
+         
+                UtGen.emitirRM("LDA", UtGen.L1, desplazamientoTmp--, UtGen.MP, "Saco el salto de la linea");
+                UtGen.emitirRM("ST", UtGen.AC, ++desplazamientoTmp, UtGen.MP, "Cargo variable que genero el return en temporales");
+                UtGen.emitirRM("ST", UtGen.PC, 0, UtGen.L1, "Regreso a donde fui llamado");
+                }
+                else{
+                UtGen.emitirRM("LDA", UtGen.L1, desplazamientoTmp--, UtGen.MP, "Saco el salto de la linea");
+                UtGen.emitirRM("ST", UtGen.PC, 0, UtGen.L1, "Regreso a donde fui llamado");
+                }
         }
 
 	private static void generarIf(NodoBase nodo){
@@ -294,6 +309,7 @@ public class Generador {
 		UtGen.emitirComentario("Preludio estandar:");
 		UtGen.emitirRM("LD", UtGen.MP, 0, UtGen.AC, "cargar la maxima direccion desde la localidad 0");
 		UtGen.emitirRM("ST", UtGen.AC, 0, UtGen.AC, "limpio el registro de la localidad 0");
+                registroBloque = UtGen.emitirSalto(1);
 	} 
 
 }
