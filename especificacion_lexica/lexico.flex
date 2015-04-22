@@ -22,9 +22,10 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 %{
 	StringBuffer string = new StringBuffer();
 
-	public Scanner(java.io.InputStream r, ComplexSymbolFactory csf){
+	public Scanner(java.io.InputStream r, ComplexSymbolFactory csf, boolean debug){
 		this(r);
 		this.csf=csf;
+		this.debug=debug;
 		lineanum=0;
 	}
 
