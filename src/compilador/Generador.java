@@ -113,10 +113,10 @@ public class Generador {
 
 	private static void generarBloque(NodoBase nodo) {
 		NodoBloque nodob = (NodoBloque) nodo;
-                UtGen.cargarRespaldo(registroBloque);
+                //UtGen.cargarRespaldo(registroBloque);
                 int dire = UtGen.getInstruccionMasAlta();
-                UtGen.emitirRM_Abs("LD", UtGen.PC, dire, null);
-                UtGen.restaurarRespaldo();
+                //UtGen.emitirRM_Abs("LD", UtGen.PC, dire, null);
+                //UtGen.restaurarRespaldo();
 		generar(nodob.getExpression());
 	}
 
