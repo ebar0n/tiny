@@ -1,0 +1,6 @@
+begin 
+	boolean a,b;
+	read a;
+	read b;
+	write a or b;
+end;

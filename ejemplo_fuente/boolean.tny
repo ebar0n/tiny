@@ -1,0 +1,3 @@
+begin 
+	write (true and true) and (true and true);
+end;

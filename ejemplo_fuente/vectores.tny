@@ -1,0 +1,15 @@
+begin
+	int a;
+	int b[100];
+	int sum;
+	sum := 0;
+
+	for(a:=0; a < 100; a := a + 1) 
+		b[a] := a * 2 + 4;
+		write b[a];
+		sum := sum + b[a];
+	end;
+	write sum;
+	write a;
+	write (sum / a);
+end;

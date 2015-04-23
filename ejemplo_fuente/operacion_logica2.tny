@@ -1,8 +1,17 @@
+boolean function() 
+begin
+	int a;
+	for(a:=0; a<100; a := a + 1)
+		write a;
+	end;
+	return true;
+end;
+
 begin 
-	boolean a,b;
+	boolean a;
 	read a;
-	read b;
-	if a or (b and b) then
+
+	if a or function() then
 		write true;
 	else
 		write false;

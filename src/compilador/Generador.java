@@ -396,12 +396,16 @@ public class Generador {
 				//SI es un or, y dio verdadero, no debe evaluarse mas nada
 				if (nodol.getOperacion()==tipoOp.or){
 
-					localidadActual_or = UtGen.emitirSalto(3);
+					localidadActual_or = UtGen.emitirSalto(2);
 
 					generate_salto_or = true;
 					//UtGen.emitirRM("LDC", UtGen.AC, 0, UtGen.AC, "caso de falso (AC=0)");
 					//UtGen.emitirRM("LDA", UtGen.PC, 1, UtGen.PC, "Salto incodicional a direccion: PC+1 (es falso evito colocarlo verdadero)");
 					//UtGen.emitirRM("LDC", UtGen.AC, 1, UtGen.AC, "caso de verdadero (AC=1)");			
+				}
+				else{
+					UtGen.emitirRM("LDA", UtGen.L1, UtGen.AC, 0, " carga parametro en llamada a funcion");
+					pilaPush();
 				}
 			}
 
@@ -410,12 +414,16 @@ public class Generador {
 				if( generate_salto_or ){
 
 					//Actualizando linea de salto de retorno en la pila, necesito la segunda
-					int localidadSaltoInicio = UtGen.emitirSalto(0)+1;
+					int localidadSaltoInicio = UtGen.emitirSalto(0);
 					UtGen.cargarRespaldo(localidadActual_or);
-					UtGen.emitirRO("SUB", UtGen.AC, UtGen.L2, UtGen.AC, "op: ==");
+					//UtGen.emitirRO("SUB", UtGen.AC, UtGen.L2, UtGen.AC, "op: ==");
 					UtGen.emitirRM("LDC", UtGen.L3, localidadSaltoInicio, 0, "cargo linea para el proximo salto");
-					UtGen.emitirRM("JEQ", UtGen.AC, 0, UtGen.L3, "voy dos instrucciones mas alla if verdadero (AC==0)");
+					UtGen.emitirRM("JNE", UtGen.AC, 0, UtGen.L3, "voy dos instrucciones mas alla if verdadero (AC==0)");
 					UtGen.restaurarRespaldo();
+				}
+				else{
+					pilaPop();
+					UtGen.emitirRO("MUL", UtGen.AC, UtGen.AC, UtGen.L1, "op: *");
 				}
 		}
 	}

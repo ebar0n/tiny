@@ -1,0 +1,14 @@
+begin 
+	boolean a;
+	boolean b;
+	boolean c;
+
+	a := (true and false) or false;
+	write a;
+	b := (false and a) and (a or true);
+	write b;
+	c := a or b;
+	write c;
+
+	write (true or false);
+end;
