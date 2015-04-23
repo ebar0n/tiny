@@ -108,7 +108,7 @@ public class Generador {
 	        }else if (nodo instanceof NodoReturn){
 	            generarReturn(nodo);
 			}else{
-				System.out.println("* BUG: Tipo de nodo a generar desconocido" + nodo);
+				System.out.println("BUG: Tipo de nodo a generar desconocido" + nodo);
 			}
 			/*Si el hijo de extrema izquierda tiene hermano a la derecha lo genero tambien*/
 			if(nodo.TieneHermano())
@@ -310,7 +310,6 @@ public class Generador {
         	direccion = tablaSimbolos.getDireccion(var.getNombre(),var.getAmbito());
         	UtGen.emitirRM("ST", UtGen.AC, direccion, UtGen.GP, "leer: almaceno el valor entero leido");
         }
-		//_LEEME Aqui agregar soporte para vectores 
 		//direccion = tablaSimbolos.getDireccion(n.getIdentificador().getNombre(),n.getAmbito());
 		//UtGen.emitirRM("ST", UtGen.AC, direccion, UtGen.GP, "asignacion: almaceno el valor para el id "+n.getIdentificador().getNombre());
 		if(UtGen.debug)	UtGen.emitirComentario("<- asignacion");
@@ -321,7 +320,6 @@ public class Generador {
 		int direccion;
 		if(UtGen.debug)	UtGen.emitirComentario("-> leer");
 		NodoBase nodo_id = n.getIdentificador();
-        //_LEEME puede ser un identificador normal o un vector
         //Auditat lectura para nodos id o vectores 
         if( n.getIdentificador() instanceof NodoArray ){
         	NodoArray array = (NodoArray)n.getIdentificador();
@@ -371,7 +369,6 @@ public class Generador {
 	private static void generarArray(NodoBase nodo){
 		NodoArray array = (NodoArray)nodo;
 		int direccion;
-		//_LEEME
 		if(UtGen.debug)	UtGen.emitirComentario("-> vector");
 		direccion = tablaSimbolos.getDireccion(array.getIdentificador().getNombre(),array.getAmbito());
 		generar(array.getPos());
@@ -394,7 +391,6 @@ public class Generador {
 		if(nodol != null) {
 			boolean generate_salto_or = false;
 			int localidadActual_or = 0;
-			//LEEME dar soporte al and y or
 			if(nodol.getOpIzquierdo() != null){
 				generar(nodol.getOpIzquierdo());
 				//SI es un or, y dio verdadero, no debe evaluarse mas nada

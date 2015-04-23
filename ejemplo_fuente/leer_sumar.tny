@@ -3,11 +3,9 @@
   computes factorial
 }
 begin
-	int x,y[3],z;
+	int x,y[1],z;
 	read x; { input an integer }
-	y[2] := 2;
-	y[1]:=1;
-	y[0]:=0;
-	z:=x+y[0]+y[1]+y[2];
+	y[0]:= -1000;
+	z:=y[0]+x;
 	write z;
 end;
