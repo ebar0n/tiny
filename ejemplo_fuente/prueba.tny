@@ -10,6 +10,61 @@ int retornarsuma(int a,int b) begin
 	return resultado;
 end;
 
+int mayor()
+begin
+	int ma;
+	ma :=0;
+	int i;
+    for (i:=0;i<10;i:=i+1)
+    	if (v[i]>ma) then
+    		ma:=v[i];
+		end;
+    end;
+    return ma;
+end;
+
+int menor()
+begin
+	int me;
+	me :=999;
+	int i;
+    for (i:=0;i<5;i:=i+1)
+    	if (v[i]<=me) then
+    		me:=v[i];
+		end;
+    end;
+    return me;
+end;
+
+int negativos()
+begin
+	int neg;
+	neg := ((-1*-5)+(2*4)-(5*4))*2;
+	return neg;	
+end;
+
+int condicionalAnidado()
+begin
+	int a;
+	a:=10;
+	int b;
+	b:=20;
+
+	if a<=10 and b>=20 then
+		if a>1 and a=10 then
+			if b>25 and b<30 then
+				return 300;
+			else
+				return 400;
+			end;
+		else
+			return 200;
+		end;
+	else
+		return 500;
+	end;
+end;
+
 begin 
 	{
 	int r;
@@ -23,7 +78,11 @@ begin
 	v[1]:=7;
 	v[2]:=2;
 	v[3]:=9;
-	read v[4];
+	v[4]:=9+10;
+	write menor();
+	write mayor();
+	write negativos();
+	write condicionalAnidado();
 	i:=0;
 	aux:=0;
 	for(i:=0;i<5;i:=i+1)
