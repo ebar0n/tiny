@@ -404,8 +404,10 @@ public class Generador {
 					//UtGen.emitirRM("LDC", UtGen.AC, 1, UtGen.AC, "caso de verdadero (AC=1)");			
 				}
 				else{
-					UtGen.emitirRM("LDA", UtGen.L1, UtGen.AC, 0, " carga parametro en llamada a funcion");
-					pilaPush();
+					if (nodol.getOperacion()==tipoOp.and){
+						UtGen.emitirRM("LDA", UtGen.L1, UtGen.AC, 0, " carga parametro en llamada a funcion");
+						pilaPush();
+					}
 				}
 			}
 
@@ -422,8 +424,10 @@ public class Generador {
 					UtGen.restaurarRespaldo();
 				}
 				else{
-					pilaPop();
-					UtGen.emitirRO("MUL", UtGen.AC, UtGen.AC, UtGen.L1, "op: *");
+					if (nodol.getOperacion()==tipoOp.and){
+						pilaPop();
+						UtGen.emitirRO("MUL", UtGen.AC, UtGen.AC, UtGen.L1, "op: *");
+					}
 				}
 		}
 	}
