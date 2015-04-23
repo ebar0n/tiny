@@ -3,24 +3,24 @@
   computes factorial
 }
 
-
-read x; { input an integer }
-if 0 < x then { don't compute if x <= 0 }
-  fact := 1;
-  repeat
-    fact := fact * x;
-    x := x - 1
-  until x = 0;
-  write fact  { output factorial of x }
-end
-read y;
-
-
-a:=1; 
-b:=2;
-
-
-if 0 < x then { don't compute if x <= 0 }
-  fact := 1;
-  write fact;  { output factorial of x }
+begin
+  int x,fact,pause; 
+  read x; { input an integer }
+  if 0 < x then { don't compute if x <= 0 }
+    fact := 1;
+    repeat
+      fact := fact * x;
+      x := x - 1;
+    until x = 0;
+    write fact;  { output factorial of x }
+  end;
+  
+  {
+  read pause;
+  }
+  
+  if 0 < x then { don't compute if x <= 0 }
+    fact := 1;
+    write fact;  { output factorial of x }
+  end;
 end;

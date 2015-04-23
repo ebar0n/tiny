@@ -1,0 +1,19 @@
+int factorial(int n)
+begin
+	int j;
+
+	if n = 0 then
+		return 1;
+	else
+		{
+		write n;
+		write n-1;
+		}
+		return (0*2)+n*factorial(n-1)-(0*2);
+	end;
+end;
+begin 
+	int x;
+	read x;
+	write factorial(x);
+end;

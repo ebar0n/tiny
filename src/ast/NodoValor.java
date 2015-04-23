@@ -28,7 +28,7 @@ public class NodoValor extends NodoBase {
 	public Integer getValorReal() {
 		if ( this.getTipoDato() == tipoDato.BOOLEAN ){
 			if( this.getValorBoolean() == true )
-				return -1;//Representa un verdadero 
+				return 1;//Representa un verdadero 
 			else
 				return 0;//representa un falso
 		}

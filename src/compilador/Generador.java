@@ -66,57 +66,60 @@ public class Generador {
 	//Funcion principal de generacion de codigo
 	//prerequisito: Fijar la tabla de simbolos antes de generar el codigo objeto 
 	private static void generar(NodoBase nodo){
-	if(tablaSimbolos!=null && nodo!= null){
-		if (nodo instanceof NodoBloque) {
-			generarBloque(nodo);
-		}else if (nodo instanceof NodoFunction) {
-			generarFuncion(nodo);
-		}else if (nodo instanceof  NodoIf){
-			generarIf(nodo);
-		}else if (nodo instanceof  NodoRepeat){
-			generarRepeat(nodo);
-		}else if (nodo instanceof  NodoAsignacion){
-			generarAsignacion(nodo);
-		}else if (nodo instanceof  NodoVariable){
-			generarVariable(nodo);
-		}else if (nodo instanceof  NodoLogico){
-			generarLogico(nodo);
-		}else if (nodo instanceof  NodoEscribir){
-			generarEscribir(nodo);
-		}else if (nodo instanceof NodoValor){
-			generarValor(nodo);
-		}else if (nodo instanceof NodoFor){
-			generarFor(nodo);	
-		}else if (nodo instanceof NodoArgList){
-			
-			generarArgList(nodo);	
-		}else if (nodo instanceof NodoIdentificador){
-			generarIdentificador(nodo);
-		}else if (nodo instanceof NodoArray){
-			generarArray(nodo);
-		}else if (nodo instanceof NodoCallFunction){
-			generarCallFunction(nodo);			
-		}else if (nodo instanceof NodoParamFunction){
-			generarParamFunctionelse(nodo);			
-		}else if (nodo instanceof NodoOperacion){
-			generarOperacion(nodo);
-        }else if (nodo instanceof NodoBloque){
-            generarBloque(nodo);
-        }else if (nodo instanceof NodoReturn){
-            generarReturn(nodo);
-		}else{
-			System.out.println("BUG: Tipo de nodo a generar desconocido" + nodo);
+		if(tablaSimbolos!=null && nodo!= null){
+			if (nodo instanceof NodoBloque) {
+				generarBloque(nodo);
+			}else if (nodo instanceof NodoFunction) {
+				generarFuncion(nodo);
+			}else if (nodo instanceof  NodoIf){
+				generarIf(nodo);
+			}else if (nodo instanceof  NodoRepeat){
+				generarRepeat(nodo);
+			}else if (nodo instanceof  NodoAsignacion){
+				generarAsignacion(nodo);
+			}else if (nodo instanceof  NodoVariable){
+				//generarVariable(nodo);
+				//Este nodo no es necesario generarlo
+				//Como tal en generacion de codigo 
+				//las variables no se declaran
+			}else if (nodo instanceof  NodoLogico){
+				generarLogico(nodo);
+			}
+			else if (nodo instanceof  NodoLeer){
+				generarLeer(nodo);
+		    }else if (nodo instanceof  NodoEscribir){
+				generarEscribir(nodo);
+			}else if (nodo instanceof NodoValor){
+				generarValor(nodo);
+			}else if (nodo instanceof NodoFor){
+				generarFor(nodo);	
+			}else if (nodo instanceof NodoArgList){
+				generarArgList(nodo);	
+			}else if (nodo instanceof NodoIdentificador){
+				generarIdentificador(nodo);
+			}else if (nodo instanceof NodoArray){
+				generarArray(nodo);
+			}else if (nodo instanceof NodoCallFunction){
+				generarCallFunction(nodo);			
+			}else if (nodo instanceof NodoParamFunction){
+				generarParamFunction(nodo);			
+			}else if (nodo instanceof NodoOperacion){
+				generarOperacion(nodo);
+	        }else if (nodo instanceof NodoReturn){
+	            generarReturn(nodo);
+			}else{
+				System.out.println("* BUG: Tipo de nodo a generar desconocido" + nodo);
+			}
+			/*Si el hijo de extrema izquierda tiene hermano a la derecha lo genero tambien*/
+			if(nodo.TieneHermano())
+				generar(nodo.getHermanoDerecha());
 		}
-		/*Si el hijo de extrema izquierda tiene hermano a la derecha lo genero tambien*/
-		if(nodo.TieneHermano())
-			generar(nodo.getHermanoDerecha());
 	}
-}
 
 	private static void generarBloque(NodoBase nodo) {
 		NodoBloque nodob = (NodoBloque) nodo;
 		if( nodob.getAmbito().equals(TablaSimbolos.conts_ambito_global) ){
-			//restauramos
+			//restauramos y ponemos el salto al bloque unico
 			UtGen.emitirComentario("Bloque principal");
 			int localidadActual = UtGen.emitirSalto(0);
 			UtGen.cargarRespaldo(registroBloque);
@@ -126,8 +129,6 @@ public class Generador {
 			UtGen.emitirComentario("bloque normal");			
 		}
 		generar(nodob.getExpression());
-		
-        
 	}
 
 	private static void generarFuncion(NodoBase nodo) {
@@ -135,14 +136,13 @@ public class Generador {
 		RegistroSimbolo simbolo = tablaSimbolos.BuscarSimboloIsFunction(nodof.getIdentificador().getNombre());
 		         
         if( simbolo != null ){
-                    
-			int localidadActual = UtGen.emitirSalto(0);
-                        //System.out.println("direccion actual: "+localidadActual);
+            int localidadActual = UtGen.emitirSalto(0);
+            //System.out.println("direccion actual: "+localidadActual);
 			simbolo.setDireccionCodigo( localidadActual );
-                        //System.out.println("------>> direccion de la funcion: "+simbolo.getDireccionCodigo());
+            //System.out.println("------>> direccion de la funcion: "+simbolo.getDireccionCodigo());
 			generar(nodof.getDeclaracion());
 			generar(nodof.getExpression());   
-		}             
+		}          
 	}
 
 	private static void generarVariable(NodoBase nodo) {
@@ -150,6 +150,7 @@ public class Generador {
 	}	
 
 	private static void generarArgList(NodoBase nodo) {
+		//Esto ocurre luego de la llamada a un funcion
 		NodoArgList nodov = (NodoArgList) nodo;
         int direccion;
 
@@ -159,18 +160,7 @@ public class Generador {
         direccion = tablaSimbolos.getDireccion(nodov.getIdentificador().getNombre(),nodov.getAmbito());
         pilaPop();
         //UtGen.emitirRM("LD", UtGen.AC,desplazamientoTmp--, UtGen.MP, "cargo el registro AC con el valor de la pila");
-        UtGen.emitirRM("ST", UtGen.L1, direccion, UtGen.GP, "Guardo en la direccion "+direccion+" "+nodov.getIdentificador().getNombre());
-                
-	}	
-
-	private static void generarLogico(NodoBase nodo) {
-		NodoLogico nodol = (NodoLogico) nodo;
-		if(nodol != null) {
-			if(nodol.getOpIzquierdo() != null)
-				generar(nodol.getOpIzquierdo());
-			if(nodol.getOpDerecho() != null) 
-				generar(nodol.getOpDerecho());
-		}
+        UtGen.emitirRM("ST", UtGen.L1, direccion, UtGen.GP, "Guardo en la direccion "+direccion+" "+nodov.getIdentificador().getNombre());        
 	}
 
 	private static void generarFor(NodoBase nodo) {
@@ -182,7 +172,6 @@ public class Generador {
 		localidadSaltoInicio = UtGen.emitirSalto(0);
 		UtGen.emitirComentario("for condicion: el salto hacia la condicion del for debe estar aqui");
 
-		generar(nodof.getIncremento());
 		generar(nodof.getSentencia());
 
 		// localidadActual = UtGen.emitirSalto(0);
@@ -190,6 +179,7 @@ public class Generador {
 		// UtGen.emitirRM("LDA", UtGen.PC, localidadActual, 0, "jmp a inicio del for");
 		// UtGen.restaurarRespaldo();
 
+		generar(nodof.getIncremento());
 		generar(nodof.getCondicion());
 		UtGen.emitirRM_Abs("JNE", UtGen.AC, localidadSaltoInicio, "for: jmp hacia el inicio del cuerpo");
 		
@@ -205,9 +195,9 @@ public class Generador {
 		
 		//Cargar variables en la pila
 		int localidadSaltoInicio_salto = UtGen.emitirSalto(3);
-		generar(nodocf.getVariables());
+		generar(nodocf.getVariables());//en generar se invoca generarParamFunction
 		
-		//Actualizando linea de salto de retorno en la pila, necesito la tercera
+		//Actualizando linea de salto de retorno en la pila, necesito la segunda
 		int localidadSaltoInicio = UtGen.emitirSalto(0)+1;
 		//haciendo respaldo de direccion
 		//UtGen.emitirRM("LDA", UtGen.L3, 0 , UtGen.MP, "cargando ubicacion de la pila, para la llamada del retunn");
@@ -221,42 +211,34 @@ public class Generador {
 		
 		//Aqui falta validar para cuando aun no se ha declarado la funcion
 		RegistroSimbolo simbolo =  tablaSimbolos.BuscarSimboloIsFunction(nodocf.getIdentificador().getNombre());
-		UtGen.emitirRM("LDC", UtGen.PC, simbolo.getDireccionCodigo(), 0, "carga salto  "+simbolo.getDireccionCodigo());
+		if( simbolo != null ){
+			if ( simbolo.getDireccionCodigo() >= 0 ){
+				UtGen.emitirRM("LDC", UtGen.PC, simbolo.getDireccionCodigo(), 0, "carga salto  "+simbolo.getDireccionCodigo());		
+			}
+			else{
+				//crear rutinas para cuando la funcion no se ha generado LEEME
+			}
+		}
 		
 	}
 
-	private static void generarParamFunctionelse(NodoBase nodo){
+	private static void generarParamFunction(NodoBase nodo){
 		generar( ((NodoParamFunction)nodo).getExpresion() );
 		UtGen.emitirRM("LDA", UtGen.L1, UtGen.AC, 0, " carga parametro en llamada a funcion");
 		pilaPush();
 		generar( ((NodoParamFunction)nodo).getSiguiente() );
-
 	}
         
     private static void generarReturn(NodoBase nodo){
         NodoReturn nodo_return = (NodoReturn) nodo;
         
-        //Restaurando salto
-		pilaPop();
-        UtGen.emitirRM("LDA", UtGen.L3, 0 , UtGen.L1, "Paso ubicacion de retorno");
-
         if(nodo_return.getExpresion()!=null){
             generar(nodo_return.getExpresion());
- 	
- 			//No tengo que llenar nada, el paranmetro de la funcion se saca lo de AC y lo publica en la pila
- 			//pilaPop();
-            //UtGen.emitirRM("LDA", UtGen.L1, desplazamientoTmp--, UtGen.MP, "Saco el salto de la linea");
-            //UtGen.emitirRO("SUB", UtGen.MP, UtGen.MP, UtGen.L2, "op: subir pila");	
-            //UtGen.emitirRM("LDA", UtGen.L1, 0, UtGen.AC, "Cargo variable que genero el return en temporales");
-            //pilaPush();
-            //UtGen.emitirRM("ST", UtGen.AC, 0, UtGen.MP, "op: push en la pila tmp");
-            UtGen.emitirRM("LDA", UtGen.PC, 0, UtGen.L3, "Regreso a donde fui llamado");
         }
-        else{
-        	//pilaPop();
-            //UtGen.emitirRM("LDA", UtGen.L1, desplazamientoTmp--, UtGen.MP, "Saco el salto de la linea");
-            UtGen.emitirRM("LDA", UtGen.PC, 0, UtGen.L3, "Regreso a donde fui llamado sin devolver nada");
-        }
+        
+        pilaPop(); //Restaurando salto
+    	//UtGen.emitirRM("LDA", UtGen.L3, 0 , UtGen.L1, "Paso ubicacion de retorno");
+        UtGen.emitirRM("LDA", UtGen.PC, 0, UtGen.L1, "Regreso a donde fui llamado");
     }
 
 	private static void generarIf(NodoBase nodo){
@@ -272,9 +254,11 @@ public class Generador {
 		localidadSaltoEnd = UtGen.emitirSalto(1);
 		UtGen.emitirComentario("If: el salto hacia el final debe estar aqui");
 		localidadActual = UtGen.emitirSalto(0);
+		
 		UtGen.cargarRespaldo(localidadSaltoElse);
 		UtGen.emitirRM_Abs("JEQ", UtGen.AC, localidadActual, "if: jmp hacia else");
 		UtGen.restaurarRespaldo();
+		
 		/*Genero la parte ELSE*/
 		if(n.getParteElse()!=null){
 			generar(n.getParteElse());
@@ -283,7 +267,7 @@ public class Generador {
 		//localidadSaltoEnd al finalizar la ejecucion de un true
 		localidadActual = UtGen.emitirSalto(0);
 		UtGen.cargarRespaldo(localidadSaltoEnd);
-		UtGen.emitirRM_Abs("LDA", UtGen.PC, localidadActual, "if: jmp hacia el final");
+		UtGen.emitirRM_Abs("LDA", UtGen.PC, localidadActual, "if: salto incondicional hacia el final");
 		UtGen.restaurarRespaldo();			
 		if(UtGen.debug)	UtGen.emitirComentario("<- if");
 	}
@@ -292,13 +276,13 @@ public class Generador {
     	NodoRepeat n = (NodoRepeat)nodo;
 		int localidadSaltoInicio;
 		if(UtGen.debug)	UtGen.emitirComentario("-> repeat");
-			localidadSaltoInicio = UtGen.emitirSalto(0);
-			UtGen.emitirComentario("repeat: el salto hacia el final (luego del cuerpo) del repeat debe estar aqui");
-			/* Genero el cuerpo del repeat */
-			generar(n.getCuerpo());
-			/* Genero el codigo de la prueba del repeat */
-			generar(n.getPrueba());
-			UtGen.emitirRM_Abs("JEQ", UtGen.AC, localidadSaltoInicio, "repeat: jmp hacia el inicio del cuerpo");
+		localidadSaltoInicio = UtGen.emitirSalto(0);
+		UtGen.emitirComentario("repeat: el salto hacia el final (luego del cuerpo) del repeat debe estar aqui");
+		/* Genero el cuerpo del repeat */
+		generar(n.getCuerpo());
+		/* Genero el codigo de la prueba del repeat */
+		generar(n.getPrueba());
+		UtGen.emitirRM_Abs("JEQ", UtGen.AC, localidadSaltoInicio, "repeat: jmp hacia el inicio del cuerpo");
 		if(UtGen.debug)	UtGen.emitirComentario("<- repeat");
 	}
 	
@@ -310,9 +294,25 @@ public class Generador {
 		generar(n.getExpresion());
 		/* Ahora almaceno el valor resultante */
 		
-		//Aqui agregar soporte para vectores
-		direccion = tablaSimbolos.getDireccion(n.getIdentificador().getNombre(),n.getAmbito());
-		UtGen.emitirRM("ST", UtGen.AC, direccion, UtGen.GP, "asignacion: almaceno el valor para el id "+n.getIdentificador().getNombre());
+		if( n.getIdentificadorOrArray() instanceof NodoArray ){
+        	NodoArray array = (NodoArray)n.getArray();
+        	direccion = tablaSimbolos.getDireccion(array.getIdentificador().getNombre(),array.getAmbito());
+        	UtGen.emitirRM("LDA", UtGen.L1, 0, UtGen.AC, "copiamos exprecion");
+        	pilaPush();
+        	generar(array.getPos());
+        	//UtGen.emitirRM("LDC", UtGen.AC1, direccion, 0, "carga direccion de vector");
+        	//UtGen.emitirRO("ADD", UtGen.AC1, UtGen.AC, UtGen.AC1, "carcular direccion vector");
+        	pilaPop();
+        	UtGen.emitirRM("ST", UtGen.L1, direccion, UtGen.AC, "leer: almaceno el valor entero leido");
+        }
+        else{
+        	NodoIdentificador var = (NodoIdentificador)n.getIdentificador();
+        	direccion = tablaSimbolos.getDireccion(var.getNombre(),var.getAmbito());
+        	UtGen.emitirRM("ST", UtGen.AC, direccion, UtGen.GP, "leer: almaceno el valor entero leido");
+        }
+		//_LEEME Aqui agregar soporte para vectores 
+		//direccion = tablaSimbolos.getDireccion(n.getIdentificador().getNombre(),n.getAmbito());
+		//UtGen.emitirRM("ST", UtGen.AC, direccion, UtGen.GP, "asignacion: almaceno el valor para el id "+n.getIdentificador().getNombre());
 		if(UtGen.debug)	UtGen.emitirComentario("<- asignacion");
 	}
 	
@@ -320,11 +320,25 @@ public class Generador {
 		NodoLeer n = (NodoLeer)nodo;
 		int direccion;
 		if(UtGen.debug)	UtGen.emitirComentario("-> leer");
-		UtGen.emitirRO("IN", UtGen.AC, 0, 0, "leer: lee un valor entero ");
-                NodoBase nodo_id = n.getIdentificador();
-                //Auditat lectura para nodos id o vectores
-		//direccion = tablaSimbolos.getDireccion();
-		//UtGen.emitirRM("ST", UtGen.AC, direccion, UtGen.GP, "leer: almaceno el valor entero leido en el id "+n.getIdentificador());
+		NodoBase nodo_id = n.getIdentificador();
+        //_LEEME puede ser un identificador normal o un vector
+        //Auditat lectura para nodos id o vectores 
+        if( n.getIdentificador() instanceof NodoArray ){
+        	NodoArray array = (NodoArray)n.getIdentificador();
+        	direccion = tablaSimbolos.getDireccion(array.getIdentificador().getNombre(),array.getAmbito());
+        	generar(array.getPos());
+        	//UtGen.emitirRM("LDC", UtGen.AC1, , 0, "carga direccion de vector");
+        	//UtGen.emitirRO("ADD", UtGen.AC1, UtGen.AC, UtGen.AC1, "carcular direccion vector");
+        	UtGen.emitirRM("LDA", UtGen.AC1, 0, UtGen.AC, "Regreso a donde fui llamado");
+        	UtGen.emitirRO("IN", UtGen.AC, 0, 0, "leer: lee un valor entero ");
+        	UtGen.emitirRM("ST", UtGen.AC, direccion, UtGen.AC1, "leer: almaceno el valor entero leido");
+        }
+        else{
+        	NodoIdentificador var = (NodoIdentificador)n.getIdentificador();
+        	direccion = tablaSimbolos.getDireccion(var.getNombre(),var.getAmbito());
+        	UtGen.emitirRO("IN", UtGen.AC, 0, 0, "leer: lee un valor entero ");
+        	UtGen.emitirRM("ST", UtGen.AC, direccion, UtGen.GP, "leer: almaceno el valor entero leido");
+        }
 		if(UtGen.debug)	UtGen.emitirComentario("<- leer");
 	}
 	
@@ -355,16 +369,60 @@ public class Generador {
 	}
 
 	private static void generarArray(NodoBase nodo){
-		NodoArray n = (NodoArray)nodo;
+		NodoArray array = (NodoArray)nodo;
 		int direccion;
+		//_LEEME
 		if(UtGen.debug)	UtGen.emitirComentario("-> vector");
-		direccion = tablaSimbolos.getDireccion(((NodoIdentificador)n.getIdentificador()).getNombre());
-		UtGen.emitirRO("ADD",UtGen.L3,UtGen.GP,UtGen.AC,"sumar desplazamiendo al registro L3");
-		UtGen.emitirRM("LD", UtGen.AC, direccion,UtGen.GP, "cargar valor de identificador: "+((NodoIdentificador)n.getIdentificador()).getNombre());
-		UtGen.emitirRM("LDC",UtGen.GP,0,0,"cargar constante 0 en el resgitro GP");
+		direccion = tablaSimbolos.getDireccion(array.getIdentificador().getNombre(),array.getAmbito());
+		generar(array.getPos());
+		//UtGen.emitirRM("LDC", UtGen.AC1, , 0, "carga direccion de vector");
+		//UtGen.emitirRO("ADD", UtGen.AC1, UtGen.AC, UtGen.AC1, "calcular direccion de vector");
+		UtGen.emitirRM("LD", UtGen.AC, direccion, UtGen.AC, "op: pop o cargo de la pila el valor");
+		//UtGen.emitirRO("IN", UtGen.AC, 0, 0, "leer: lee un valor entero ");
+		//UtGen.emitirRM("ST", UtGen.AC, UtGen.AC1, UtGen.GP, "leer: almaceno el valor entero leido");
+
+
+		//direccion = tablaSimbolos.getDireccion(((NodoIdentificador)n.getIdentificador()).getNombre());
+		//UtGen.emitirRO("ADD",UtGen.L3,UtGen.GP,UtGen.AC,"sumar desplazamiendo al registro L3");
+		//UtGen.emitirRM("LD", UtGen.AC, direccion,UtGen.GP, "cargar valor de identificador: "+((NodoIdentificador)n.getIdentificador()).getNombre());
+		//UtGen.emitirRM("LDC",UtGen.GP,0,0,"cargar constante 0 en el resgitro GP");
 		if(UtGen.debug)	UtGen.emitirComentario("<- vector");
 	}
 	
+	private static void generarLogico(NodoBase nodo) {
+		NodoLogico nodol = (NodoLogico) nodo;
+		if(nodol != null) {
+			boolean generate_salto_or = false;
+			int localidadActual_or = 0;
+			//LEEME dar soporte al and y or
+			if(nodol.getOpIzquierdo() != null){
+				generar(nodol.getOpIzquierdo());
+				//SI es un or, y dio verdadero, no debe evaluarse mas nada
+				if (nodol.getOperacion()==tipoOp.or){
+
+					localidadActual_or = UtGen.emitirSalto(3);
+
+					generate_salto_or = true;
+					//UtGen.emitirRM("LDC", UtGen.AC, 0, UtGen.AC, "caso de falso (AC=0)");
+					//UtGen.emitirRM("LDA", UtGen.PC, 1, UtGen.PC, "Salto incodicional a direccion: PC+1 (es falso evito colocarlo verdadero)");
+					//UtGen.emitirRM("LDC", UtGen.AC, 1, UtGen.AC, "caso de verdadero (AC=1)");			
+				}
+			}
+
+			if(nodol.getOpDerecho() != null) 
+				generar(nodol.getOpDerecho());
+				if( generate_salto_or ){
+
+					//Actualizando linea de salto de retorno en la pila, necesito la segunda
+					int localidadSaltoInicio = UtGen.emitirSalto(0)+1;
+					UtGen.cargarRespaldo(localidadActual_or);
+					UtGen.emitirRO("SUB", UtGen.AC, UtGen.L2, UtGen.AC, "op: ==");
+					UtGen.emitirRM("LDC", UtGen.L3, localidadSaltoInicio, 0, "cargo linea para el proximo salto");
+					UtGen.emitirRM("JEQ", UtGen.AC, 0, UtGen.L3, "voy dos instrucciones mas alla if verdadero (AC==0)");
+					UtGen.restaurarRespaldo();
+				}
+		}
+	}
 
 	private static void generarOperacion(NodoBase nodo){
 		NodoOperacion n = (NodoOperacion) nodo;
@@ -374,13 +432,12 @@ public class Generador {
 		/* Almaceno en la pseudo pila de valor temporales el valor de la operacion izquierda */
 		UtGen.emitirRM("LDA", UtGen.L1, UtGen.AC, 0, "Pasando operador izquierdo a la pila");
 		pilaPush();
-
 		/* Genero la expresion derecha de la operacion */
 		generar(n.getOpDerecho());
 		/* Ahora cargo/saco de la pila el valor izquierdo */
 		pilaPop();
 		UtGen.emitirRM("LDA", UtGen.AC1, 0,UtGen.L1,  "Pasando operador izquierdo de la pila a AC1");
-		
+		//LEEME Verificar el cumplimiento de estas operaciones
 		//UtGen.emitirRM("LD", UtGen.AC1, ++desplazamientoTmp, UtGen.MP, "op: pop o cargo de la pila el valor izquierdo en AC1");
 		switch(n.getOperacion()){
 			case	mas:	UtGen.emitirRO("ADD", UtGen.AC, UtGen.AC1, UtGen.AC, "op: +");		
@@ -453,25 +510,10 @@ public class Generador {
 		UtGen.emitirComentario("Fin Preludio estandar:");
 	} 
 
-	
-	public static void generarEjemplo(){
-		generarPreludioEstandar();
-		
-		UtGen.emitirRM("LDA", UtGen.L1, UtGen.PC, 0, "carga la linea donde me encuentro, llamada a funcion");
-		pilaPush();
-		UtGen.emitirRO("IN", UtGen.L1, 0, 0, "leer: lee un valor entero ");
-		pilaPush();
-		UtGen.emitirRM("LDC", UtGen.PC, 6, 0, "carga salto");
-		UtGen.emitirComentario("Fin de la ejecucion.");
-		UtGen.emitirRO("HALT", 0, 0, 0, "");
-
-	} 
-
 	//El registro L1 se usa para obtener los elementos ingresados en la pila
 	private static void pilaPush(){
 		UtGen.emitirRO("SUB", UtGen.MP, UtGen.MP, UtGen.L2, "op: subir pila");
-		UtGen.emitirRM("ST", UtGen.L1, 0, UtGen.MP, "op: push en la pila tmp");
-			
+		UtGen.emitirRM("ST", UtGen.L1, 0, UtGen.MP, "op: push en la pila tmp");			
 	}
 
 	//El registro L1 se usa para obtener los elementos sacar en la pila

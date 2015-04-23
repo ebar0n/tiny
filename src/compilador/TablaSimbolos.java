@@ -216,6 +216,8 @@ public class TablaSimbolos {
                 nivel--;
                 ambito = ambito_padre;
                 ambito_padre = ambito_aux_padre;
+            }else if (raiz instanceof NodoReturn ){
+                raiz.setAmbito(ambito);
             }
             raiz = raiz.getHermanoDerecha();
         }
@@ -460,7 +462,8 @@ public class TablaSimbolos {
     }
 
     public int getDireccion(String Clave, String ambito){
-            return BuscarSimbolo(Clave, ambito).getDireccionMemoria();
+        //System.out.println(Clave + " - " +ambito);
+        return BuscarSimbolo(Clave, ambito).getDireccionMemoria();
     }
     /*
      * TODO:

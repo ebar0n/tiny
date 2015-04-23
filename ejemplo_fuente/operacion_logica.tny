@@ -1,0 +1,17 @@
+int pong(int a)
+begin
+	return a;
+end;
+
+int ping(int a)
+begin
+	return pong(a);
+end;
+
+begin 
+	if ping(1)<7 or (ping(2)>1 and ping(2)<1) then
+		write true;
+	else
+		write false;
+	end;
+end;

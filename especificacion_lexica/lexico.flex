@@ -67,7 +67,7 @@ letra			= [a-zA-Z]
 
 /**Identificadores tipo python, pero se usa el de tiny**/
 
-combinacion = [-_]*{digito}*[-_]*{digito}*
+combinacion = [_]*{digito}*[_]*{digito}*
 identificador	= {letra}+{combinacion}*{letra}*{combinacion}*
 
 /*identificador	= {letra}+*/

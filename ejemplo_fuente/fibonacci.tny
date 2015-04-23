@@ -1,0 +1,15 @@
+int fibonacci(int n)
+begin
+	if  n <= 2  then
+		return n;
+	else
+		return fibonacci(n-1)+fibonacci(n-2);
+	end;
+	
+end;
+begin
+	int j;
+	for(j:=0;j<10;j:=j+1)
+		write fibonacci(j);
+	end;
+end;

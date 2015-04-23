@@ -26,6 +26,10 @@ public class NodoAsignacion extends NodoBase {
 			return this.vector.getIdentificador();
 	}
 
+	public NodoBase getArray() {
+		return this.vector;
+	}
+
 	public NodoBase getIdentificadorOrArray(){
 		if (this.identificador!=null)
 			return this.identificador;

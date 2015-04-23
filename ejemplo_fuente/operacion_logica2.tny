@@ -1,0 +1,10 @@
+begin 
+	boolean a,b;
+	read a;
+	read b;
+	if a or (b and b) then
+		write true;
+	else
+		write false;
+	end;
+end;
